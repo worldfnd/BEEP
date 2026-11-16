@@ -71,7 +71,20 @@
 #let fold = $sans("fold")$
 #let batch = $sans("batch")$
 
-// Abstract 
+#let expdata = json("tables/minimal.json")
+#let num(key) = if key in expdata.numbers { eval(expdata.numbers.at(key), mode: "markup") } else { highlight[pending] }
+#let exprows(name) = {
+  let rows = expdata.tables.at(name, default: ())
+  if rows.len() == 0 { (table.cell(colspan: 2, highlight[pending]),) } else {
+    rows.map(r => r.map(c => eval(c, mode: "markup"))).flatten()
+  }
+}
+#let exptable(columns, header, name, size: 7.5pt) = text(size: size, table(
+  columns: columns, stroke: none, align: center + horizon, inset: (x: 3.5pt, top: 0.7pt, bottom: 1.5pt),
+  table.hline(stroke: 0.6pt), ..header, table.hline(stroke: 0.4pt), ..exprows(name), table.hline(stroke: 0.6pt),
+))
+
+// Abstract
 #abstract[
   
   We present an improved soundness analysis of the DEEP technique @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. We then modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of (Mutual) Correlated Agreement (MCA),  with a folding error bound that is linear on the code dimension and list size, improving upon the standard MCA error in typical instantiations. 
@@ -156,7 +169,7 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 #albert[Mention the high arity part]
 
-#paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #albert[basefold], etc. At its core is an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and where for a code $cal(C)'$ of dimension $codedim$ and blocklength $blockclength$,
+#paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and where for a code $cal(C)'$ of dimension $codedim$ and blocklength $blockclength$,
   $ cal(R)_(cal(C)') := lr({
     lr(( cases(delim: #none,
       bb(x) = (mu, vb(v)) in FF times FF^(codedim) \,,
@@ -175,9 +188,9 @@ $
 $
 where $L_(interleavedcode(2))$ is a list size bound at radius $delta$ for $interleavedcode(2)$, and as before $L$ is a list size for $cal(C)$ (the error $epsilon_(sans("BEEP"),1)$ uses the list size $L$).
 
-This IOR can then composed with itself several times, and then composed with a codeswith IOR (as in WHIR @whir, Ligerito @ligerito, Blaze @blaze, etc.) or a standard spot check step as in Basefold, FRI-binius #albert[references], in order to obtain a "BEEP variant" of the cited IOPPs. See Section @s:BEEP_WHIR for details.
+This IOR can then composed with itself several times, and then composed with a codeswith IOR (as in WHIR @whir, Ligerito @ligerito, Blaze @blaze, etc.) or a standard spot check step as in Basefold, FRI-binius #aiedit[@basefold @fribinius], in order to obtain a "BEEP variant" of the cited IOPPs. See Section @s:BEEP_WHIR for details.
 
-In Section @s:experiments we compare the soundness errors of Ligerito @ligerito and our BEEP version of it, as well as their runtimes and proof sizes. We provide a highlight of the results in #albert[cite table]. An implementation of BEEP-Ligerito can be found in #link("https://github.com/worldfnd/BEEP")). #albert[Make sure tables are updated]
+In Section @s:experiments we compare the soundness errors of Ligerito @ligerito and our BEEP version of it, as well as their runtimes and proof sizes. We provide a highlight of the results in #aiedit[@tab:measured_0]. An implementation of BEEP-Ligerito can be found in #link("https://github.com/worldfnd/BEEP")). #albert[Make sure tables are updated]
 
 #figure(
   stack(dir: ttb, spacing: 3pt,
@@ -193,7 +206,7 @@ In Section @s:experiments we compare the soundness errors of Ligerito @ligerito 
   caption: [Proof sizes (KiB) and times (ms) at $100$ (top) and $128$ (bottom) bits of security. "Prove" is the opening, without the commitment ("commit"), which all the variants share.],
 ) <tab:measured_0>
 
-#paragraph[BEEP and affine folding.] In @CWYZ26 and #albert[polygero], the authors propose replacing folding challenges $alpha in FF$ with low degree polynomials.  Concretely @CWYZ26 uses affine polynomial challenges $alpha(X)= sigma + tau dot X$, for $sigma, tau in FF$. They obtain an MCA-type error bound of #albert[fill in].
+#paragraph[BEEP and affine folding.] In @CWYZ26 and #aiedit[@polygero], the authors propose replacing folding challenges $alpha in FF$ with low degree polynomials.  Concretely @CWYZ26 uses affine polynomial challenges $alpha(X)= sigma + tau dot X$, for $sigma, tau in FF$. They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for Reed-Solomon codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$ (assuming $blockclength dot eta^2 ≥ 4\/rho$), where one position of agreement may be lost @CWYZ26[Theorem 1.1]].
 
 In Section @s:affine, we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $epsilon_(sans("BEEP"),1)$ remains the same, while the folding error $epsilon_(sans("BEEP"),2)$ becomes, in most settings,
  $
@@ -203,8 +216,8 @@ In contrast to @CWYZ26 #albert[check], our analysis in the affine setting is ele
 
 
 #paragraph[Consequences.] We list some implications of our results:
-- It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #albert[ERA, sketched, RAA, QA]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.
-- When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a substantially smaller error, as shown in #albert[reference]. 
+- It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.
+- When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a substantially smaller error, as shown in #aiedit[@tab:errors].
 
 
 == Use of AI and Lean formalization
@@ -988,19 +1001,6 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 = Instantiation and Experiments <s:experiments>
 // [AI-drafted in the author's register (claude-fable-5-2), 2026-11-16, at the author's request ("Let's write the instantiation and experiment section. I want something minimal that fits in two pages": a comparison of runtimes and proof sizes of Ligerito and BEEP-Ligerito for 2^15 to 2^23 field elements at 100 bits over GF(2^128) and at rate 1/2; the same at 128 bits; and a table with the error bounds of the first two rounds of the BEEP IOR and the number of queries, with the fold round of Ligerito next to them, at 128 bits over a field of 2^128 elements): this whole section, up to the include of batch.typ. Every number and every table row is read from tables/minimal.json, which scripts/minimal_tables.py writes from the runs beep-ligerito/bench_results/three-way-minimal-20261116-ac3 (the cells at 100 bits) and three-way-minimal-20261116-ac2 (the cells at 128 bits; see beep-ligerito/README.md for why two runs), whose cells are beep-ligerito/scripts/cells_minimal.txt, and from the exact arithmetic of beep-ligerito/scripts/beep_params.py. A number that the script did not write prints as a highlighted "pending". The code is beep-ligerito/flock (Flock's branch affine-fold-f128 with crates/flock-core/src/pcs/ligerito/beep.rs added); the baseline "Ligerito over GF(2^128)" is `mca_ladder_no_first_sample_at` of that file, written for this section (BEEP-Ligerito with no samples in its fold rounds and nothing else changed; its accounting is ours, see beep-ligerito/README.md). Two readings of the request that the author should check: (1) at 128 bits BEEP-Ligerito stays over GF(2^128), with grinding on its fold challenges, and Ligerito is Flock's, with fold challenges in GF(2^256) (the request said "using a larger field for BEEP-Ligerito"; this code has no BEEP prover with challenges in GF(2^256)); (2) "n = 2^15 to 2^23" is read as the number of field elements of the message, and the block length of the first code (the n of the paper) is a column of the first table. Research, unaudited. Please review]
 #aiedit[
-#let expdata = json("tables/minimal.json")
-#let num(key) = if key in expdata.numbers { eval(expdata.numbers.at(key), mode: "markup") } else { highlight[pending] }
-#let exprows(name) = {
-  let rows = expdata.tables.at(name, default: ())
-  if rows.len() == 0 { (table.cell(colspan: 2, highlight[pending]),) } else {
-    rows.map(r => r.map(c => eval(c, mode: "markup"))).flatten()
-  }
-}
-#let exptable(columns, header, name, size: 7.5pt) = text(size: size, table(
-  columns: columns, stroke: none, align: center + horizon, inset: (x: 3.5pt, top: 0.7pt, bottom: 1.5pt),
-  table.hline(stroke: 0.6pt), ..header, table.hline(stroke: 0.4pt), ..exprows(name), table.hline(stroke: 0.6pt),
-))
-
 We instantiate @c:BEEP_codeswitch with Reed-Solomon codes over $"GF"(2^128)$, and we compare the resulting PCS, "BEEP-Ligerito", with Ligerito @ligerito. Our code (research code, not audited), the raw outputs and the scripts that write every number below are in our repository #albert[ref to repo].
 
 #paragraph[BEEP-Ligerito.] We start from the implementation of Ligerito in Flock @flock. A message of $k dot codedim$ elements from $"GF"(2^128)$ is arranged in $k$ rows, each encoded with a Reed-Solomon code $cal(C)$ of rate $rho = 1\/2$. The rows are folded with $log k$ executions of @c:BEEP, and the folded message is committed with a code of smaller rate and queried, as in @c:BEEP_codeswitch, until the message is short. As zero evader we take $numsamples$ independent samples of the multilinear evader, with error $epsilon_"evader" = (log_2 e \/ |FF|)^numsamples$ on messages with $e$ entries. We take $delta = 1 - sqrt(rho) - eta$ for a small "slack" $eta > 0$, so that $cal(C)$ and its interleavings are $(delta, L)$-list decodable with $L = floor(1 \/ (2 dot eta dot sqrt(rho)))$ (see @ex:interleaved_list).
