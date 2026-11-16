@@ -1,0 +1,9 @@
+name	status	start	end	power	power_after	load_before	cell
+fast25.split	ok	16:35:14	16:35:20	AC Power	AC Power	2.12 2.32 2.52	 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split
+fast25.affine	ok	16:36:05	16:36:11	AC Power	AC Power	3.12 2.57 2.60	 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.beep02	ok	16:36:57	16:37:06	AC Power	AC Power	3.15 2.75 2.67	 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02 variants=beep,control
+fast25.beep001	ok	16:37:51	16:38:00	AC Power	AC Power	2.59 2.68 2.64	 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control
+fast25.split-nopow	ok	16:38:45	16:38:51	AC Power	AC Power	2.73 2.74 2.67	FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split
+fast25.affine-nopow	ok	16:39:36	16:39:41	AC Power	AC Power	3.62 3.04 2.79	FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.beep02-nopow	ok	16:40:26	16:40:33	AC Power	AC Power	2.50 2.82 2.72	FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02 variants=beep,control
+fast25.beep001-nopow	ok	16:41:18	16:41:24	AC Power	AC Power	3.06 2.95 2.77	FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control

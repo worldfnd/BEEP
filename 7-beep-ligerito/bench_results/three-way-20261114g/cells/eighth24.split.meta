@@ -1,0 +1,14 @@
+name: eighth24.split
+attempt: 1
+env: 
+args: log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 variants=split reps=9
+start: 2026-11-14 03:28:23
+power_before: AC Power
+load_before: 2.54 2.42 2.25
+swap_before: total = 5120.00M used = 3808.12M free = 1311.88M (encrypted)
+top_before: CPU usage: 3.22% user, 9.13% sys, 87.63% idle  PhysMem: 14G used (3060M wired, 598M compressor), 9071M unused. 
+end: 2026-11-14 03:28:30
+exit: 0
+power_after: AC Power
+load_after: 3.38 2.59 2.31
+swap_after: total = 5120.00M used = 3808.12M free = 1311.88M (encrypted)

@@ -1,0 +1,14 @@
+name: eighth24.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 variants=split reps=9
+start: 2026-11-14 00:19:58
+power_before: AC Power
+load_before: 1.55 1.93 2.09
+swap_before: total = 3072.00M used = 2209.75M free = 862.25M (encrypted)
+top_before: CPU usage: 2.5% user, 9.23% sys, 88.71% idle  PhysMem: 17G used (3217M wired, 1701M compressor), 6101M unused. 
+end: 2026-11-14 00:20:04
+exit: 0
+power_after: AC Power
+load_after: 2.31 2.08 2.14
+swap_after: total = 3072.00M used = 2209.75M free = 862.25M (encrypted)

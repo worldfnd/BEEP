@@ -1,0 +1,7243 @@
+{
+ "binaries": [
+  "ligerito_three_way 260159033caa44cc /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987",
+  "d71a52552958447a2ac371f84177cfac574116841a28727b4cb6497ac29f73d0  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/src/pcs/ligerito/beep.rs",
+  "eed9d53144f4fe240026d430979d3f5531bdb29cb4188822e077aa1ae29072e6  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/benches/ligerito_three_way.rs",
+  "54881f1da1ca3e004c7e2d86ca0cb513e39ee8e1148f3dc11eb060b09121e6af  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/scripts/cells.txt"
+ ],
+ "cells": {
+  "fast20": {
+   "context": {
+    "commit_ms": 6.213833,
+    "commit_ms_reps": [
+     7.821875,
+     6.213833,
+     5.166791,
+     5.2215,
+     5.431584,
+     6.839625,
+     5.360709,
+     7.125125000000001,
+     6.59325
+    ],
+    "initial_k": 6,
+    "log_n": 20,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 209060.3122153126,
+    "pow_hashes_per_ms_sequential": 38092.58803231638,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     6
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=20 profile=fast rates=1,3,6 fold=4,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:13:59",
+    "env": "",
+    "exit": "0",
+    "load_after": "2.35 2.66 3.00",
+    "load_before": "2.35 2.66 3.00",
+    "name": "fast20",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:13:57",
+    "swap_after": "total = 15360.00M used = 14295.81M free = 1064.19M (encrypted)",
+    "swap_before": "total = 15360.00M used = 14295.81M free = 1064.19M (encrypted)",
+    "top_before": "CPU usage: 9.7% user, 17.59% sys, 73.33% idle  PhysMem: 23G used (4642M wired, 8975M compressor), 146M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 26416230453,
+    "effective_ghz": 3.2937943208229425,
+    "instructions": 64991221448,
+    "max_rss_bytes": 813580288,
+    "peak_footprint_bytes": 812188752,
+    "real_s": 1.34,
+    "swaps": 0,
+    "sys_s": 2.42,
+    "user_s": 5.6
+   }
+  },
+  "fast20-nopow": {
+   "context": {
+    "commit_ms": 4.848334,
+    "commit_ms_reps": [
+     6.756958,
+     4.946542,
+     4.98175,
+     4.848334,
+     4.693583,
+     4.777125,
+     5.058708,
+     4.70825,
+     4.836375
+    ],
+    "initial_k": 6,
+    "log_n": 20,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     6
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=20 profile=fast rates=1,3,6 fold=4,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:18:46",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "1.63 2.64 2.96",
+    "load_before": "1.63 2.64 2.96",
+    "name": "fast20-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:18:45",
+    "swap_after": "total = 4096.00M used = 3325.81M free = 770.19M (encrypted)",
+    "swap_before": "total = 4096.00M used = 3325.81M free = 770.19M (encrypted)",
+    "top_before": "CPU usage: 2.85% user, 8.57% sys, 88.57% idle  PhysMem: 13G used (2913M wired, 1202M compressor), 10G unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 13397168795,
+    "effective_ghz": 3.36612281281407,
+    "instructions": 35868196456,
+    "max_rss_bytes": 812204032,
+    "peak_footprint_bytes": 810812496,
+    "real_s": 0.53,
+    "swaps": 0,
+    "sys_s": 1.35,
+    "user_s": 2.63
+   }
+  },
+  "fast22": {
+   "context": {
+    "commit_ms": 22.38,
+    "commit_ms_reps": [
+     30.888208,
+     21.678292,
+     22.753625,
+     23.659209,
+     21.889083,
+     22.38,
+     22.126584,
+     21.963666,
+     25.457875
+    ],
+    "initial_k": 5,
+    "log_n": 22,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 219004.39753928865,
+    "pow_hashes_per_ms_sequential": 37804.97781448303,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:14:48",
+    "env": "",
+    "exit": "0",
+    "load_after": "4.33 3.08 3.13",
+    "load_before": "3.66 2.93 3.08",
+    "name": "fast22",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:14:44",
+    "swap_after": "total = 12288.00M used = 7523.69M free = 4764.31M (encrypted)",
+    "swap_before": "total = 13312.00M used = 11873.31M free = 1438.69M (encrypted)",
+    "top_before": "CPU usage: 6.33% user, 12.16% sys, 81.49% idle  PhysMem: 22G used (3272M wired, 6893M compressor), 973M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 64418305067,
+    "effective_ghz": 3.3377360138341965,
+    "instructions": 188983857671,
+    "max_rss_bytes": 2615394304,
+    "peak_footprint_bytes": 2614921592,
+    "real_s": 3.28,
+    "swaps": 0,
+    "sys_s": 4.12,
+    "user_s": 15.18
+   }
+  },
+  "fast22-nopow": {
+   "context": {
+    "commit_ms": 21.840458,
+    "commit_ms_reps": [
+     28.390458,
+     21.751666999999998,
+     21.780875,
+     21.721833999999998,
+     21.840458,
+     23.75075,
+     22.122833,
+     22.048667000000002,
+     21.75
+    ],
+    "initial_k": 5,
+    "log_n": 22,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:19:33",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "2.23 2.58 2.92",
+    "load_before": "1.39 2.42 2.87",
+    "name": "fast22-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:19:31",
+    "swap_after": "total = 4096.00M used = 3301.81M free = 794.19M (encrypted)",
+    "swap_before": "total = 4096.00M used = 3309.81M free = 786.19M (encrypted)",
+    "top_before": "CPU usage: 2.29% user, 9.77% sys, 87.93% idle  PhysMem: 13G used (2893M wired, 1187M compressor), 10G unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 45687767395,
+    "effective_ghz": 3.3035262035430226,
+    "instructions": 143436175951,
+    "max_rss_bytes": 2613870592,
+    "peak_footprint_bytes": 2613397880,
+    "real_s": 1.86,
+    "swaps": 0,
+    "sys_s": 2.69,
+    "user_s": 11.14
+   }
+  },
+  "fast24": {
+   "context": {
+    "commit_ms": 95.51491700000001,
+    "commit_ms_reps": [
+     102.119084,
+     91.129583,
+     95.51491700000001,
+     96.25666700000001,
+     93.057375,
+     91.7735,
+     94.569,
+     96.9215,
+     122.878292
+    ],
+    "initial_k": 6,
+    "log_n": 24,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 225299.78371025433,
+    "pow_hashes_per_ms_sequential": 40398.11309267675,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:15:42",
+    "env": "",
+    "exit": "0",
+    "load_after": "4.99 3.47 3.28",
+    "load_before": "3.82 3.20 3.18",
+    "name": "fast24",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:15:33",
+    "swap_after": "total = 5120.00M used = 4369.44M free = 750.56M (encrypted)",
+    "swap_before": "total = 6144.00M used = 4419.19M free = 1724.81M (encrypted)",
+    "top_before": "CPU usage: 3.34% user, 9.62% sys, 87.2% idle  PhysMem: 18G used (3254M wired, 3221M compressor), 5810M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 184259434943,
+    "effective_ghz": 3.335012397158371,
+    "instructions": 578025669038,
+    "max_rss_bytes": 7271743488,
+    "peak_footprint_bytes": 7969019976,
+    "real_s": 8.55,
+    "swaps": 0,
+    "sys_s": 8.52,
+    "user_s": 46.73
+   }
+  },
+  "fast24-nopow": {
+   "context": {
+    "commit_ms": 96.505667,
+    "commit_ms_reps": [
+     107.667625,
+     96.49258300000001,
+     96.505667,
+     95.052083,
+     95.300042,
+     97.308375,
+     105.191,
+     96.777458,
+     95.975167
+    ],
+    "initial_k": 6,
+    "log_n": 24,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:20:24",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "2.45 2.53 2.88",
+    "load_before": "1.70 2.39 2.83",
+    "name": "fast24-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:20:18",
+    "swap_after": "total = 4096.00M used = 3285.81M free = 810.19M (encrypted)",
+    "swap_before": "total = 4096.00M used = 3285.81M free = 810.19M (encrypted)",
+    "top_before": "CPU usage: 3.95% user, 10.73% sys, 85.31% idle  PhysMem: 14G used (3041M wired, 1168M compressor), 9251M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 147209776976,
+    "effective_ghz": 3.3118060062092236,
+    "instructions": 502126440011,
+    "max_rss_bytes": 7965294592,
+    "peak_footprint_bytes": 7967414344,
+    "real_s": 5.75,
+    "swaps": 0,
+    "sys_s": 4.59,
+    "user_s": 39.86
+   }
+  },
+  "fast25": {
+   "context": {
+    "commit_ms": 182.520958,
+    "commit_ms_reps": [
+     196.555917,
+     180.60725,
+     183.05645900000002,
+     186.343333,
+     179.097083,
+     180.620959,
+     182.520958,
+     183.106041,
+     180.315709
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 243868.39742786562,
+    "pow_hashes_per_ms_sequential": 41264.47927752127,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:17:11",
+    "env": "",
+    "exit": "0",
+    "load_after": "2.47 3.04 3.13",
+    "load_before": "3.47 3.27 3.21",
+    "name": "fast25",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:16:27",
+    "swap_after": "total = 7168.00M used = 5979.94M free = 1188.06M (encrypted)",
+    "swap_before": "total = 5120.00M used = 4153.44M free = 966.56M (encrypted)",
+    "top_before": "CPU usage: 4.11% user, 11.52% sys, 84.36% idle  PhysMem: 16G used (3289M wired, 2985M compressor), 7609M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 471657724274,
+    "effective_ghz": 3.425504570222965,
+    "instructions": 1221559437651,
+    "max_rss_bytes": 10755145728,
+    "peak_footprint_bytes": 15565516248,
+    "real_s": 43.74,
+    "swaps": 0,
+    "sys_s": 47.84,
+    "user_s": 89.85
+   }
+  },
+  "fast25-nopow": {
+   "context": {
+    "commit_ms": 190.264792,
+    "commit_ms_reps": [
+     205.409666,
+     191.65558399999998,
+     190.173334,
+     189.261916,
+     193.402083,
+     189.957166,
+     190.264792,
+     191.072667,
+     189.57012500000002
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:21:31",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "3.88 2.79 2.94",
+    "load_before": "2.34 2.46 2.83",
+    "name": "fast25-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:21:09",
+    "swap_after": "total = 5120.00M used = 4012.94M free = 1107.06M (encrypted)",
+    "swap_before": "total = 4096.00M used = 3069.81M free = 1026.19M (encrypted)",
+    "top_before": "CPU usage: 6.11% user, 12.77% sys, 81.11% idle  PhysMem: 15G used (3275M wired, 1091M compressor), 8790M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 341629354525,
+    "effective_ghz": 3.3694580779662684,
+    "instructions": 1037150635950,
+    "max_rss_bytes": 11680677888,
+    "peak_footprint_bytes": 15834869328,
+    "real_s": 22.04,
+    "swaps": 0,
+    "sys_s": 22.35,
+    "user_s": 79.04
+   }
+  },
+  "slim22": {
+   "context": {
+    "commit_ms": 44.232708,
+    "commit_ms_reps": [
+     50.631917,
+     46.568333,
+     43.8135,
+     43.333999999999996,
+     44.232708,
+     44.479459,
+     43.740500000000004,
+     44.0955,
+     45.748416999999996
+    ],
+    "initial_k": 5,
+    "log_n": 22,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 232674.41100312152,
+    "pow_hashes_per_ms_sequential": 40169.72077455205,
+    "profile": "slim",
+    "rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:18:00",
+    "env": "",
+    "exit": "0",
+    "load_after": "2.27 2.90 3.07",
+    "load_before": "1.95 2.85 3.05",
+    "name": "slim22",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:17:56",
+    "swap_after": "total = 5120.00M used = 3425.94M free = 1694.06M (encrypted)",
+    "swap_before": "total = 5120.00M used = 3425.94M free = 1694.06M (encrypted)",
+    "top_before": "CPU usage: 4.21% user, 9.3% sys, 86.74% idle  PhysMem: 13G used (2913M wired, 1403M compressor), 10G unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 89119722002,
+    "effective_ghz": 3.308081737268003,
+    "instructions": 267196140431,
+    "max_rss_bytes": 2898870272,
+    "peak_footprint_bytes": 2898528824,
+    "real_s": 3.3,
+    "swaps": 0,
+    "sys_s": 3.6,
+    "user_s": 23.34
+   }
+  },
+  "slim22-nopow": {
+   "context": {
+    "commit_ms": 45.976459,
+    "commit_ms_reps": [
+     53.333583,
+     45.343292,
+     46.487666,
+     46.18025,
+     45.737375,
+     45.447874999999996,
+     46.154292,
+     45.727667,
+     45.976459
+    ],
+    "initial_k": 5,
+    "log_n": 22,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "slim",
+    "rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:22:19",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "2.88 2.66 2.88",
+    "load_before": "2.43 2.57 2.85",
+    "name": "slim22-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:22:16",
+    "swap_after": "total = 5120.00M used = 3812.88M free = 1307.12M (encrypted)",
+    "swap_before": "total = 5120.00M used = 3812.88M free = 1307.12M (encrypted)",
+    "top_before": "CPU usage: 3.40% user, 11.36% sys, 85.22% idle  PhysMem: 11G used (3250M wired, 1220M compressor), 12G unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 61138311386,
+    "effective_ghz": 3.319126568186754,
+    "instructions": 195016669638,
+    "max_rss_bytes": 2897002496,
+    "peak_footprint_bytes": 2896661048,
+    "real_s": 2.3,
+    "swaps": 0,
+    "sys_s": 2.64,
+    "user_s": 15.78
+   }
+  }
+ },
+ "folder": "bench_results/three-way-20261113",
+ "machine": {
+  "cells": "/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/scripts/cells.txt",
+  "cooldown": "45 s, reps: 9",
+  "date": "2026-11-13 16:00:48 CET",
+  "flock": "succinctlabs/flock 14b78c09b182fdbf0c88fbbf999adbc0ea394fe0 (branch affine-fold-f128) + the local changes of VENDORED.md",
+  "hw.memsize": "25769803776",
+  "hw.ncpu": "10",
+  "hw.perflevel0.physicalcpu": "4",
+  "hw.perflevel1.physicalcpu": "6",
+  "label": "20261113",
+  "load": "1.91 3.22 3.66",
+  "machdep.cpu.brand_string": "Apple M5",
+  "os": "27.0.1 arm64",
+  "power": "Battery Power",
+  "repository": "9a496b5b49e5f736b24e0024ab30c3431cafc4c5 2 changed or untracked paths",
+  "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+  "swap": "total = 17408.00M used = 16327.69M free = 1080.31M (encrypted)",
+  "top": "CPU usage: 8.80% user, 11.79% sys, 79.40% idle  PhysMem: 23G used (3917M wired, 3229M compressor), 148M unused."
+ },
+ "rows": [
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 9216,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 109440,
+    "nonces": 152,
+    "opened_rows": 315904,
+    "round_messages": 1792
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     6,
+     7,
+     7
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     9,
+     10
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     119,
+     79,
+     60
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     11,
+     8,
+     5
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 264704.0,
+   "pow_expected_ms": 1.3211203380436198,
+   "pow_hashes_mean": 234152.11111111112,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 2.526195795613221,
+   "pow_rate_only_ms": 1.3211203380436198,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    6,
+    6,
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 437640.0,
+   "prove_expected_ms": 9.99820333804362,
+   "prove_ms": 11.824125,
+   "prove_ms_reps": [
+    15.369499999999999,
+    11.881709,
+    12.975667,
+    14.854625,
+    11.824125,
+    11.188875,
+    9.858792,
+    11.599208999999998,
+    10.923084
+   ],
+   "prove_nopow_ms": 8.677083,
+   "prove_nopow_ms_reps": [
+    8.677083,
+    8.775792,
+    8.69425,
+    8.787958999999999,
+    8.960291999999999,
+    7.822666000000001,
+    8.054833,
+    7.944667000000001,
+    8.297917
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 1.32975
+  },
+  {
+   "breakdown": {
+    "binding_answers": 80,
+    "caps": 7168,
+    "final_message": 1248,
+    "fold_answers": 0,
+    "merkle_paths": 89344,
+    "nonces": 208,
+    "opened_rows": 280576,
+    "round_messages": 1120
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     10,
+     6
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 199200.0,
+   "pow_expected_ms": 1.0084814807297198,
+   "pow_hashes_mean": 209619.33333333334,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 1.2741923584873458,
+   "pow_rate_only_ms": 1.0084814807297198,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    9,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 379744.0,
+   "prove_expected_ms": 7.2920234807297195,
+   "prove_ms": 8.350625,
+   "prove_ms_reps": [
+    10.14925,
+    8.350625,
+    8.17725,
+    9.09375,
+    8.188834,
+    9.321708,
+    8.120166999999999,
+    8.856167,
+    8.195915999999999
+   ],
+   "prove_nopow_ms": 6.283542,
+   "prove_nopow_ms_reps": [
+    6.171125,
+    6.297167,
+    6.005084,
+    6.283542,
+    6.478292,
+    6.176292,
+    6.335625,
+    6.441666000000001,
+    6.2325
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 0.886292
+  },
+  {
+   "breakdown": {
+    "binding_answers": 80,
+    "caps": 7168,
+    "final_message": 1024,
+    "fold_answers": 1792,
+    "merkle_paths": 89344,
+    "nonces": 208,
+    "opened_rows": 280576,
+    "round_messages": 448
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     11
+    ],
+    "fold_grinding_bits": [
+     14,
+     13,
+     13
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 23826,
+      "claim_batch_bits": 122.81590465461862,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.85614381022528,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 114.84565653975655,
+      "fold_grinding_bits": 14,
+      "folds": 6,
+      "line_bound": 8943,
+      "list_size": 35,
+      "log_inv_rate": 1,
+      "log_msg_cols": 14,
+      "max_variables": 19,
+      "ood_bits": 237.63547202339973,
+      "ood_samples": 1,
+      "queries": 244,
+      "query_bits": 112.1816460319758,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00406845375636,
+      "samples": 4,
+      "threshold": 9012
+     },
+     {
+      "agreement": 3061,
+      "claim_batch_bits": 121.83588394487712,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 119.04878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 115.53061255903566,
+      "fold_grinding_bits": 13,
+      "folds": 4,
+      "line_bound": 5132,
+      "list_size": 70,
+      "log_inv_rate": 3,
+      "log_msg_cols": 10,
+      "max_variables": 13,
+      "ood_bits": 237.09757777633536,
+      "ood_samples": 2,
+      "queries": 79,
+      "query_bits": 112.2284774109194,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00197052761746,
+      "samples": 4,
+      "threshold": 5461
+     },
+     {
+      "agreement": 594,
+      "claim_batch_bits": 120.34894830882106,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 117.77118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 115.46302433438936,
+      "fold_grinding_bits": 13,
+      "folds": 4,
+      "line_bound": 3503,
+      "list_size": 200,
+      "log_inv_rate": 6,
+      "log_msg_cols": 6,
+      "max_variables": 9,
+      "ood_bits": 235.06843143067582,
+      "ood_samples": 2,
+      "queries": 41,
+      "query_bits": 114.22088298053325,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.0008200383088,
+      "samples": 4,
+      "threshold": 5343
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     6
+    ],
+    "min_bits": 128.0008200383088,
+    "ood_samples": [
+     1,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     10,
+     6
+    ],
+    "samples": [
+     4,
+     4,
+     4
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 362688.0,
+   "pow_expected_ms": 1.7829381272918734,
+   "pow_hashes_mean": 341910.3333333333,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 2.038569023263987,
+   "pow_rate_only_ms": 1.7829381272918734,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    6,
+    16,
+    9,
+    7,
+    13,
+    13,
+    13,
+    13,
+    7,
+    7,
+    16,
+    9,
+    8,
+    13,
+    13,
+    13,
+    13,
+    8,
+    8,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 380640.0,
+   "prove_expected_ms": 9.530272127291873,
+   "prove_ms": 11.415792,
+   "prove_ms_reps": [
+    12.036292000000001,
+    11.752916,
+    11.0685,
+    10.827333999999999,
+    11.339625000000002,
+    11.966792,
+    11.415792,
+    10.46275,
+    12.451333
+   ],
+   "prove_nopow_ms": 7.7473339999999995,
+   "prove_nopow_ms_reps": [
+    8.232833,
+    7.673959,
+    7.7473339999999995,
+    7.660042,
+    8.034082999999999,
+    7.7122090000000005,
+    8.073167,
+    7.733458000000001,
+    7.857167
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 1.3171249999999999,
+    "fold_answers": 1.867666,
+    "fold_grinding": 1.73875,
+    "folds": 2.837205,
+    "induce": 1.286499,
+    "ood": 0.990835,
+    "opens": 0.08220799999999999,
+    "other_grinding": 1.116833,
+    "total": 11.413708
+   },
+   "timings_nopow_ms": {
+    "commits": 1.239125,
+    "fold_answers": 1.8275819999999998,
+    "fold_grinding": 0.008499,
+    "folds": 2.5790029999999997,
+    "induce": 1.176501,
+    "ood": 0.845666,
+    "opens": 0.068334,
+    "other_grinding": 0.013001,
+    "total": 7.745666
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 0.8017500000000001
+  },
+  {
+   "breakdown": {
+    "binding_answers": 80,
+    "caps": 7168,
+    "final_message": 1024,
+    "fold_answers": 2240,
+    "merkle_paths": 82912,
+    "nonces": 208,
+    "opened_rows": 259328,
+    "round_messages": 448
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15
+    ],
+    "fold_grinding_bits": [
+     14,
+     14,
+     14
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 23204,
+      "claim_batch_bits": 118.53217687778101,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.53421571533791,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 114.48738297634446,
+      "fold_grinding_bits": 14,
+      "folds": 6,
+      "line_bound": 9565,
+      "list_size": 707,
+      "log_inv_rate": 1,
+      "log_msg_cols": 14,
+      "max_variables": 19,
+      "ood_bits": 228.991615833625,
+      "ood_samples": 1,
+      "queries": 225,
+      "query_bits": 112.04126154969802,
+      "query_grinding_bits": 16,
+      "sample_bits": 232.81091254757368,
+      "samples": 5,
+      "threshold": 9566
+     },
+     {
+      "agreement": 2905,
+      "claim_batch_bits": 117.53319593639515,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.72686079328031,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 114.78158812456535,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 5288,
+      "list_size": 1414,
+      "log_inv_rate": 3,
+      "log_msg_cols": 10,
+      "max_variables": 13,
+      "ood_bits": 228.45372158656062,
+      "ood_samples": 2,
+      "queries": 75,
+      "query_bits": 112.194390160149,
+      "query_grinding_bits": 16,
+      "sample_bits": 230.83838791641534,
+      "samples": 5,
+      "threshold": 5289
+     },
+     {
+      "agreement": 517,
+      "claim_batch_bits": 116.0338550866544,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.44925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 114.07249979085435,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 3580,
+      "list_size": 4000,
+      "log_inv_rate": 6,
+      "log_msg_cols": 6,
+      "max_variables": 9,
+      "ood_bits": 226.42457524090108,
+      "ood_samples": 2,
+      "queries": 38,
+      "query_bits": 113.56316572416249,
+      "query_grinding_bits": 16,
+      "sample_bits": 227.86491281427433,
+      "samples": 5,
+      "threshold": 3581
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     6
+    ],
+    "min_bits": 128.0338550866544,
+    "ood_samples": [
+     1,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     38
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     10,
+     6
+    ],
+    "samples": [
+     5,
+     5,
+     5
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 470016.0,
+   "pow_expected_ms": 2.6659230760691743,
+   "pow_hashes_mean": 453957.6666666667,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 3.073852945212158,
+   "pow_rate_only_ms": 2.6659230760691743,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    10,
+    16,
+    13,
+    11,
+    14,
+    14,
+    14,
+    14,
+    11,
+    11,
+    16,
+    14,
+    12,
+    14,
+    14,
+    14,
+    14,
+    12,
+    12,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 353408.0,
+   "prove_expected_ms": 11.011465076069175,
+   "prove_ms": 13.792333000000001,
+   "prove_ms_reps": [
+    14.454875000000001,
+    15.319917,
+    13.792333000000001,
+    13.205458,
+    13.734333,
+    13.669459,
+    13.4615,
+    13.79875,
+    14.9595
+   ],
+   "prove_nopow_ms": 8.345542,
+   "prove_nopow_ms_reps": [
+    8.263708999999999,
+    8.345542,
+    7.908708000000001,
+    8.224167,
+    8.440458,
+    8.424917,
+    8.469916,
+    8.163833,
+    8.964459
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 1.303083,
+    "fold_answers": 2.447624,
+    "fold_grinding": 2.0545020000000003,
+    "folds": 3.2663349999999998,
+    "induce": 1.268293,
+    "ood": 1.183918,
+    "opens": 0.07550000000000001,
+    "other_grinding": 2.121582,
+    "total": 13.790291
+   },
+   "timings_nopow_ms": {
+    "commits": 1.226708,
+    "fold_answers": 2.195875,
+    "fold_grinding": 0.008751,
+    "folds": 2.743083,
+    "induce": 1.119043,
+    "ood": 0.866708,
+    "opens": 0.065042,
+    "other_grinding": 0.012124,
+    "total": 8.344292
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 0.783583
+  },
+  {
+   "breakdown": {
+    "binding_answers": 80,
+    "caps": 7168,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 89344,
+    "nonces": 208,
+    "opened_rows": 280576,
+    "round_messages": 448
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     11
+    ],
+    "fold_grinding_bits": [
+     14,
+     13,
+     13
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     10,
+     6
+    ],
+    "samples": [
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 362688.0,
+   "pow_expected_ms": 1.7829381272918734,
+   "pow_hashes_mean": 363682.55555555556,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 2.2627022702636737,
+   "pow_rate_only_ms": 1.7829381272918734,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    6,
+    16,
+    9,
+    7,
+    13,
+    13,
+    13,
+    13,
+    7,
+    7,
+    16,
+    9,
+    8,
+    13,
+    13,
+    13,
+    13,
+    8,
+    8,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 378848.0,
+   "prove_expected_ms": 6.916521127291873,
+   "prove_ms": 8.632375,
+   "prove_ms_reps": [
+    11.143583,
+    12.112917000000001,
+    8.52825,
+    7.562709,
+    8.618167,
+    8.642584,
+    8.372958,
+    8.632375,
+    9.568666
+   ],
+   "prove_nopow_ms": 5.133583,
+   "prove_nopow_ms_reps": [
+    5.116833000000001,
+    5.372333,
+    5.080209,
+    5.133583,
+    5.1097920000000006,
+    5.200333,
+    5.029959,
+    5.1657910000000005,
+    5.608041
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 1.2883339999999999,
+    "fold_answers": 0.003123,
+    "fold_grinding": 1.658124,
+    "folds": 2.12804,
+    "induce": 1.31775,
+    "ood": 0.959502,
+    "opens": 0.079499,
+    "other_grinding": 1.433793,
+    "total": 8.6305
+   },
+   "timings_nopow_ms": {
+    "commits": 1.248959,
+    "fold_answers": 0.0027930000000000003,
+    "fold_grinding": 0.008211,
+    "folds": 1.7175829999999999,
+    "induce": 1.2482909999999998,
+    "ood": 0.880625,
+    "opens": 0.069084,
+    "other_grinding": 0.013461,
+    "total": 5.132375
+   },
+   "variant": "control-0.02",
+   "verify_ms": 0.803666
+  },
+  {
+   "breakdown": {
+    "binding_answers": 80,
+    "caps": 7168,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 82912,
+    "nonces": 208,
+    "opened_rows": 259328,
+    "round_messages": 448
+   },
+   "breakdown_levels": null,
+   "cell": "fast20",
+   "commit_ms": 6.213833,
+   "commit_ms_both": [
+    6.213833,
+    4.848334
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15
+    ],
+    "fold_grinding_bits": [
+     14,
+     14,
+     14
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     38
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     10,
+     6
+    ],
+    "samples": [
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 20,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.63 2.64 2.96",
+     "max_rss_bytes": 812204032,
+     "peak_footprint_bytes": 810812496,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "2.35 2.66 3.00",
+     "max_rss_bytes": 813580288,
+     "peak_footprint_bytes": 812188752,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 470016.0,
+   "pow_expected_ms": 2.6659230760691743,
+   "pow_hashes_mean": 449549.1111111111,
+   "pow_hashes_per_ms_parallel": 209060.3122153126,
+   "pow_hashes_per_ms_sequential": 38092.58803231638,
+   "pow_model_residual_ms": 2.5910951170184964,
+   "pow_rate_only_ms": 2.6659230760691743,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    10,
+    16,
+    13,
+    11,
+    14,
+    14,
+    14,
+    14,
+    11,
+    11,
+    16,
+    14,
+    12,
+    14,
+    14,
+    14,
+    14,
+    12,
+    12,
+    16
+   ],
+   "process": "fast20",
+   "profile": "fast",
+   "proof_bytes": 351168.0,
+   "prove_expected_ms": 7.7169230760691745,
+   "prove_ms": 10.031082999999999,
+   "prove_ms_reps": [
+    11.348458,
+    12.998083000000001,
+    10.26625,
+    9.547167,
+    10.255,
+    9.898875,
+    9.863625,
+    10.031082999999999,
+    9.431792
+   ],
+   "prove_nopow_ms": 5.051,
+   "prove_nopow_ms_reps": [
+    5.274084,
+    4.9572080000000005,
+    5.097917000000001,
+    5.051,
+    4.988709,
+    5.124792,
+    5.332291000000001,
+    4.96925,
+    4.8234580000000005
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 1.3010000000000002,
+    "fold_answers": 0.0026680000000000002,
+    "fold_grinding": 1.9689579999999998,
+    "folds": 2.105665,
+    "induce": 1.309375,
+    "ood": 1.1119590000000001,
+    "opens": 0.075125,
+    "other_grinding": 2.093292,
+    "total": 10.028917
+   },
+   "timings_nopow_ms": {
+    "commits": 1.22325,
+    "fold_answers": 0.0024590000000000002,
+    "fold_grinding": 0.008041,
+    "folds": 1.7059149999999998,
+    "induce": 1.155624,
+    "ood": 0.882502,
+    "opens": 0.063,
+    "other_grinding": 0.013335,
+    "total": 5.049583
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.716834
+  },
+  {
+   "breakdown": {
+    "binding_answers": 144,
+    "caps": 10240,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 165312,
+    "nonces": 192,
+    "opened_rows": 203264,
+    "round_messages": 2176
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     6,
+     7,
+     7,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     9,
+     10,
+     10
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     119,
+     79,
+     60,
+     48
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     11,
+     8,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 332032.0,
+   "pow_expected_ms": 1.6113427789843993,
+   "pow_hashes_mean": 236540.55555555556,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 3.7055858123170644,
+   "pow_rate_only_ms": 1.6113427789843993,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    6,
+    6,
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 382352.0,
+   "prove_expected_ms": 28.7758847789844,
+   "prove_ms": 32.201834,
+   "prove_ms_reps": [
+    101.80875,
+    45.559041,
+    34.483708,
+    31.267125,
+    37.653625000000005,
+    32.201834,
+    31.565958999999996,
+    31.048583,
+    31.926499999999997
+   ],
+   "prove_nopow_ms": 27.164542,
+   "prove_nopow_ms_reps": [
+    27.164542,
+    27.421083999999997,
+    26.883791000000002,
+    23.673084,
+    24.463167000000002,
+    28.414417,
+    26.386041,
+    39.699375,
+    28.27325
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 1.378167
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 784,
+    "fold_answers": 0,
+    "merkle_paths": 133056,
+    "nonces": 272,
+    "opened_rows": 166656,
+    "round_messages": 1360
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5,
+     6
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     36
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 267536.0,
+   "pow_expected_ms": 1.3396072511230126,
+   "pow_hashes_mean": 202953.44444444444,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 5.948874389367802,
+   "pow_rate_only_ms": 1.3396072511230126,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    9,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16,
+    10,
+    9,
+    6,
+    6,
+    6,
+    6,
+    9,
+    9,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 310432.0,
+   "prove_expected_ms": 20.92577325112301,
+   "prove_ms": 26.569083,
+   "prove_ms_reps": [
+    27.297874999999998,
+    32.545291,
+    22.88675,
+    30.016333,
+    33.762,
+    26.569083,
+    23.820083,
+    22.892916,
+    23.274208
+   ],
+   "prove_nopow_ms": 19.586166,
+   "prove_nopow_ms_reps": [
+    19.586166,
+    19.506041,
+    19.433875,
+    19.333375,
+    18.91525,
+    21.571042,
+    21.525041,
+    27.422833,
+    24.420917
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 0.9827499999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 512,
+    "fold_answers": 2176,
+    "merkle_paths": 132832,
+    "nonces": 272,
+    "opened_rows": 166400,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     17,
+     16,
+     14,
+     13
+    ],
+    "initial_k": 5,
+    "levels": [
+     {
+      "agreement": 190607,
+      "claim_batch_bits": 122.81590465461862,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.85614381022528,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 111.87142159603162,
+      "fold_grinding_bits": 17,
+      "folds": 5,
+      "line_bound": 71538,
+      "list_size": 35,
+      "log_inv_rate": 1,
+      "log_msg_cols": 17,
+      "max_variables": 21,
+      "ood_bits": 237.39487500668568,
+      "ood_samples": 1,
+      "queries": 244,
+      "query_bits": 112.1816460319758,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.29578608740314,
+      "samples": 4,
+      "threshold": 71540
+     },
+     {
+      "agreement": 24482,
+      "claim_batch_bits": 121.83588394487712,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 119.04878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 112.66687959912048,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 41055,
+      "list_size": 70,
+      "log_inv_rate": 3,
+      "log_msg_cols": 13,
+      "max_variables": 16,
+      "ood_bits": 236.53736193794987,
+      "ood_samples": 2,
+      "queries": 79,
+      "query_bits": 112.2284774109194,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.07099513968788,
+      "samples": 4,
+      "threshold": 41069
+     },
+     {
+      "agreement": 3224,
+      "claim_batch_bits": 120.8459783140087,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 118.27118130950412,
+      "consistency_batch_grinding_bits": 10,
+      "eta": 0.02,
+      "fold_bits": 114.2367876331856,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 13161,
+      "list_size": 141,
+      "log_inv_rate": 5,
+      "log_msg_cols": 9,
+      "max_variables": 12,
+      "ood_bits": 235.31140818416836,
+      "ood_samples": 2,
+      "queries": 48,
+      "query_bits": 112.57769883302473,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00059680782988,
+      "samples": 4,
+      "threshold": 13481
+     },
+     {
+      "agreement": 444,
+      "claim_batch_bits": 119.85105210863959,
+      "claim_batch_grinding_bits": 9,
+      "consistency_batch_bits": 117.27118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 115.23533570792665,
+      "fold_grinding_bits": 13,
+      "folds": 4,
+      "line_bound": 3653,
+      "list_size": 282,
+      "log_inv_rate": 7,
+      "log_msg_cols": 5,
+      "max_variables": 8,
+      "ood_bits": 234.37243761756594,
+      "ood_samples": 2,
+      "queries": 35,
+      "query_bits": 112.2001449666912,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00088222283085,
+      "samples": 4,
+      "threshold": 6113
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00059680782988,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     4,
+     4,
+     4,
+     4
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 1282752.0,
+   "pow_expected_ms": 5.962247494208972,
+   "pow_hashes_mean": 1376108.5555555555,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 7.097735815545551,
+   "pow_rate_only_ms": 5.962247494208972,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    17,
+    17,
+    17,
+    17,
+    17,
+    6,
+    16,
+    9,
+    7,
+    16,
+    16,
+    16,
+    16,
+    7,
+    7,
+    16,
+    9,
+    8,
+    14,
+    14,
+    14,
+    14,
+    8,
+    8,
+    16,
+    10,
+    9,
+    13,
+    13,
+    13,
+    13,
+    9,
+    9,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 311040.0,
+   "prove_expected_ms": 32.231122494208975,
+   "prove_ms": 40.511875,
+   "prove_ms_reps": [
+    46.144875,
+    48.073125000000005,
+    37.797083,
+    43.027916,
+    47.918958999999994,
+    37.338958,
+    36.572791,
+    40.511875,
+    37.190124999999995
+   ],
+   "prove_nopow_ms": 26.268875,
+   "prove_nopow_ms_reps": [
+    24.497792,
+    23.942959,
+    26.268875,
+    24.779666,
+    25.630167,
+    31.040084,
+    31.786624999999997,
+    32.890125,
+    36.984167
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 5.236833,
+    "fold_answers": 6.885790999999999,
+    "fold_grinding": 8.11521,
+    "folds": 10.595376,
+    "induce": 3.827042,
+    "ood": 3.497457,
+    "opens": 0.170208,
+    "other_grinding": 2.2884189999999998,
+    "total": 40.509791
+   },
+   "timings_nopow_ms": {
+    "commits": 5.062375,
+    "fold_answers": 6.261876,
+    "fold_grinding": 0.012209,
+    "folds": 8.833789,
+    "induce": 3.264876,
+    "ood": 3.0193350000000003,
+    "opens": 0.085001,
+    "other_grinding": 0.020084,
+    "total": 26.266292
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 0.799667
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 512,
+    "fold_answers": 2560,
+    "merkle_paths": 123552,
+    "nonces": 272,
+    "opened_rows": 154368,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     17,
+     16,
+     15,
+     15
+    ],
+    "initial_k": 5,
+    "levels": [
+     {
+      "agreement": 185626,
+      "claim_batch_bits": 118.53217687778101,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.53421571533791,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 111.57532520880581,
+      "fold_grinding_bits": 17,
+      "folds": 5,
+      "line_bound": 76519,
+      "list_size": 707,
+      "log_inv_rate": 1,
+      "log_msg_cols": 17,
+      "max_variables": 21,
+      "ood_bits": 228.75101881691094,
+      "ood_samples": 1,
+      "queries": 225,
+      "query_bits": 112.04126154969802,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.0001382765493,
+      "samples": 4,
+      "threshold": 85846
+     },
+     {
+      "agreement": 23237,
+      "claim_batch_bits": 117.53319593639515,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.72686079328031,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 112.49372341560259,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 42300,
+      "list_size": 1414,
+      "log_inv_rate": 3,
+      "log_msg_cols": 13,
+      "max_variables": 16,
+      "ood_bits": 227.89350574817513,
+      "ood_samples": 2,
+      "queries": 75,
+      "query_bits": 112.194390160149,
+      "query_grinding_bits": 16,
+      "sample_bits": 235.3400749772237,
+      "samples": 5,
+      "threshold": 42301
+     },
+     {
+      "agreement": 2913,
+      "claim_batch_bits": 116.53370573576181,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.94925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 113.57760666905752,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 13472,
+      "list_size": 2828,
+      "log_inv_rate": 5,
+      "log_msg_cols": 9,
+      "max_variables": 12,
+      "ood_bits": 226.66755199439362,
+      "ood_samples": 2,
+      "queries": 45,
+      "query_bits": 112.1337846388641,
+      "query_grinding_bits": 16,
+      "sample_bits": 231.11394821253307,
+      "samples": 5,
+      "threshold": 13473
+     },
+     {
+      "agreement": 367,
+      "claim_batch_bits": 115.53396070301572,
+      "claim_batch_grinding_bits": 13,
+      "consistency_batch_bits": 112.94925321461676,
+      "consistency_batch_grinding_bits": 16,
+      "eta": 0.001,
+      "fold_bits": 113.66272654982207,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 3730,
+      "list_size": 5656,
+      "log_inv_rate": 7,
+      "log_msg_cols": 5,
+      "max_variables": 8,
+      "ood_bits": 225.7285814277912,
+      "ood_samples": 2,
+      "queries": 33,
+      "query_bits": 114.96439055567949,
+      "query_grinding_bits": 16,
+      "sample_bits": 227.33360734553116,
+      "samples": 5,
+      "threshold": 3731
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.0001382765493,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     4,
+     5,
+     5,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 1543168.0,
+   "pow_expected_ms": 7.472090557426098,
+   "pow_hashes_mean": 1336854.0,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 6.983851816586153,
+   "pow_rate_only_ms": 7.472090557426098,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    17,
+    17,
+    17,
+    17,
+    17,
+    10,
+    16,
+    13,
+    11,
+    16,
+    16,
+    16,
+    16,
+    11,
+    11,
+    16,
+    14,
+    12,
+    15,
+    15,
+    15,
+    15,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 290112.0,
+   "prove_expected_ms": 33.9985485574261,
+   "prove_ms": 40.033583,
+   "prove_ms_reps": [
+    46.614999999999995,
+    40.144125,
+    39.159542,
+    40.033583,
+    52.579333,
+    38.611833,
+    38.871500000000005,
+    37.663791,
+    44.026666999999996
+   ],
+   "prove_nopow_ms": 26.526457999999998,
+   "prove_nopow_ms_reps": [
+    23.940541999999997,
+    24.497999999999998,
+    25.513375,
+    24.190083,
+    26.969,
+    30.634791,
+    29.984,
+    27.186458000000002,
+    26.526457999999998
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 5.152375,
+    "fold_answers": 7.040541,
+    "fold_grinding": 6.9067490000000005,
+    "folds": 10.367665,
+    "induce": 3.630084,
+    "ood": 3.955458,
+    "opens": 0.145876,
+    "other_grinding": 2.853665,
+    "total": 40.030875
+   },
+   "timings_nopow_ms": {
+    "commits": 4.4302079999999995,
+    "fold_answers": 6.3117090000000005,
+    "fold_grinding": 0.013666,
+    "folds": 8.7095,
+    "induce": 2.764999,
+    "ood": 3.06629,
+    "opens": 0.074958,
+    "other_grinding": 0.02029,
+    "total": 26.522833
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 0.7447079999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 132832,
+    "nonces": 272,
+    "opened_rows": 166400,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     17,
+     16,
+     14,
+     13
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 1282752.0,
+   "pow_expected_ms": 5.962247494208972,
+   "pow_hashes_mean": 1284162.6666666667,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 5.876845086464218,
+   "pow_rate_only_ms": 5.962247494208972,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    17,
+    17,
+    17,
+    17,
+    17,
+    6,
+    16,
+    9,
+    7,
+    16,
+    16,
+    16,
+    16,
+    7,
+    7,
+    16,
+    9,
+    8,
+    14,
+    14,
+    14,
+    14,
+    8,
+    8,
+    16,
+    10,
+    9,
+    13,
+    13,
+    13,
+    13,
+    9,
+    9,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 308864.0,
+   "prove_expected_ms": 21.89537249420897,
+   "prove_ms": 27.707208,
+   "prove_ms_reps": [
+    32.643542,
+    28.430833,
+    27.518166,
+    24.949666999999998,
+    27.707208,
+    27.896416,
+    31.531375,
+    25.007458,
+    26.547583
+   ],
+   "prove_nopow_ms": 15.933124999999999,
+   "prove_nopow_ms_reps": [
+    15.933124999999999,
+    15.877042000000001,
+    14.838584,
+    15.379375000000001,
+    18.387292,
+    19.864084000000002,
+    19.872791,
+    16.968291999999998,
+    15.446709
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 5.109541,
+    "fold_answers": 0.006042,
+    "fold_grinding": 6.486542,
+    "folds": 6.360082,
+    "induce": 3.732084,
+    "ood": 3.328876,
+    "opens": 0.146833,
+    "other_grinding": 1.794334,
+    "total": 27.704834
+   },
+   "timings_nopow_ms": {
+    "commits": 4.543667,
+    "fold_answers": 0.005917,
+    "fold_grinding": 0.013084,
+    "folds": 5.942000999999999,
+    "induce": 2.461834,
+    "ood": 3.178419,
+    "opens": 0.080418,
+    "other_grinding": 0.02025,
+    "total": 15.93125
+   },
+   "variant": "control-0.02",
+   "verify_ms": 0.7365419999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 123552,
+    "nonces": 272,
+    "opened_rows": 154368,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "fast22",
+   "commit_ms": 22.38,
+   "commit_ms_both": [
+    22.38,
+    21.840458
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     17,
+     16,
+     15,
+     15
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.39 2.42 2.87",
+     "max_rss_bytes": 2613870592,
+     "peak_footprint_bytes": 2613397880,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "3.66 2.93 3.08",
+     "max_rss_bytes": 2615394304,
+     "peak_footprint_bytes": 2614921592,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 1543168.0,
+   "pow_expected_ms": 7.472090557426098,
+   "pow_hashes_mean": 1407263.4444444445,
+   "pow_hashes_per_ms_parallel": 219004.39753928865,
+   "pow_hashes_per_ms_sequential": 37804.97781448303,
+   "pow_model_residual_ms": 7.559450122683568,
+   "pow_rate_only_ms": 7.472090557426098,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    17,
+    17,
+    17,
+    17,
+    17,
+    10,
+    16,
+    13,
+    11,
+    16,
+    16,
+    16,
+    16,
+    11,
+    11,
+    16,
+    14,
+    12,
+    15,
+    15,
+    15,
+    15,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast22",
+   "profile": "fast",
+   "proof_bytes": 287552.0,
+   "prove_expected_ms": 23.244673557426097,
+   "prove_ms": 29.952042000000002,
+   "prove_ms_reps": [
+    47.228209,
+    27.872999999999998,
+    34.688542000000005,
+    31.148167,
+    33.997666,
+    29.952042000000002,
+    27.830375,
+    26.456666,
+    26.220416
+   ],
+   "prove_nopow_ms": 15.772583,
+   "prove_nopow_ms_reps": [
+    15.517083,
+    15.772583,
+    15.258333,
+    15.172417000000001,
+    17.238291999999998,
+    18.730292,
+    20.627541,
+    16.686541,
+    15.688417
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 5.05825,
+    "fold_answers": 0.0055,
+    "fold_grinding": 7.373836,
+    "folds": 6.499336,
+    "induce": 3.6155839999999997,
+    "ood": 3.5279170000000004,
+    "opens": 0.141458,
+    "other_grinding": 3.066041,
+    "total": 29.950083999999997
+   },
+   "timings_nopow_ms": {
+    "commits": 4.460792,
+    "fold_answers": 0.005917,
+    "fold_grinding": 0.013417,
+    "folds": 5.936839999999999,
+    "induce": 2.4171679999999998,
+    "ood": 3.061085,
+    "opens": 0.07645800000000001,
+    "other_grinding": 0.02,
+    "total": 15.770665999999999
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.696833
+  },
+  {
+   "breakdown": {
+    "binding_answers": 176,
+    "caps": 11264,
+    "final_message": 256,
+    "fold_answers": 0,
+    "merkle_paths": 188160,
+    "nonces": 232,
+    "opened_rows": 338688,
+    "round_messages": 2688
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     6,
+     7,
+     7,
+     8,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     9,
+     10,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     119,
+     79,
+     60,
+     48,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     12,
+     9,
+     6,
+     3
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 399360.0,
+   "pow_expected_ms": 1.897387587242657,
+   "pow_hashes_mean": 325048.22222222225,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 2.787466995368689,
+   "pow_rate_only_ms": 1.897387587242657,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    6,
+    6,
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 541464.0,
+   "prove_expected_ms": 75.25134658724267,
+   "prove_ms": 77.170708,
+   "prove_ms_reps": [
+    107.563625,
+    217.850375,
+    81.791875,
+    73.51787499999999,
+    80.821625,
+    73.57279199999999,
+    77.170708,
+    73.314667,
+    75.448625
+   ],
+   "prove_nopow_ms": 73.353959,
+   "prove_nopow_ms_reps": [
+    85.31775,
+    87.691083,
+    73.097125,
+    72.68425,
+    72.403041,
+    76.756709,
+    73.832792,
+    73.353959,
+    72.867292
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 1.408667
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 1312,
+    "fold_answers": 0,
+    "merkle_paths": 146080,
+    "nonces": 280,
+    "opened_rows": 291584,
+    "round_messages": 1440
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5,
+     5
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     36
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     10,
+     6
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 267424.0,
+   "pow_expected_ms": 1.2942333577173428,
+   "pow_hashes_mean": 238819.11111111112,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 1.2823996071542396,
+   "pow_rate_only_ms": 1.2942333577173428,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    9,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16,
+    10,
+    9,
+    5,
+    5,
+    5,
+    5,
+    9,
+    9,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 449000.0,
+   "prove_expected_ms": 55.95940035771735,
+   "prove_ms": 57.321708,
+   "prove_ms_reps": [
+    64.447709,
+    147.583,
+    60.706417,
+    55.8095,
+    57.321708,
+    57.093917,
+    54.794166999999995,
+    52.926625,
+    58.222207999999995
+   ],
+   "prove_nopow_ms": 54.665167000000004,
+   "prove_nopow_ms_reps": [
+    60.405667,
+    56.842042,
+    54.665167000000004,
+    53.580375,
+    53.369292,
+    54.959541,
+    55.589791999999996,
+    54.093042000000004,
+    54.251417000000004
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 1.051042
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 1024,
+    "fold_answers": 2432,
+    "merkle_paths": 145824,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     15,
+     13
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 381214,
+      "claim_batch_bits": 122.81590465461862,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.85614381022528,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 110.87251946469578,
+      "fold_grinding_bits": 18,
+      "folds": 6,
+      "line_bound": 143075,
+      "list_size": 35,
+      "log_inv_rate": 1,
+      "log_msg_cols": 18,
+      "max_variables": 23,
+      "ood_bits": 237.1731288093425,
+      "ood_samples": 1,
+      "queries": 244,
+      "query_bits": 112.1816460319758,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.77073737103723,
+      "samples": 4,
+      "threshold": 143076
+     },
+     {
+      "agreement": 48963,
+      "claim_batch_bits": 121.83588394487712,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 119.04878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 111.67095701362993,
+      "fold_grinding_bits": 17,
+      "folds": 4,
+      "line_bound": 82110,
+      "list_size": 70,
+      "log_inv_rate": 3,
+      "log_msg_cols": 14,
+      "max_variables": 17,
+      "ood_bits": 236.37243761756594,
+      "ood_samples": 2,
+      "queries": 79,
+      "query_bits": 112.2284774109194,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.23492643706032,
+      "samples": 4,
+      "threshold": 82115
+     },
+     {
+      "agreement": 6448,
+      "claim_batch_bits": 120.8459783140087,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 118.27118130950412,
+      "consistency_batch_grinding_bits": 10,
+      "eta": 0.02,
+      "fold_bits": 113.2868820283396,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 26321,
+      "list_size": 141,
+      "log_inv_rate": 5,
+      "log_msg_cols": 10,
+      "max_variables": 13,
+      "ood_bits": 235.09757777633536,
+      "ood_samples": 2,
+      "queries": 48,
+      "query_bits": 112.57769883302473,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00545510787396,
+      "samples": 4,
+      "threshold": 26436
+     },
+     {
+      "agreement": 888,
+      "claim_batch_bits": 119.85105210863959,
+      "claim_batch_grinding_bits": 9,
+      "consistency_batch_bits": 117.27118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 115.00706166383418,
+      "fold_grinding_bits": 13,
+      "folds": 4,
+      "line_bound": 7305,
+      "list_size": 282,
+      "log_inv_rate": 7,
+      "log_msg_cols": 6,
+      "max_variables": 9,
+      "ood_bits": 234.06843143067582,
+      "ood_samples": 2,
+      "queries": 35,
+      "query_bits": 112.2001449666912,
+      "query_grinding_bits": 16,
+      "sample_bits": 241.40125553164495,
+      "samples": 5,
+      "threshold": 7306
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00545510787396,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     10,
+     6
+    ],
+    "samples": [
+     4,
+     4,
+     4,
+     5
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2527936.0,
+   "pow_expected_ms": 11.317833951857656,
+   "pow_hashes_mean": 2080438.4444444445,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 3.7997891145366793,
+   "pow_rate_only_ms": 11.317833951857656,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    18,
+    6,
+    16,
+    9,
+    7,
+    17,
+    17,
+    17,
+    17,
+    7,
+    7,
+    16,
+    9,
+    8,
+    15,
+    15,
+    15,
+    15,
+    8,
+    8,
+    16,
+    10,
+    9,
+    13,
+    13,
+    13,
+    13,
+    9,
+    9,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 449768.0,
+   "prove_expected_ms": 89.55275095185765,
+   "prove_ms": 91.761666,
+   "prove_ms_reps": [
+    91.761666,
+    99.875666,
+    91.784959,
+    97.963917,
+    88.26787499999999,
+    92.244958,
+    87.49808300000001,
+    90.295416,
+    91.530958
+   ],
+   "prove_nopow_ms": 78.234917,
+   "prove_nopow_ms_reps": [
+    78.234917,
+    77.350666,
+    77.92150000000001,
+    78.271958,
+    78.283542,
+    77.70566600000001,
+    78.176958,
+    78.995834,
+    84.857083
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 8.051833,
+    "fold_answers": 21.544332999999998,
+    "fold_grinding": 11.189126,
+    "folds": 33.609456,
+    "induce": 3.006834,
+    "ood": 9.778416,
+    "opens": 0.60375,
+    "other_grinding": 1.43579,
+    "total": 91.75475
+   },
+   "timings_nopow_ms": {
+    "commits": 8.131791,
+    "fold_answers": 21.89258,
+    "fold_grinding": 0.019001999999999998,
+    "folds": 34.681586,
+    "induce": 3.4535820000000004,
+    "ood": 9.915624,
+    "opens": 0.111376,
+    "other_grinding": 0.022209,
+    "total": 78.2315
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 0.9626669999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 1024,
+    "fold_answers": 2560,
+    "merkle_paths": 135648,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 371252,
+      "claim_batch_bits": 118.53217687778101,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.53421571533791,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 110.7198092077831,
+      "fold_grinding_bits": 18,
+      "folds": 6,
+      "line_bound": 153037,
+      "list_size": 707,
+      "log_inv_rate": 1,
+      "log_msg_cols": 18,
+      "max_variables": 23,
+      "ood_bits": 228.52927261956776,
+      "ood_samples": 1,
+      "queries": 225,
+      "query_bits": 112.04126154969802,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00010401330434,
+      "samples": 4,
+      "threshold": 157047
+     },
+     {
+      "agreement": 46473,
+      "claim_batch_bits": 117.53319593639515,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.72686079328031,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 111.25328887525978,
+      "fold_grinding_bits": 17,
+      "folds": 4,
+      "line_bound": 84600,
+      "list_size": 1414,
+      "log_inv_rate": 3,
+      "log_msg_cols": 14,
+      "max_variables": 17,
+      "ood_bits": 227.7285814277912,
+      "ood_samples": 2,
+      "queries": 75,
+      "query_bits": 112.194390160149,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00001356532496,
+      "samples": 4,
+      "threshold": 105725
+     },
+     {
+      "agreement": 5826,
+      "claim_batch_bits": 116.53370573576181,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.94925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 112.88739759647115,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 26943,
+      "list_size": 2828,
+      "log_inv_rate": 5,
+      "log_msg_cols": 10,
+      "max_variables": 13,
+      "ood_bits": 226.45372158656062,
+      "ood_samples": 2,
+      "queries": 45,
+      "query_bits": 112.1337846388641,
+      "query_grinding_bits": 16,
+      "sample_bits": 232.53640149580116,
+      "samples": 5,
+      "threshold": 26944
+     },
+     {
+      "agreement": 733,
+      "claim_batch_bits": 115.53396070301572,
+      "claim_batch_grinding_bits": 13,
+      "consistency_batch_bits": 112.94925321461676,
+      "consistency_batch_grinding_bits": 16,
+      "eta": 0.001,
+      "fold_bits": 113.42369281229233,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 7460,
+      "list_size": 5656,
+      "log_inv_rate": 7,
+      "log_msg_cols": 6,
+      "max_variables": 9,
+      "ood_bits": 225.42457524090108,
+      "ood_samples": 2,
+      "queries": 33,
+      "query_bits": 114.96439055567949,
+      "query_grinding_bits": 16,
+      "sample_bits": 228.48378898644089,
+      "samples": 5,
+      "threshold": 7461
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00001356532496,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     10,
+     6
+    ],
+    "samples": [
+     4,
+     4,
+     5,
+     5
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2853888.0,
+   "pow_expected_ms": 13.062320016911375,
+   "pow_hashes_mean": 2794394.6666666665,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 2.2736913174709343,
+   "pow_rate_only_ms": 13.062320016911375,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    18,
+    10,
+    16,
+    13,
+    11,
+    17,
+    17,
+    17,
+    17,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 417960.0,
+   "prove_expected_ms": 91.29940301691137,
+   "prove_ms": 94.175209,
+   "prove_ms_reps": [
+    110.50575,
+    91.92175,
+    91.01525000000001,
+    87.361042,
+    98.581083,
+    99.161709,
+    94.175209,
+    95.69554199999999,
+    88.154
+   ],
+   "prove_nopow_ms": 78.237083,
+   "prove_nopow_ms_reps": [
+    78.40512500000001,
+    76.765959,
+    76.14999999999999,
+    76.81666700000001,
+    77.09,
+    78.237083,
+    78.677625,
+    78.462542,
+    82.029125
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.967125,
+    "fold_answers": 21.160086000000003,
+    "fold_grinding": 12.133248,
+    "folds": 33.568416,
+    "induce": 3.442666,
+    "ood": 10.860581,
+    "opens": 0.485918,
+    "other_grinding": 2.710624,
+    "total": 94.171542
+   },
+   "timings_nopow_ms": {
+    "commits": 8.115834000000001,
+    "fold_answers": 21.854291,
+    "fold_grinding": 0.019126,
+    "folds": 34.044627,
+    "induce": 3.096835,
+    "ood": 10.173582,
+    "opens": 0.108668,
+    "other_grinding": 0.021877999999999998,
+    "total": 78.233708
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 0.898417
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 145824,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     15,
+     13
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     10,
+     6
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2527936.0,
+   "pow_expected_ms": 11.317833951857656,
+   "pow_hashes_mean": 2872911.777777778,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 0.9033011995186015,
+   "pow_rate_only_ms": 11.317833951857656,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    18,
+    6,
+    16,
+    9,
+    7,
+    17,
+    17,
+    17,
+    17,
+    7,
+    7,
+    16,
+    9,
+    8,
+    15,
+    15,
+    15,
+    15,
+    8,
+    8,
+    16,
+    10,
+    9,
+    13,
+    13,
+    13,
+    13,
+    9,
+    9,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 447336.0,
+   "prove_expected_ms": 56.35208395185766,
+   "prove_ms": 58.595041,
+   "prove_ms_reps": [
+    68.024958,
+    58.595041,
+    61.069875,
+    56.266584,
+    66.73029199999999,
+    58.167875,
+    58.370083,
+    56.231875,
+    59.164375
+   ],
+   "prove_nopow_ms": 45.03425,
+   "prove_nopow_ms_reps": [
+    46.18625,
+    45.855834,
+    43.844333999999996,
+    44.40279099999999,
+    44.955000000000005,
+    45.03425,
+    45.626833999999995,
+    45.022417000000004,
+    47.2805
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.921042,
+    "fold_answers": 0.008416,
+    "fold_grinding": 12.274251999999999,
+    "folds": 22.340667,
+    "induce": 3.1215420000000003,
+    "ood": 9.977794,
+    "opens": 0.562126,
+    "other_grinding": 1.44504,
+    "total": 58.589875
+   },
+   "timings_nopow_ms": {
+    "commits": 8.249292,
+    "fold_answers": 0.009628,
+    "fold_grinding": 0.019706,
+    "folds": 23.313958999999997,
+    "induce": 3.518874,
+    "ood": 9.804625000000001,
+    "opens": 0.113917,
+    "other_grinding": 0.022084,
+    "total": 45.030708000000004
+   },
+   "variant": "control-0.02",
+   "verify_ms": 0.8989999999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 135648,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast24",
+   "commit_ms": 95.51491700000001,
+   "commit_ms_both": [
+    95.51491700000001,
+    96.505667
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     10,
+     6
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 24,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "1.70 2.39 2.83",
+     "max_rss_bytes": 7965294592,
+     "peak_footprint_bytes": 7967414344,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.82 3.20 3.18",
+     "max_rss_bytes": 7271743488,
+     "peak_footprint_bytes": 7969019976,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2853888.0,
+   "pow_expected_ms": 13.062320016911375,
+   "pow_hashes_mean": 3201016.777777778,
+   "pow_hashes_per_ms_parallel": 225299.78371025433,
+   "pow_hashes_per_ms_sequential": 40398.11309267675,
+   "pow_model_residual_ms": 1.1907309147630372,
+   "pow_rate_only_ms": 13.062320016911375,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    18,
+    10,
+    16,
+    13,
+    11,
+    17,
+    17,
+    17,
+    17,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast24",
+   "profile": "fast",
+   "proof_bytes": 415400.0,
+   "prove_expected_ms": 57.62807001691138,
+   "prove_ms": 59.653458,
+   "prove_ms_reps": [
+    101.22575,
+    61.664625,
+    58.133416,
+    59.224709,
+    58.455124999999995,
+    61.746209,
+    57.857541999999995,
+    59.653458,
+    60.756042
+   ],
+   "prove_nopow_ms": 44.56575,
+   "prove_nopow_ms_reps": [
+    44.839999999999996,
+    43.803917,
+    43.424625,
+    44.56575,
+    44.556625000000004,
+    45.507,
+    43.705583,
+    44.8475,
+    46.886084000000004
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 8.031709,
+    "fold_answers": 0.006669,
+    "fold_grinding": 12.774252,
+    "folds": 22.135041,
+    "induce": 3.229667,
+    "ood": 9.523999,
+    "opens": 0.526541,
+    "other_grinding": 2.783876,
+    "total": 59.650208000000006
+   },
+   "timings_nopow_ms": {
+    "commits": 8.082624000000001,
+    "fold_answers": 0.008045,
+    "fold_grinding": 0.018836000000000002,
+    "folds": 23.060957,
+    "induce": 3.140709,
+    "ood": 9.785415,
+    "opens": 0.106334,
+    "other_grinding": 0.021041999999999998,
+    "total": 44.561958
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.85175
+  },
+  {
+   "breakdown": {
+    "binding_answers": 176,
+    "caps": 11264,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 207072,
+    "nonces": 232,
+    "opened_rows": 338688,
+    "round_messages": 2688
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     6,
+     7,
+     7,
+     8,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     9,
+     10,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     119,
+     79,
+     60,
+     48,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     16,
+     13,
+     10,
+     7,
+     4
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 399360.0,
+   "pow_expected_ms": 1.7613038361649653,
+   "pow_hashes_mean": 489127.22222222225,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 651.7128701842522,
+   "pow_rate_only_ms": 1.7613038361649653,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    6,
+    6,
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 560632.0,
+   "prove_expected_ms": 158.45184583616495,
+   "prove_ms": 811.15475,
+   "prove_ms_reps": [
+    878.072542,
+    1682.823834,
+    275.076208,
+    811.15475,
+    2588.3073329999997,
+    277.12066699999997,
+    486.855416,
+    722.407417,
+    1870.48025
+   ],
+   "prove_nopow_ms": 156.690542,
+   "prove_nopow_ms_reps": [
+    383.37662500000005,
+    513.5398329999999,
+    156.690542,
+    222.79958299999998,
+    145.374958,
+    160.744833,
+    143.447416,
+    143.816375,
+    154.826209
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 1.438375
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2336,
+    "fold_answers": 0,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 1440
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5,
+     5
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 267424.0,
+   "pow_expected_ms": 1.2028955161508967,
+   "pow_hashes_mean": 240754.55555555556,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 482.735794715089,
+   "pow_rate_only_ms": 1.2028955161508967,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    9,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16,
+    10,
+    9,
+    5,
+    5,
+    5,
+    5,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 462504.0,
+   "prove_expected_ms": 157.2929785161509,
+   "prove_ms": 639.632334,
+   "prove_ms_reps": [
+    287.614625,
+    310.287125,
+    1204.129875,
+    896.952334,
+    960.1912080000001,
+    874.300584,
+    329.582708,
+    288.93170899999996,
+    639.632334
+   ],
+   "prove_nopow_ms": 156.090083,
+   "prove_nopow_ms_reps": [
+    245.849333,
+    287.105792,
+    157.196875,
+    162.42875,
+    156.090083,
+    112.131583,
+    108.16891600000001,
+    108.41675000000001,
+    112.954791
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 1.1625839999999998
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 2432,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     14
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 762427,
+      "claim_batch_bits": 122.81590465461862,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.85614381022528,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 109.87305359277447,
+      "fold_grinding_bits": 19,
+      "folds": 6,
+      "line_bound": 286150,
+      "list_size": 35,
+      "log_inv_rate": 1,
+      "log_msg_cols": 19,
+      "max_variables": 24,
+      "ood_bits": 237.06843143067582,
+      "ood_samples": 1,
+      "queries": 244,
+      "query_bits": 112.1816460319758,
+      "query_grinding_bits": 16,
+      "sample_bits": 130.52513015066307,
+      "samples": 4,
+      "threshold": 286151
+     },
+     {
+      "agreement": 97925,
+      "claim_batch_bits": 121.83588394487712,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 119.04878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 110.67286843731715,
+      "fold_grinding_bits": 18,
+      "folds": 4,
+      "line_bound": 164220,
+      "list_size": 70,
+      "log_inv_rate": 3,
+      "log_msg_cols": 15,
+      "max_variables": 18,
+      "ood_bits": 236.21643259356338,
+      "ood_samples": 2,
+      "queries": 79,
+      "query_bits": 112.2284774109194,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.58301792861724,
+      "samples": 4,
+      "threshold": 164222
+     },
+     {
+      "agreement": 12896,
+      "claim_batch_bits": 120.8459783140087,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 118.27118130950412,
+      "consistency_batch_grinding_bits": 10,
+      "eta": 0.02,
+      "fold_bits": 112.30349425352912,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 52641,
+      "list_size": 141,
+      "log_inv_rate": 5,
+      "log_msg_cols": 11,
+      "max_variables": 14,
+      "ood_bits": 234.89850642923352,
+      "ood_samples": 2,
+      "queries": 48,
+      "query_bits": 112.57769883302473,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00723653745268,
+      "samples": 4,
+      "threshold": 52680
+     },
+     {
+      "agreement": 1776,
+      "claim_batch_bits": 119.85105210863959,
+      "claim_batch_grinding_bits": 9,
+      "consistency_batch_bits": 117.27118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 114.08412062116423,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 14609,
+      "list_size": 282,
+      "log_inv_rate": 7,
+      "log_msg_cols": 7,
+      "max_variables": 10,
+      "ood_bits": 233.79342438317596,
+      "ood_samples": 2,
+      "queries": 35,
+      "query_bits": 112.2001449666912,
+      "query_grinding_bits": 16,
+      "sample_bits": 242.64094383327503,
+      "samples": 5,
+      "threshold": 14610
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00723653745268,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     4,
+     4,
+     4,
+     5
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4788928.0,
+   "pow_expected_ms": 19.733985653481344,
+   "pow_hashes_mean": 3989799.888888889,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 118.76883930456685,
+   "pow_rate_only_ms": 19.733985653481344,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    6,
+    16,
+    9,
+    7,
+    18,
+    18,
+    18,
+    18,
+    7,
+    7,
+    16,
+    9,
+    8,
+    16,
+    16,
+    16,
+    16,
+    8,
+    8,
+    16,
+    10,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 463784.0,
+   "prove_expected_ms": 185.44736065348133,
+   "prove_ms": 299.23120800000004,
+   "prove_ms_reps": [
+    695.988042,
+    299.23120800000004,
+    241.70429199999998,
+    420.292334,
+    290.359333,
+    308.520792,
+    319.61833299999995,
+    220.865417,
+    279.4565
+   ],
+   "prove_nopow_ms": 165.71337499999998,
+   "prove_nopow_ms_reps": [
+    150.492917,
+    213.694041,
+    166.15474999999998,
+    176.720167,
+    190.543292,
+    152.702417,
+    165.71337499999998,
+    148.60695800000002,
+    147.790375
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 16.949709,
+    "fold_answers": 50.825207,
+    "fold_grinding": 21.642501000000003,
+    "folds": 134.842207,
+    "induce": 6.009084,
+    "ood": 24.622957,
+    "opens": 22.46221,
+    "other_grinding": 2.6826659999999998,
+    "total": 299.22637499999996
+   },
+   "timings_nopow_ms": {
+    "commits": 14.942668,
+    "fold_answers": 42.04304,
+    "fold_grinding": 0.020211,
+    "folds": 69.70420800000001,
+    "induce": 5.30625,
+    "ood": 19.484125000000002,
+    "opens": 1.60275,
+    "other_grinding": 0.025666,
+    "total": 165.705875
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 1.062833
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 2560,
+    "merkle_paths": 147744,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 742504,
+      "claim_batch_bits": 118.53217687778101,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.53421571533791,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 109.76071847486493,
+      "fold_grinding_bits": 19,
+      "folds": 6,
+      "line_bound": 306073,
+      "list_size": 707,
+      "log_inv_rate": 1,
+      "log_msg_cols": 19,
+      "max_variables": 24,
+      "ood_bits": 228.42457524090108,
+      "ood_samples": 1,
+      "queries": 225,
+      "query_bits": 112.04126154969802,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00061286802298,
+      "samples": 4,
+      "threshold": 307315
+     },
+     {
+      "agreement": 92945,
+      "claim_batch_bits": 117.53319593639515,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.72686079328031,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 110.52044075397836,
+      "fold_grinding_bits": 18,
+      "folds": 4,
+      "line_bound": 169200,
+      "list_size": 1414,
+      "log_inv_rate": 3,
+      "log_msg_cols": 15,
+      "max_variables": 18,
+      "ood_bits": 227.57257640378864,
+      "ood_samples": 2,
+      "queries": 75,
+      "query_bits": 112.194390160149,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00013325852152,
+      "samples": 4,
+      "threshold": 178514
+     },
+     {
+      "agreement": 11651,
+      "claim_batch_bits": 116.53370573576181,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.94925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 112.07141223048492,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 53886,
+      "list_size": 2828,
+      "log_inv_rate": 5,
+      "log_msg_cols": 11,
+      "max_variables": 14,
+      "ood_bits": 226.25465023945878,
+      "ood_samples": 2,
+      "queries": 45,
+      "query_bits": 112.1337846388641,
+      "query_grinding_bits": 16,
+      "sample_bits": 234.00179870386802,
+      "samples": 5,
+      "threshold": 53887
+     },
+     {
+      "agreement": 1465,
+      "claim_batch_bits": 115.53396070301572,
+      "claim_batch_grinding_bits": 13,
+      "consistency_batch_bits": 112.94925321461676,
+      "consistency_batch_grinding_bits": 16,
+      "eta": 0.001,
+      "fold_bits": 113.03922876330131,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 14920,
+      "list_size": 5656,
+      "log_inv_rate": 7,
+      "log_msg_cols": 7,
+      "max_variables": 10,
+      "ood_bits": 225.14956819340122,
+      "ood_samples": 2,
+      "queries": 33,
+      "query_bits": 114.96439055567949,
+      "query_grinding_bits": 16,
+      "sample_bits": 229.72367683355785,
+      "samples": 5,
+      "threshold": 14921
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00013325852152,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     4,
+     4,
+     5,
+     5
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4951040.0,
+   "pow_expected_ms": 20.693811945046694,
+   "pow_hashes_mean": 5251339.333333333,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 36.75129332270771,
+   "pow_rate_only_ms": 20.693811945046694,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    18,
+    18,
+    18,
+    18,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 431080.0,
+   "prove_expected_ms": 185.7051039450467,
+   "prove_ms": 222.339125,
+   "prove_ms_reps": [
+    392.225792,
+    207.869833,
+    204.59670799999998,
+    277.658666,
+    222.339125,
+    209.67675,
+    357.88941600000004,
+    231.222333,
+    204.253084
+   ],
+   "prove_nopow_ms": 165.011292,
+   "prove_nopow_ms_reps": [
+    285.919667,
+    159.288125,
+    233.045917,
+    197.803708,
+    152.388375,
+    165.011292,
+    153.432333,
+    165.08404199999998,
+    151.24504199999998
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.160626,
+    "fold_answers": 45.196919,
+    "fold_grinding": 27.423873,
+    "folds": 80.105457,
+    "induce": 5.112623,
+    "ood": 24.393747,
+    "opens": 21.477667,
+    "other_grinding": 3.034789,
+    "total": 222.333791
+   },
+   "timings_nopow_ms": {
+    "commits": 16.539042000000002,
+    "fold_answers": 43.231164,
+    "fold_grinding": 0.020166,
+    "folds": 70.236249,
+    "induce": 5.854167,
+    "ood": 21.235668999999998,
+    "opens": 1.946459,
+    "other_grinding": 0.024835,
+    "total": 165.00741699999998
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 1.025625
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 0,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     14
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4788928.0,
+   "pow_expected_ms": 19.733985653481344,
+   "pow_hashes_mean": 4232641.111111111,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 17.775363458402424,
+   "pow_rate_only_ms": 19.733985653481344,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    6,
+    16,
+    9,
+    7,
+    18,
+    18,
+    18,
+    18,
+    7,
+    7,
+    16,
+    9,
+    8,
+    16,
+    16,
+    16,
+    16,
+    8,
+    8,
+    16,
+    10,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 461352.0,
+   "prove_expected_ms": 118.48244365348134,
+   "prove_ms": 133.633,
+   "prove_ms_reps": [
+    413.166625,
+    137.65016599999998,
+    131.61012499999998,
+    146.36533400000002,
+    129.069959,
+    133.633,
+    131.672917,
+    139.611292,
+    118.31987500000001
+   ],
+   "prove_nopow_ms": 98.748458,
+   "prove_nopow_ms_reps": [
+    275.647417,
+    98.692666,
+    98.748458,
+    102.351042,
+    99.573208,
+    114.394875,
+    84.379583,
+    86.157208,
+    86.747708
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.159875,
+    "fold_answers": 0.010915,
+    "fold_grinding": 24.999208,
+    "folds": 45.813081,
+    "induce": 4.8374179999999996,
+    "ood": 22.403085,
+    "opens": 19.066792,
+    "other_grinding": 1.536209,
+    "total": 133.628
+   },
+   "timings_nopow_ms": {
+    "commits": 15.223416,
+    "fold_answers": 0.01196,
+    "fold_grinding": 0.024083999999999998,
+    "folds": 51.552749,
+    "induce": 4.853957,
+    "ood": 20.731418,
+    "opens": 3.326042,
+    "other_grinding": 0.024626000000000002,
+    "total": 98.743958
+   },
+   "variant": "control-0.02",
+   "verify_ms": 1.015208
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 0,
+    "merkle_paths": 147744,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "breakdown_levels": null,
+   "cell": "fast25",
+   "commit_ms": 182.520958,
+   "commit_ms_both": [
+    182.520958,
+    190.264792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.34 2.46 2.83",
+     "max_rss_bytes": 11680677888,
+     "peak_footprint_bytes": 15834869328,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.47 3.27 3.21",
+     "max_rss_bytes": 10755145728,
+     "peak_footprint_bytes": 15565516248,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4951040.0,
+   "pow_expected_ms": 20.693811945046694,
+   "pow_hashes_mean": 5244476.111111111,
+   "pow_hashes_per_ms_parallel": 243868.39742786562,
+   "pow_hashes_per_ms_sequential": 41264.47927752127,
+   "pow_model_residual_ms": 25.387120125045087,
+   "pow_rate_only_ms": 20.693811945046694,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    18,
+    18,
+    18,
+    18,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast25",
+   "profile": "fast",
+   "proof_bytes": 428520.0,
+   "prove_expected_ms": 115.22868694504669,
+   "prove_ms": 136.16737500000002,
+   "prove_ms_reps": [
+    518.260292,
+    142.76429199999998,
+    133.48820899999998,
+    154.425,
+    136.16737500000002,
+    130.185667,
+    165.379166,
+    128.18970800000002,
+    130.641708
+   ],
+   "prove_nopow_ms": 94.534875,
+   "prove_nopow_ms_reps": [
+    229.677875,
+    93.053333,
+    90.393417,
+    124.49025,
+    86.134916,
+    97.84700000000001,
+    87.320916,
+    97.18625,
+    94.534875
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.970374,
+    "fold_answers": 0.011831999999999999,
+    "fold_grinding": 26.29454,
+    "folds": 46.25104,
+    "induce": 5.108126,
+    "ood": 21.798458999999998,
+    "opens": 17.949541,
+    "other_grinding": 2.785335,
+    "total": 136.16220800000002
+   },
+   "timings_nopow_ms": {
+    "commits": 15.936042,
+    "fold_answers": 0.010003000000000001,
+    "fold_grinding": 0.021582,
+    "folds": 50.207378,
+    "induce": 6.286043,
+    "ood": 21.86354,
+    "opens": 1.42746,
+    "other_grinding": 0.0275,
+    "total": 94.531167
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.943375
+  },
+  {
+   "breakdown": {
+    "binding_answers": 144,
+    "caps": 5632,
+    "final_message": 1024,
+    "fold_answers": 0,
+    "merkle_paths": 110976,
+    "nonces": 192,
+    "opened_rows": 101888,
+    "round_messages": 2176
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     10,
+     11,
+     11,
+     12
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     119,
+     60,
+     41,
+     32,
+     27
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     14,
+     11,
+     8,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 339136.0,
+   "pow_expected_ms": 1.6935098196795306,
+   "pow_hashes_mean": 243073.88888888888,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": -1.9951726478756129,
+   "pow_rate_only_ms": 1.6935098196795306,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16,
+    11,
+    9,
+    9,
+    9,
+    16,
+    11,
+    10,
+    10,
+    10,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 222032.0,
+   "prove_expected_ms": 44.25646881967953,
+   "prove_ms": 41.835375,
+   "prove_ms_reps": [
+    45.967665999999994,
+    44.712375,
+    46.431374999999996,
+    41.835375,
+    41.144208,
+    41.270375,
+    41.20825,
+    42.886,
+    40.941709
+   ],
+   "prove_nopow_ms": 42.562959,
+   "prove_nopow_ms_reps": [
+    45.097542,
+    43.836416,
+    45.415125,
+    41.551834,
+    42.657917,
+    40.942209,
+    42.562959,
+    40.706166,
+    40.6505
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 0.9432079999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 5120,
+    "final_message": 784,
+    "fold_answers": 0,
+    "merkle_paths": 93856,
+    "nonces": 272,
+    "opened_rows": 94976,
+    "round_messages": 1360
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     10,
+     11,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5,
+     5
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     119,
+     60,
+     41,
+     32
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 268944.0,
+   "pow_expected_ms": 1.2959376431954182,
+   "pow_hashes_mean": 224125.33333333334,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": -0.4487140882996101,
+   "pow_rate_only_ms": 1.2959376431954182,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    10,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16,
+    11,
+    9,
+    5,
+    5,
+    5,
+    5,
+    9,
+    9,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 196480.0,
+   "prove_expected_ms": 23.013646643195422,
+   "prove_ms": 22.712875,
+   "prove_ms_reps": [
+    22.712875,
+    23.041959000000002,
+    22.965417,
+    23.176458,
+    21.973584000000002,
+    22.248917,
+    21.794792,
+    22.024208,
+    22.959417
+   ],
+   "prove_nopow_ms": 21.717709000000003,
+   "prove_nopow_ms_reps": [
+    22.204833999999998,
+    21.717709000000003,
+    22.023500000000002,
+    22.813875,
+    20.833750000000002,
+    21.182375,
+    22.203292,
+    21.2885,
+    20.779374999999998
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 0.629625
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 5120,
+    "final_message": 512,
+    "fold_answers": 2176,
+    "merkle_paths": 93856,
+    "nonces": 272,
+    "opened_rows": 94976,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     10,
+     11,
+     11
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     15,
+     14
+    ],
+    "initial_k": 5,
+    "levels": [
+     {
+      "agreement": 272630,
+      "claim_batch_bits": 122.32757465802851,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.54878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 110.05802394836829,
+      "fold_grinding_bits": 18,
+      "folds": 5,
+      "line_bound": 251659,
+      "list_size": 50,
+      "log_inv_rate": 2,
+      "log_msg_cols": 17,
+      "max_variables": 21,
+      "ood_bits": 236.39487500668568,
+      "ood_samples": 1,
+      "queries": 119,
+      "query_bits": 112.26656012440228,
+      "query_grinding_bits": 16,
+      "sample_bits": 129.38138880795444,
+      "samples": 4,
+      "threshold": 251660
+     },
+     {
+      "agreement": 35390,
+      "claim_batch_bits": 121.3417885172482,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 118.77118130950412,
+      "consistency_batch_grinding_bits": 10,
+      "eta": 0.02,
+      "fold_bits": 111.4493884736172,
+      "fold_grinding_bits": 17,
+      "folds": 4,
+      "line_bound": 95683,
+      "list_size": 100,
+      "log_inv_rate": 4,
+      "log_msg_cols": 13,
+      "max_variables": 16,
+      "ood_bits": 235.53736193794987,
+      "ood_samples": 2,
+      "queries": 60,
+      "query_bits": 113.33812125667536,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.1606075964578,
+      "samples": 4,
+      "threshold": 95691
+     },
+     {
+      "agreement": 4752,
+      "claim_batch_bits": 120.34894830882106,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 117.77118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 113.18491696331014,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 28017,
+      "list_size": 200,
+      "log_inv_rate": 6,
+      "log_msg_cols": 9,
+      "max_variables": 12,
+      "ood_bits": 234.31140818416836,
+      "ood_samples": 2,
+      "queries": 41,
+      "query_bits": 114.22088298053325,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00536359414673,
+      "samples": 4,
+      "threshold": 28226
+     },
+     {
+      "agreement": 676,
+      "claim_batch_bits": 119.35254157354508,
+      "claim_batch_grinding_bits": 9,
+      "consistency_batch_bits": 117.03421571533791,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 114.53698658655031,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 7517,
+      "list_size": 400,
+      "log_inv_rate": 8,
+      "log_msg_cols": 5,
+      "max_variables": 8,
+      "ood_bits": 233.37243761756594,
+      "ood_samples": 2,
+      "queries": 32,
+      "query_bits": 115.18278625332067,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.000494168179,
+      "samples": 4,
+      "threshold": 10092
+     }
+    ],
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "min_bits": 128.000494168179,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     119,
+     60,
+     41,
+     32
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     4,
+     4,
+     4,
+     4
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2300096.0,
+   "pow_expected_ms": 10.015969948023823,
+   "pow_hashes_mean": 2082686.2222222222,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": 1.4984780021179134,
+   "pow_rate_only_ms": 10.015969948023823,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    6,
+    16,
+    9,
+    7,
+    17,
+    17,
+    17,
+    17,
+    7,
+    7,
+    16,
+    10,
+    8,
+    15,
+    15,
+    15,
+    15,
+    8,
+    8,
+    16,
+    11,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 197568.0,
+   "prove_expected_ms": 37.85380294802383,
+   "prove_ms": 37.906124999999996,
+   "prove_ms_reps": [
+    37.987292,
+    37.818375,
+    37.906124999999996,
+    36.531709,
+    37.266875,
+    38.493083999999996,
+    35.173625,
+    41.193708,
+    39.028416
+   ],
+   "prove_nopow_ms": 27.837833,
+   "prove_nopow_ms_reps": [
+    27.248166,
+    27.183584,
+    28.020500000000002,
+    27.519375,
+    28.302083,
+    27.837833,
+    27.974791999999997,
+    27.300584,
+    28.083834
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.38725,
+    "fold_answers": 5.760379,
+    "fold_grinding": 10.036461,
+    "folds": 8.609874999999999,
+    "induce": 2.029875,
+    "ood": 2.7785420000000003,
+    "opens": 0.055624999999999994,
+    "other_grinding": 1.568956,
+    "total": 37.904374999999995
+   },
+   "timings_nopow_ms": {
+    "commits": 7.478959000000001,
+    "fold_answers": 5.984457,
+    "fold_grinding": 0.014166,
+    "folds": 8.914416,
+    "induce": 2.221792,
+    "ood": 2.919666,
+    "opens": 0.057958,
+    "other_grinding": 0.016669,
+    "total": 27.835333
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 0.583375
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 4608,
+    "final_message": 512,
+    "fold_answers": 2560,
+    "merkle_paths": 89408,
+    "nonces": 272,
+    "opened_rows": 89600,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     17,
+     16,
+     15
+    ],
+    "initial_k": 5,
+    "levels": [
+     {
+      "agreement": 262669,
+      "claim_batch_bits": 118.03277374116401,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.22686079328031,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 109.97134926963345,
+      "fold_grinding_bits": 19,
+      "folds": 5,
+      "line_bound": 261620,
+      "list_size": 1000,
+      "log_inv_rate": 2,
+      "log_msg_cols": 17,
+      "max_variables": 21,
+      "ood_bits": 227.75101881691094,
+      "ood_samples": 1,
+      "queries": 113,
+      "query_bits": 112.67427653575729,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00002583141378,
+      "samples": 4,
+      "threshold": 264402
+     },
+     {
+      "agreement": 32900,
+      "claim_batch_bits": 117.03349454809425,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.44925321461676,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 111.33136427435369,
+      "fold_grinding_bits": 17,
+      "folds": 4,
+      "line_bound": 98173,
+      "list_size": 2000,
+      "log_inv_rate": 4,
+      "log_msg_cols": 13,
+      "max_variables": 16,
+      "ood_bits": 226.89350574817513,
+      "ood_samples": 2,
+      "queries": 57,
+      "query_bits": 113.67172165054495,
+      "query_grinding_bits": 16,
+      "sample_bits": 236.26873920511179,
+      "samples": 5,
+      "threshold": 98174
+     },
+     {
+      "agreement": 4129,
+      "claim_batch_bits": 116.0338550866544,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.44925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 112.68935171939137,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 28640,
+      "list_size": 4000,
+      "log_inv_rate": 6,
+      "log_msg_cols": 9,
+      "max_variables": 12,
+      "ood_bits": 225.66755199439362,
+      "ood_samples": 2,
+      "queries": 38,
+      "query_bits": 113.56316572416249,
+      "query_grinding_bits": 16,
+      "sample_bits": 231.78937275926194,
+      "samples": 5,
+      "threshold": 28641
+     },
+     {
+      "agreement": 521,
+      "claim_batch_bits": 115.03403538972792,
+      "claim_batch_grinding_bits": 13,
+      "consistency_batch_bits": 112.71228762045055,
+      "consistency_batch_grinding_bits": 16,
+      "eta": 0.001,
+      "fold_bits": 113.04903409757,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 7672,
+      "list_size": 8000,
+      "log_inv_rate": 8,
+      "log_msg_cols": 5,
+      "max_variables": 8,
+      "ood_bits": 224.7285814277912,
+      "ood_samples": 2,
+      "queries": 29,
+      "query_bits": 115.3358883388077,
+      "query_grinding_bits": 16,
+      "sample_bits": 227.91360919059454,
+      "samples": 5,
+      "threshold": 7673
+     }
+    ],
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "min_bits": 128.00002583141378,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     113,
+     57,
+     38,
+     29
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     4,
+     5,
+     5,
+     5
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 3902464.0,
+   "pow_expected_ms": 17.172935565314102,
+   "pow_hashes_mean": 3648459.6666666665,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": 3.468153554945225,
+   "pow_rate_only_ms": 17.172935565314102,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    17,
+    17,
+    17,
+    17,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 187616.0,
+   "prove_expected_ms": 44.936644565314104,
+   "prove_ms": 47.6515,
+   "prove_ms_reps": [
+    38.880416000000004,
+    47.822666,
+    46.588125,
+    48.856166,
+    50.20725,
+    42.595124999999996,
+    46.046416,
+    47.6515,
+    58.654792
+   ],
+   "prove_nopow_ms": 27.763709000000002,
+   "prove_nopow_ms_reps": [
+    27.763709000000002,
+    27.294333,
+    27.258000000000003,
+    27.13475,
+    27.268792,
+    28.108083,
+    28.605249999999998,
+    28.106958000000002,
+    28.256583
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.4047920000000005,
+    "fold_answers": 5.865501,
+    "fold_grinding": 17.113499,
+    "folds": 8.638333,
+    "induce": 1.9812509999999999,
+    "ood": 2.921376,
+    "opens": 0.053999000000000005,
+    "other_grinding": 2.800291,
+    "total": 47.649625
+   },
+   "timings_nopow_ms": {
+    "commits": 7.359083,
+    "fold_answers": 5.916004,
+    "fold_grinding": 0.012335,
+    "folds": 9.010914999999999,
+    "induce": 2.398501,
+    "ood": 2.8596250000000003,
+    "opens": 0.055417999999999995,
+    "other_grinding": 0.015625,
+    "total": 27.761291
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 0.5756249999999999
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 5120,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 93856,
+    "nonces": 272,
+    "opened_rows": 94976,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     10,
+     11,
+     11
+    ],
+    "fold_grinding_bits": [
+     18,
+     17,
+     15,
+     14
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     119,
+     60,
+     41,
+     32
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 2300096.0,
+   "pow_expected_ms": 10.015969948023823,
+   "pow_hashes_mean": 2271533.0,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": 1.302547515184564,
+   "pow_rate_only_ms": 10.015969948023823,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    6,
+    16,
+    9,
+    7,
+    17,
+    17,
+    17,
+    17,
+    7,
+    7,
+    16,
+    10,
+    8,
+    15,
+    15,
+    15,
+    15,
+    8,
+    8,
+    16,
+    11,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 195392.0,
+   "prove_expected_ms": 28.648385948023822,
+   "prove_ms": 30.029125,
+   "prove_ms_reps": [
+    29.163708,
+    31.281625000000002,
+    32.5985,
+    30.268041,
+    26.516833,
+    37.630833,
+    28.530167,
+    26.07925,
+    30.029125
+   ],
+   "prove_nopow_ms": 18.632416,
+   "prove_nopow_ms_reps": [
+    21.885791,
+    18.734791,
+    18.513499999999997,
+    19.244208,
+    18.56125,
+    18.436083,
+    18.996125,
+    18.632416,
+    17.983584
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.207708,
+    "fold_answers": 0.00471,
+    "fold_grinding": 10.062626,
+    "folds": 5.768623,
+    "induce": 2.0789590000000002,
+    "ood": 2.8627499999999997,
+    "opens": 0.057166,
+    "other_grinding": 1.420749,
+    "total": 30.027541000000003
+   },
+   "timings_nopow_ms": {
+    "commits": 7.5065,
+    "fold_answers": 0.004834,
+    "fold_grinding": 0.011456000000000001,
+    "folds": 5.960502,
+    "induce": 2.188333,
+    "ood": 2.901043,
+    "opens": 0.057166,
+    "other_grinding": 0.016416,
+    "total": 18.630417
+   },
+   "variant": "control-0.02",
+   "verify_ms": 0.5240410000000001
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 4608,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 89408,
+    "nonces": 272,
+    "opened_rows": 89600,
+    "round_messages": 544
+   },
+   "breakdown_levels": null,
+   "cell": "slim22",
+   "commit_ms": 44.232708,
+   "commit_ms_both": [
+    44.232708,
+    45.976459
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     17,
+     16,
+     15
+    ],
+    "initial_k": 5,
+    "log_inv_rates": [
+     2,
+     4,
+     6,
+     8
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     113,
+     57,
+     38,
+     29
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     13,
+     9,
+     5
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 22,
+   "memory": {
+    "nopow": {
+     "limited": false,
+     "load_before": "2.43 2.57 2.85",
+     "max_rss_bytes": 2897002496,
+     "peak_footprint_bytes": 2896661048,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": false,
+     "load_before": "1.95 2.85 3.05",
+     "max_rss_bytes": 2898870272,
+     "peak_footprint_bytes": 2898528824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 3902464.0,
+   "pow_expected_ms": 17.172935565314102,
+   "pow_hashes_mean": 4371673.333333333,
+   "pow_hashes_per_ms_parallel": 232674.41100312152,
+   "pow_hashes_per_ms_sequential": 40169.72077455205,
+   "pow_model_residual_ms": 2.171142723306751,
+   "pow_rate_only_ms": 17.172935565314102,
+   "pow_searches": null,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    17,
+    17,
+    17,
+    17,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "slim22",
+   "profile": "slim",
+   "proof_bytes": 185056.0,
+   "prove_expected_ms": 35.996102565314104,
+   "prove_ms": 40.126042,
+   "prove_ms_reps": [
+    41.671,
+    37.731458,
+    35.650458,
+    39.265417,
+    32.951083,
+    53.171834000000004,
+    40.126042,
+    41.324540999999996,
+    41.408209
+   ],
+   "prove_nopow_ms": 18.823166999999998,
+   "prove_nopow_ms_reps": [
+    19.263459,
+    19.064125,
+    18.995666,
+    18.542209,
+    18.500042,
+    18.823166999999998,
+    18.836875,
+    18.113457999999998,
+    18.294083999999998
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 7.11221,
+    "fold_answers": 0.004416,
+    "fold_grinding": 20.713787,
+    "folds": 5.750832,
+    "induce": 2.017124,
+    "ood": 2.8620419999999998,
+    "opens": 0.055124,
+    "other_grinding": 2.471708,
+    "total": 40.124624999999995
+   },
+   "timings_nopow_ms": {
+    "commits": 7.298375,
+    "fold_answers": 0.005082,
+    "fold_grinding": 0.011835,
+    "folds": 5.985456,
+    "induce": 2.3342110000000003,
+    "ood": 2.85575,
+    "opens": 0.055583,
+    "other_grinding": 0.016457,
+    "total": 18.821166
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.507458
+  }
+ ],
+ "warnings": []
+}

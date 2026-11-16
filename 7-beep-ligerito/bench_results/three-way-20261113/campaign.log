@@ -1,0 +1,34 @@
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.08s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+on battery (Battery Power) before fast20: waiting for AC power (at most 14400 s)
+AC power back after 360 s; waiting for 60 s of at least 80 % idle CPU
+[bench_gate] three-way-20261113-after-ac-wait: idle 71% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 89% (streak 1/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 77% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 81% (streak 1/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 81% (streak 2/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 77% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 68% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 84% (streak 1/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 82% (streak 2/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 75% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 72% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 72% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 78% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 79% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 78% (streak 0/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 85% (streak 1/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 86% (streak 2/3)
+[bench_gate] three-way-20261113-after-ac-wait: idle 86% (streak 3/3)
+fast20 (attempt 1): ok
+fast22 (attempt 1): ok
+fast24 (attempt 1): ok
+fast25 (attempt 1): ok
+slim22 (attempt 1): ok
+fast20-nopow (attempt 1): ok
+fast22-nopow (attempt 1): ok
+fast24-nopow (attempt 1): ok
+fast25-nopow (attempt 1): ok
+slim22-nopow (attempt 1): ok
+done: 2026-11-13 16:22:19, failures: 0

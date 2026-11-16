@@ -1,0 +1,16 @@
+# A second run of the four shared cells of the run 20261113b, with and without proofs of work, as a check
+# (research, unaudited). [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+#
+# In the run 20261113b, the processes with proofs of work of these four shapes measured the prover of the affine
+# variant 2 to 22 ms slower than the processes without proofs of work, beyond what its proofs of work cost, and
+# no other prover. This file repeats the eight processes (label 20261113b-check1): the result is the same. The
+# folder is named `-check1` and not `-rerun1` so that make_tables.py does not merge it into the run. See the
+# README ("Flags") and the WORKLOG phase BEEP-on-Flock for what was tried.
+fast20          log_n=20 profile=fast rates=1,3,6   fold=4,5,5   affine_eta=0.003,0.01,0.02        affine_fold=6,6,5   eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22          log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24          log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+slim22          log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast20-nopow          FLOCK_NO_GRIND=1 log_n=20 profile=fast rates=1,3,6   fold=4,5,5   affine_eta=0.003,0.01,0.02        affine_fold=6,6,5   eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22-nopow          FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24-nopow          FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+slim22-nopow          FLOCK_NO_GRIND=1 log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control

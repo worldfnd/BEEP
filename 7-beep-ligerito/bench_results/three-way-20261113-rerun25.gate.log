@@ -1,0 +1,15 @@
+[bench_gate] beep-three-way-20261113-rerun25: idle 96% (streak 1/3)
+[bench_gate] beep-three-way-20261113-rerun25: idle 95% (streak 2/3)
+[bench_gate] beep-three-way-20261113-rerun25: idle 96% (streak 3/3)
+[bench_gate] beep-three-way-20261113-rerun25: starting (swap baseline 2.59 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+fast25.split (attempt 1): ok
+fast25.affine (attempt 1): ok
+fast25.beep02 (attempt 1): ok
+fast25.beep001 (attempt 1): ok
+fast25.split-nopow (attempt 1): ok
+fast25.affine-nopow (attempt 1): ok
+fast25.beep02-nopow (attempt 1): ok
+fast25.beep001-nopow (attempt 1): ok
+done: 2026-11-13 16:41:24, failures: 0
+gate exit: 0

@@ -1,0 +1,12 @@
+# Build outputs (regenerable)
+/7-beep-ligerito/target/
+.lake/
+
+# The compiled paper is not tracked: compile it outside the repository (see README.md)
+/typst/*.pdf
+
+# Local tooling and OS files
+.claude/
+.DS_Store
+__pycache__/
+*.py[cod]

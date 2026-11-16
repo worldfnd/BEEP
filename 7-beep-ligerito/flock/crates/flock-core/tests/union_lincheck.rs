@@ -1,0 +1,2102 @@
+//! M2 oracles for the union-column lincheck (`lincheck::prove_union_capture_z_vec`
+//! / `lincheck::verify_union`).
+//!
+//! 1. **T = 1 degeneration**: on a single-type registry the union-column
+//!    lincheck IS today's lincheck — byte-identical proof messages, claims,
+//!    and captured fold (the heavy BLAKE3/SHA-256 instances of this oracle
+//!    run through the full union prove entry in flock-prover's ignored
+//!    `tests/union_roundtrip.rs`).
+//! 2. **T = 2 vs brute force**: a synthetic two-type registry small enough
+//!    for brute-force MLEs — union zerocheck, then the union-column
+//!    lincheck, with (a) the initial claim, (b) the final witness claim,
+//!    and (c) the verifier's closed-form Comb-hat collapse each
+//!    cross-checked against dense recomputations, plus tamper rejection
+//!    (corrupted round message / z_partial / comb-affecting declared count).
+
+use std::collections::BTreeSet;
+
+use aggregate::{
+    Accumulator, AggregateProof, prove_aggregate, prove_aggregate_classes_shared_with_grinding,
+    verify_aggregate, verify_aggregate_classes_shared_with_grinding,
+};
+use bincode::serialize;
+use flock_core::{
+    aggregate::{self, AggregateError},
+    challenger::{Challenger, FsChallenger},
+    field::F128,
+    lincheck::{
+        self, LincheckCircuit, QuirkyPoint, SkipPoint, SparseMatrixCircuit, UnionLincheckSlot,
+        build_eq_table, build_quirky_eq_table, pack_z_lincheck,
+    },
+    matrix_fold::{self, FoldError, MatrixClaim, Weight},
+    r1cs::SparseBinaryMatrix,
+    schedule::{Instance, Registry, TableClass, TableType},
+    test_rng::Rng,
+    union::UnionInstance,
+    zerocheck::{self, K_SKIP, multilinear::lagrange_weights_naive, univariate_skip::pack_bits},
+};
+use lincheck::{
+    LincheckClaim, LincheckError, LincheckGrinding, LincheckProof, MatrixAssertion, eq_prefix_sum,
+    eq_prefix_weight, prove_padded_capture_z_vec, prove_union_capture_z_vec,
+    prove_union_capture_z_vec_with_grinding, union_comb_partial, verify as verify_lincheck,
+    verify_union, verify_union_deferred, verify_union_with_grinding,
+};
+use matrix_fold::{FoldGrinding, col_marginal, prove_fold, verify_fold};
+use zerocheck::{prove_packed_padded, verify as verify_zerocheck};
+const DOMAIN: &[u8] = b"flock-union-lincheck-test-v0";
+
+fn identity(k: usize) -> SparseBinaryMatrix {
+    SparseBinaryMatrix::new(k, k, (0..k).map(|i| vec![i]).collect())
+}
+
+/// Random sparse `k × k` matrix supported on the useful square: rows
+/// `[0, useful)` get ~`per_row` entries in columns `[0, useful)`; rows
+/// `[useful, k)` are empty. Keeps `M·z` honestly zero on the padding
+/// columns of every block (the same shape as the hash encoders' matrices).
+fn random_useful_matrix(
+    k: usize,
+    useful: usize,
+    per_row: usize,
+    rng: &mut Rng,
+) -> SparseBinaryMatrix {
+    let mut rows: Vec<Vec<usize>> = vec![Vec::new(); k];
+    for row in rows.iter_mut().take(useful) {
+        let mut cols = BTreeSet::new();
+        for _ in 0..per_row {
+            cols.insert((rng.next_u64() as usize) % useful);
+        }
+        *row = cols.into_iter().collect();
+    }
+    SparseBinaryMatrix::new(k, k, rows)
+}
+
+/// One synthetic slot: matrices, declared count, and the semantic
+/// (column-inner, row-outer) witness triple `z, a = A·z, b = B·z` over the
+/// full capacity (dummy rows all-zero — pin included).
+struct SlotData {
+    k_log: usize,
+    useful: usize,
+    n: usize,
+    pin: Option<usize>,
+    a0: SparseBinaryMatrix,
+    b0: SparseBinaryMatrix,
+    /// `z[v + row·k]` — trace position `v`, invocation `row`.
+    z_sem: Vec<bool>,
+    a_sem: Vec<bool>,
+    b_sem: Vec<bool>,
+}
+
+fn build_slot(
+    k_log: usize,
+    useful: usize,
+    nu: usize,
+    n: usize,
+    pin: Option<usize>,
+    seed: u64,
+) -> SlotData {
+    let mut rng = Rng::new(seed);
+    let k = 1usize << k_log;
+    let rows = 1usize << nu;
+    assert!(n <= rows);
+    let a0 = random_useful_matrix(k, useful, 4, &mut rng);
+    let b0 = random_useful_matrix(k, useful, 4, &mut rng);
+
+    let mut z_sem = vec![false; k * rows];
+    for row in 0..n {
+        for v in 0..useful {
+            z_sem[v + row * k] = rng.bit();
+        }
+        if let Some(p) = pin {
+            z_sem[p + row * k] = true; // declared rows carry the pin at 1
+        }
+    }
+    // a = A·z, b = B·z per invocation (dummy rows: zero in, zero out).
+    let apply = |m: &SparseBinaryMatrix| -> Vec<bool> {
+        let mut out = vec![false; k * rows];
+        for row in 0..rows {
+            for (i, cols) in m.rows.iter().enumerate() {
+                let mut acc = false;
+                for &c in cols {
+                    acc ^= z_sem[c + row * k];
+                }
+                out[i + row * k] = acc;
+            }
+        }
+        out
+    };
+    let a_sem = apply(&a0);
+    let b_sem = apply(&b0);
+    SlotData {
+        k_log,
+        useful,
+        n,
+        pin,
+        a0,
+        b0,
+        z_sem,
+        a_sem,
+        b_sem,
+    }
+}
+
+fn table_type(slot: &SlotData) -> TableType {
+    TableType {
+        k_log: slot.k_log,
+        useful_bits: slot.useful,
+        a_0: slot.a0.clone(),
+        b_0: slot.b0.clone(),
+        c_0: identity(1 << slot.k_log),
+        const_pin: slot.pin,
+        class: TableClass::Boolean,
+        io_schema: Vec::new(),
+        zeroed_word_cols: Vec::new(),
+    }
+}
+
+/// Scatter a slot's semantic vector into a union address-space vector at
+/// the slot's offset, under the BatchMajor address split
+/// `[7 in-word | ν row | κ−7 chunk]`.
+fn place_addr(dst: &mut [bool], sem: &[bool], k_log: usize, nu: usize, offset: usize) {
+    let k = 1usize << k_log;
+    for row in 0..(1usize << nu) {
+        for v in 0..k {
+            let addr = offset + (v & 127) + (row << 7) + ((v >> 7) << (7 + nu));
+            dst[addr] = sem[v + row * k];
+        }
+    }
+}
+
+/// Brute-force quirky MLE of an address-ordered Boolean vector at
+/// `(z_skip, rest)`: φ8 Lagrange on the low `K_SKIP` address bits,
+/// multilinear eq on the rest (LSB-first, `rest[j]` binds address bit
+/// `K_SKIP + j`).
+fn quirky_eval_addr(f: &[bool], z_skip: F128, rest: &[F128]) -> F128 {
+    let lambda = lagrange_weights_naive(K_SKIP, z_skip);
+    let eq = build_eq_table(rest);
+    assert_eq!(f.len(), lambda.len() * eq.len());
+    let mask = (1usize << K_SKIP) - 1;
+    let mut acc = F128::ZERO;
+    for (i, &bit) in f.iter().enumerate() {
+        if bit {
+            acc += lambda[i & mask] * eq[i >> K_SKIP];
+        }
+    }
+    acc
+}
+
+/// Brute-force quirky MLE of a semantic (column-inner, row-outer) Boolean
+/// vector at a semantic [`QuirkyPoint`].
+fn quirky_eval_sem(f: &[bool], k_log: usize, p: &QuirkyPoint) -> F128 {
+    let lambda = lagrange_weights_naive(K_SKIP, p.z_skip.phi8());
+    let eq_rest = build_eq_table(&p.x_inner_rest);
+    let eq_outer = build_eq_table(&p.x_outer);
+    let skip_mask = (1usize << K_SKIP) - 1;
+    let rest_mask = (1usize << (k_log - K_SKIP)) - 1;
+    let mut acc = F128::ZERO;
+    for (i, &bit) in f.iter().enumerate() {
+        if bit {
+            acc +=
+                lambda[i & skip_mask] * eq_rest[(i >> K_SKIP) & rest_mask] * eq_outer[i >> k_log];
+        }
+    }
+    acc
+}
+
+/// T = 1 degeneration: on a single-type registry at full utilization the
+/// union-column lincheck produces byte-identical proof messages, claims,
+/// captured fold, and post-proof transcript state to today's single-table
+/// lincheck — and both verifiers accept with the same output claim.
+#[test]
+fn single_type_union_lincheck_is_byte_identical() {
+    let (k_log, useful, nu) = (8usize, 200usize, 4usize);
+    let n = 1usize << nu; // full utilization: every row declared, pin = 1
+    let slot = build_slot(k_log, useful, nu, n, Some(0), 0x51_46_1E);
+    let m = nu + k_log;
+    let stripe = pack_z_lincheck(&slot.z_sem, m, k_log);
+    let circuit = SparseMatrixCircuit::new(&slot.a0, &slot.b0).with_const_pin(slot.pin);
+
+    let mut rng = Rng::new(0x0DD_0);
+    let x_ab = QuirkyPoint {
+        z_skip: SkipPoint::Phi8(rng.f128()),
+        x_inner_rest: rng.f128_vec(k_log - K_SKIP),
+        x_outer: rng.f128_vec(nu),
+    };
+
+    // Today's single-table lincheck.
+    let mut ch1 = FsChallenger::new(DOMAIN);
+    let (proof1, claim1, zvec1) =
+        prove_padded_capture_z_vec(&stripe, m, k_log, K_SKIP, useful, &circuit, &x_ab, &mut ch1);
+
+    // The union-column lincheck on the one-slot registry.
+    let registry = Registry::new(vec![table_type(&slot)], nu);
+    let union = UnionInstance::new(&registry, vec![n]);
+    let mut ch2 = FsChallenger::new(DOMAIN);
+    let (proof2, claim2, zvec2) = prove_union_capture_z_vec(
+        &union,
+        &[UnionLincheckSlot {
+            z_lincheck: &stripe,
+            circuit: &circuit,
+        }],
+        &x_ab,
+        &mut ch2,
+    );
+
+    // The SUMCHECK is byte-identical — that is what "T = 1 degenerates to the
+    // single-table lincheck" means. The union path additionally reports the
+    // per-matrix bilinear values for accumulation; the single-table path does
+    // not accumulate and leaves them empty, so they are compared separately
+    // (below) rather than papered over.
+    assert_eq!(
+        serialize(&(&proof1.rounds, &proof1.z_partial)).unwrap(),
+        serialize(&(&proof2.rounds, &proof2.z_partial)).unwrap(),
+        "union lincheck sumcheck must be byte-identical to the single-table one"
+    );
+    assert!(
+        proof1.matrix_evals.is_empty(),
+        "the single-table path does not accumulate"
+    );
+    assert_eq!(proof2.matrix_evals.len(), 1, "one boolean type, one report");
+    assert_eq!(claim1, claim2, "claims diverged");
+    assert_eq!(zvec1, zvec2, "captured pre-sumcheck folds diverged");
+    assert_eq!(
+        ch1.sample_f128(),
+        ch2.sample_f128(),
+        "post-proof transcript state diverged"
+    );
+
+    // Both verifiers accept the honest proof and agree on the claim.
+    let v_a = quirky_eval_sem(&slot.a_sem, k_log, &x_ab);
+    let v_b = quirky_eval_sem(&slot.b_sem, k_log, &x_ab);
+    let mut chv1 = FsChallenger::new(DOMAIN);
+    let vclaim1 = verify_lincheck(
+        m, k_log, K_SKIP, &circuit, &x_ab, v_a, v_b, &proof1, &mut chv1,
+    )
+    .expect("single-table verifier must accept");
+    let mut chv2 = FsChallenger::new(DOMAIN);
+    let vclaim2 = verify_union(&union, &[&circuit], &x_ab, v_a, v_b, &proof2, &mut chv2)
+        .expect("union verifier must accept");
+    assert_eq!(vclaim1, claim1);
+    assert_eq!(vclaim2, claim2);
+    assert_eq!(
+        chv1.sample_f128(),
+        chv2.sample_f128(),
+        "post-verify transcript state diverged"
+    );
+}
+
+/// T = 2 vs brute force: union zerocheck → union-column lincheck on a
+/// synthetic two-type registry with partial counts and one const-pinned
+/// type, cross-checked against dense recomputations, plus tamper rejection.
+#[test]
+fn two_type_union_lincheck_matches_brute_force() {
+    let nu = 4usize;
+    // Type A: κ = 9, 300 useful bits (3 of 4 chunk-columns), pinned at
+    // column 0, 11 of 16 rows declared. Type B: κ = 8, 120 useful bits
+    // (1 of 2 chunk-columns), unpinned, 13 of 16 rows declared.
+    let slot_a = build_slot(9, 300, nu, 11, Some(0), 0x2A_2A_01);
+    let slot_b = build_slot(8, 120, nu, 13, None, 0x2B_2B_02);
+    let registry = Registry::new(vec![table_type(&slot_a), table_type(&slot_b)], nu);
+    assert_eq!(registry.types()[0].k_log, 9, "slot order: A (wider) first");
+    let m = registry.m_total();
+    assert_eq!(m, 14); // 2^13 + 2^12 rounded up to 2^14 (with a gap)
+    let union = UnionInstance::new(&registry, vec![slot_a.n, slot_b.n]);
+
+    // Dense union address-space buffers; c = a ∘ b pointwise.
+    let mut z_addr = vec![false; 1 << m];
+    let mut a_addr = vec![false; 1 << m];
+    let mut b_addr = vec![false; 1 << m];
+    for (slot, layout) in [&slot_a, &slot_b].into_iter().zip(registry.slots()) {
+        place_addr(&mut z_addr, &slot.z_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut a_addr, &slot.a_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut b_addr, &slot.b_sem, slot.k_log, nu, layout.offset);
+    }
+    let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+    let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+    let padding = union.padding_spec();
+    assert!(padding.as_single_run().is_none(), "must exercise multi-run");
+
+    // ---- Prove: union zerocheck, then the union-column lincheck.
+    let stripe_a = pack_z_lincheck(&slot_a.z_sem, nu + slot_a.k_log, slot_a.k_log);
+    let stripe_b = pack_z_lincheck(&slot_b.z_sem, nu + slot_b.k_log, slot_b.k_log);
+    let circ_a = SparseMatrixCircuit::new(&slot_a.a0, &slot_a.b0).with_const_pin(slot_a.pin);
+    let circ_b = SparseMatrixCircuit::new(&slot_b.a0, &slot_b.b0);
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) = prove_packed_padded(&a_p, &b_p, &c_p, m, &padding, &mut ch_p);
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let lc_slots = [
+        UnionLincheckSlot {
+            z_lincheck: &stripe_a,
+            circuit: &circ_a,
+        },
+        UnionLincheckSlot {
+            z_lincheck: &stripe_b,
+            circuit: &circ_b,
+        },
+    ];
+    let (lc_proof, lc_claim, _g_vec) =
+        prove_union_capture_z_vec(&union, &lc_slots, &x_ab, &mut ch_p);
+
+    // ---- Verify (and probe the transcript for α, β_A, and the round
+    // challenges — cloned BEFORE verify_union consumes them).
+    let mut ch_v = FsChallenger::new(DOMAIN);
+    let zc_claim_v = verify_zerocheck(m, &zc_proof, &mut ch_v).expect("zerocheck must accept");
+    assert_eq!(zc_claim_v, zc_claim);
+    let x_ab_v = union
+        .x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim_v.z), &zc_claim_v.mlv_challenges);
+    assert_eq!(x_ab_v, x_ab);
+
+    let mut probe = ch_v.clone();
+    probe.observe_label(b"flock-lincheck-v0");
+    let alpha = probe.sample_f128();
+    let beta_a = probe.sample_f128(); // slot A's pin; B has none
+    let r_rounds: Vec<F128> = lc_proof
+        .rounds
+        .iter()
+        .map(|&(e1, einf)| {
+            probe.observe_f128(e1);
+            probe.observe_f128(einf);
+            probe.sample_f128()
+        })
+        .collect();
+    let mut rr = r_rounds.clone();
+    rr.reverse();
+
+    let circuits: [&dyn LincheckCircuit; 2] = [&circ_a, &circ_b];
+    let lc_claim_v = verify_union(
+        &union,
+        &circuits,
+        &x_ab_v,
+        zc_claim.a_eval,
+        zc_claim.b_eval,
+        &lc_proof,
+        &mut ch_v,
+    )
+    .expect("union lincheck verifier must accept the honest proof");
+    assert_eq!(lc_claim_v, lc_claim);
+
+    // ---- (a) The lincheck's initial claim α·â(r) + b̂(r) equals the
+    // brute-force quirky MLEs of the dense union buffers at the zerocheck
+    // point.
+    let v_a_bf = quirky_eval_addr(&a_addr, zc_claim.z, &zc_claim.mlv_challenges);
+    let v_b_bf = quirky_eval_addr(&b_addr, zc_claim.z, &zc_claim.mlv_challenges);
+    assert_eq!(zc_claim.a_eval, v_a_bf, "â(r) != brute force");
+    assert_eq!(zc_claim.b_eval, v_b_bf, "b̂(r) != brute force");
+    assert_eq!(
+        alpha * zc_claim.a_eval + zc_claim.b_eval,
+        alpha * v_a_bf + v_b_bf,
+        "initial lincheck claim != brute force"
+    );
+
+    // ---- (b) The final witness claim equals the brute-force MLE of the
+    // union witness at the (address-ordered) claim point.
+    let point = union.ab_claim_point(lc_claim.r_inner_skip, &lc_claim.r_inner_rest, &x_ab.x_outer);
+    let rest: Vec<F128> = point
+        .x_inner_rest
+        .iter()
+        .chain(&point.x_outer)
+        .copied()
+        .collect();
+    assert_eq!(
+        lc_claim.w,
+        quirky_eval_addr(&z_addr, point.z_skip.phi8(), &rest),
+        "final witness claim != brute-force union witness MLE"
+    );
+
+    // ---- (c) The verifier's closed-form Comb-hat collapse equals a dense
+    // union Comb MLE at the bound point.
+    // Verifier-identical per-type combs: circuit fold + w_t scale + β pin.
+    let mut combs_v: Vec<Vec<F128>> = registry
+        .types()
+        .iter()
+        .zip(registry.slots())
+        .zip(circuits)
+        .map(|((ty, layout), circuit)| {
+            let inner = ty.k_log - K_SKIP;
+            let eq_inner =
+                build_quirky_eq_table(x_ab.z_skip.phi8(), &x_ab.x_inner_rest[..inner], K_SKIP);
+            let mut comb = circuit.fold_alpha_batched(alpha, &eq_inner);
+            let w_t = eq_prefix_weight(&x_ab.x_inner_rest[inner..], layout.prefix);
+            for v in &mut comb {
+                *v *= w_t;
+            }
+            comb
+        })
+        .collect();
+    combs_v[0][slot_a.pin.unwrap()] += beta_a;
+    let closed = union_comb_partial(&registry, &combs_v, &rr, K_SKIP);
+
+    // Dense: per-type ξ recomputed from the raw matrix entries with explicit
+    // Lagrange × eq products, w_t-scaled, placed at the aligned column
+    // offsets (zero on gaps), pin added, then folded with the full eq tensor
+    // over the bound challenges.
+    let col_vars = m - nu;
+    let lambda = lagrange_weights_naive(K_SKIP, x_ab.z_skip.phi8());
+    let mut dense = vec![F128::ZERO; 1 << col_vars];
+    for (slot, layout) in [&slot_a, &slot_b].into_iter().zip(registry.slots()) {
+        let inner = slot.k_log - K_SKIP;
+        let eq_rest_t = build_eq_table(&x_ab.x_inner_rest[..inner]);
+        let mut w_t = F128::ONE;
+        for (j, &x) in x_ab.x_inner_rest[inner..].iter().enumerate() {
+            w_t *= if (layout.prefix >> j) & 1 == 1 {
+                x
+            } else {
+                F128::ONE + x
+            };
+        }
+        let off = layout.prefix << slot.k_log;
+        for (i, cols) in slot.a0.rows.iter().enumerate() {
+            let wq = alpha * w_t * lambda[i & 63] * eq_rest_t[i >> K_SKIP];
+            for &c in cols {
+                dense[off + c] += wq;
+            }
+        }
+        for (i, cols) in slot.b0.rows.iter().enumerate() {
+            let wq = w_t * lambda[i & 63] * eq_rest_t[i >> K_SKIP];
+            for &c in cols {
+                dense[off + c] += wq;
+            }
+        }
+        if let Some(p) = slot.pin {
+            dense[off + p] += beta_a; // only slot A is pinned
+        }
+    }
+    let eq_rr = build_eq_table(&rr);
+    let n_skip = 1usize << K_SKIP;
+    let mut dense_partial = vec![F128::ZERO; n_skip];
+    for (j, &e) in eq_rr.iter().enumerate() {
+        for (i, x) in dense_partial.iter_mut().enumerate() {
+            *x += e * dense[(j << K_SKIP) + i];
+        }
+    }
+    assert_eq!(
+        closed, dense_partial,
+        "closed-form Comb-hat collapse != brute-force dense Comb MLE"
+    );
+
+    // Final-check ledger: replaying the rounds from the brute-force target
+    // (with the count-derived pin term) must land exactly on
+    // Σ comb_partial · z_partial — the verifier's accepted equation.
+    let mut running = alpha * v_a_bf + v_b_bf + beta_a * eq_prefix_sum(&x_ab.x_outer, slot_a.n);
+    for (&(e1, einf), &r) in lc_proof.rounds.iter().zip(&r_rounds) {
+        let e0 = running + e1;
+        let c1 = e0 + e1 + einf;
+        running = einf * r * r + c1 * r + e0;
+    }
+    let final_sum = closed
+        .iter()
+        .zip(&lc_proof.z_partial)
+        .fold(F128::ZERO, |acc, (c, z)| acc + *c * *z);
+    assert_eq!(running, final_sum, "brute-force sumcheck ledger broke");
+
+    // ---- Tampers. Each replays the verifier from a fresh transcript.
+    let verify_with = |union: &UnionInstance<'_>,
+                       proof: &LincheckProof|
+     -> Result<LincheckClaim, LincheckError> {
+        let mut ch = FsChallenger::new(DOMAIN);
+        let zc = verify_zerocheck(m, &zc_proof, &mut ch).expect("zerocheck side is untampered");
+        let x = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+        verify_union(union, &circuits, &x, zc.a_eval, zc.b_eval, proof, &mut ch)
+    };
+
+    // Corrupted round message.
+    let mut bad = lc_proof.clone();
+    bad.rounds[1].0.lo ^= 1;
+    assert!(
+        matches!(
+            verify_with(&union, &bad),
+            Err(LincheckError::ConsistencyFailed { .. })
+        ),
+        "corrupted round message must be rejected"
+    );
+
+    // Corrupted z_partial entry.
+    let mut bad = lc_proof.clone();
+    bad.z_partial[3].hi ^= 1;
+    assert!(
+        matches!(
+            verify_with(&union, &bad),
+            Err(LincheckError::ConsistencyFailed { .. })
+        ),
+        "corrupted z_partial must be rejected"
+    );
+
+    // Comb-affecting count: the pinned slot's declared count enters the
+    // verifier's target through the const-pin term β·Σ_{row<n}eq(x_outer,row),
+    // so a corrupted count must fail the final consistency check.
+    let union_bad = UnionInstance::new(&registry, vec![slot_a.n - 1, slot_b.n]);
+    assert!(
+        matches!(
+            verify_with(&union_bad, &lc_proof),
+            Err(LincheckError::ConsistencyFailed { .. })
+        ),
+        "corrupted pinned-slot count must be rejected"
+    );
+
+    // The grinded multi-table path has the same relation but a different
+    // transcript: α, the one pinned table's β, every sumcheck round, then
+    // the φ8 skip point are all preceded by a PoW witness.
+    let grinding = LincheckGrinding::per_challenge_128();
+    let mut ch_p_secure = FsChallenger::new(b"flock-union-lincheck-secure-v0");
+    let (zc_proof_secure, zc_claim_secure) =
+        prove_packed_padded(&a_p, &b_p, &c_p, m, &padding, &mut ch_p_secure);
+    let x_ab_secure = union.x_ab_from_multilinear_values(
+        SkipPoint::Phi8(zc_claim_secure.z),
+        &zc_claim_secure.mlv_challenges,
+    );
+    let (lc_proof_secure, lc_claim_secure, _) = prove_union_capture_z_vec_with_grinding(
+        &union,
+        &lc_slots,
+        &x_ab_secure,
+        grinding,
+        &mut ch_p_secure,
+    );
+    assert_eq!(
+        lc_proof_secure.grinding_nonces.len(),
+        grinding.nonce_count(registry.m_bool() - nu - K_SKIP, 1, K_SKIP),
+    );
+
+    let mut ch_v_secure = FsChallenger::new(b"flock-union-lincheck-secure-v0");
+    let zc_claim_secure_v = verify_zerocheck(m, &zc_proof_secure, &mut ch_v_secure)
+        .expect("ungrinded zerocheck side must verify");
+    let x_ab_secure_v = union.x_ab_from_multilinear_values(
+        SkipPoint::Phi8(zc_claim_secure_v.z),
+        &zc_claim_secure_v.mlv_challenges,
+    );
+    let lc_claim_secure_v = verify_union_with_grinding(
+        &union,
+        &circuits,
+        &x_ab_secure_v,
+        zc_claim_secure_v.a_eval,
+        zc_claim_secure_v.b_eval,
+        &lc_proof_secure,
+        grinding,
+        &mut ch_v_secure,
+    )
+    .expect("grinded union lincheck must verify");
+    assert_eq!(lc_claim_secure_v, lc_claim_secure);
+
+    let mut missing_nonce = lc_proof_secure.clone();
+    missing_nonce.grinding_nonces.pop();
+    let mut ch_missing = FsChallenger::new(b"flock-union-lincheck-secure-v0");
+    let zc_missing = verify_zerocheck(m, &zc_proof_secure, &mut ch_missing)
+        .expect("ungrinded zerocheck side must verify");
+    let x_missing = union
+        .x_ab_from_multilinear_values(SkipPoint::Phi8(zc_missing.z), &zc_missing.mlv_challenges);
+    assert!(matches!(
+        verify_union_with_grinding(
+            &union,
+            &circuits,
+            &x_missing,
+            zc_missing.a_eval,
+            zc_missing.b_eval,
+            &missing_nonce,
+            grinding,
+            &mut ch_missing,
+        ),
+        Err(LincheckError::BadGrindingNonceCount { .. })
+    ));
+}
+
+/// The deferred split is behaviour-preserving, and the deferred half really
+/// does leave the matrix work undone.
+///
+/// `verify_union` is `verify_union_deferred` + `MatrixAssertion::check`, so the
+/// two must agree on every input — including tampered ones, where the
+/// interesting property is *which* half rejects. A corrupted round message
+/// perturbs `running`, which the assertion carries as `target`, so the deferred
+/// pass still returns `Ok` and only `check` catches it. That is the point of
+/// the split: nothing before `check` reads a base matrix, which is why a
+/// circuit can replay the deferred half and carry the assertion out as a claim
+/// instead of paying `O(nnz)`.
+#[test]
+fn deferred_lincheck_matches_and_defers_the_matrix_work() {
+    let nu = 4usize;
+    let slot_a = build_slot(9, 300, nu, 11, Some(0), 0x2A_2A_01);
+    let slot_b = build_slot(8, 120, nu, 13, None, 0x2B_2B_02);
+    let registry = Registry::new(vec![table_type(&slot_a), table_type(&slot_b)], nu);
+    let m = registry.m_total();
+    let union = UnionInstance::new(&registry, vec![slot_a.n, slot_b.n]);
+
+    let mut z_addr = vec![false; 1 << m];
+    let mut a_addr = vec![false; 1 << m];
+    let mut b_addr = vec![false; 1 << m];
+    for (slot, layout) in [&slot_a, &slot_b].into_iter().zip(registry.slots()) {
+        place_addr(&mut z_addr, &slot.z_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut a_addr, &slot.a_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut b_addr, &slot.b_sem, slot.k_log, nu, layout.offset);
+    }
+    let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+    let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+
+    let stripe_a = pack_z_lincheck(&slot_a.z_sem, nu + slot_a.k_log, slot_a.k_log);
+    let stripe_b = pack_z_lincheck(&slot_b.z_sem, nu + slot_b.k_log, slot_b.k_log);
+    let circ_a = SparseMatrixCircuit::new(&slot_a.a0, &slot_a.b0).with_const_pin(slot_a.pin);
+    let circ_b = SparseMatrixCircuit::new(&slot_b.a0, &slot_b.b0);
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) =
+        prove_packed_padded(&a_p, &b_p, &c_p, m, &union.padding_spec(), &mut ch_p);
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let lc_slots = [
+        UnionLincheckSlot {
+            z_lincheck: &stripe_a,
+            circuit: &circ_a,
+        },
+        UnionLincheckSlot {
+            z_lincheck: &stripe_b,
+            circuit: &circ_b,
+        },
+    ];
+    let (lc_proof, _lc_claim, _g) = prove_union_capture_z_vec(&union, &lc_slots, &x_ab, &mut ch_p);
+
+    let circuits: Vec<&dyn LincheckCircuit> = vec![&circ_a, &circ_b];
+    // The transcript up to the lincheck does not depend on the lincheck proof.
+    let replay = || {
+        let mut ch = FsChallenger::new(DOMAIN);
+        let zc = verify_zerocheck(m, &zc_proof, &mut ch).expect("zerocheck untampered");
+        let x = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+        (x, zc.a_eval, zc.b_eval, ch)
+    };
+
+    // Honest: both entries agree, and the assertion discharges.
+    let (x, va, vb, mut ch) = replay();
+    let direct = verify_union(&union, &circuits, &x, va, vb, &lc_proof, &mut ch)
+        .expect("direct verify accepts");
+    let (x, va, vb, mut ch) = replay();
+    let (deferred, assertion) =
+        verify_union_deferred(&union, &circuits, &x, va, vb, &lc_proof, &mut ch)
+            .expect("deferred verify accepts");
+    assert_eq!(
+        direct, deferred,
+        "the split must not change the witness claim"
+    );
+    assert!(
+        assertion.check(&union, &circuits).is_ok(),
+        "an honest assertion must discharge"
+    );
+
+    // Tampered: the composition still rejects, but the deferred half does not —
+    // it never reads a matrix, so `check` is what catches it.
+    let mut bad = lc_proof.clone();
+    bad.rounds[1].0.lo ^= 1;
+    let (x, va, vb, mut ch) = replay();
+    assert!(
+        matches!(
+            verify_union(&union, &circuits, &x, va, vb, &bad, &mut ch),
+            Err(LincheckError::ConsistencyFailed { .. })
+        ),
+        "composed verifier must still reject a corrupted round message"
+    );
+    let (x, va, vb, mut ch) = replay();
+    let (_, tampered) = verify_union_deferred(&union, &circuits, &x, va, vb, &bad, &mut ch)
+        .expect("the deferred half accepts — it defers");
+    assert!(
+        matches!(
+            tampered.check(&union, &circuits),
+            Err(LincheckError::ConsistencyFailed { .. })
+        ),
+        "the assertion is what must catch it"
+    );
+}
+
+/// The bridge between the two halves of the accumulation route: a real
+/// `MatrixAssertion` decomposes into per-matrix claims that `matrix_fold`
+/// can fold.
+///
+/// The decomposition is the load-bearing algebra. For a single boolean type
+/// filling the region, `fold_alpha_batched`'s contract
+/// `comb[c] = α·Σ_{r∈colA(c)} eq_inner[r] + Σ_{r∈colB(c)} eq_inner[r]`
+/// and the closed-form collapse give
+///
+/// ```text
+///   target = α·⟨W_row⊗W_col, A₀⟩ + ⟨W_row⊗W_col, B₀⟩ + β·W_col[pin]
+/// ```
+///
+/// with `W_row = λ(z_skip) ⊗ eq(x_inner_rest)` and `W_col = z_partial ⊗ eq(rr)`
+/// — exactly `matrix_fold::Weight`'s shape. Pinning this is what says the
+/// verifier's matrix work really is two evaluations of two *static* matrices,
+/// which is what makes accumulating them (rather than delegating, or paying
+/// them in-circuit) sound. It also shows why A and B stay separate claims:
+/// only their α-combination appears in the target, and α is per-proof.
+#[test]
+fn matrix_assertion_decomposes_into_foldable_claims() {
+    let nu = 4usize;
+    let slot = build_slot(9, 300, nu, 11, Some(0), 0xF0_0D_01);
+    let registry = Registry::new(vec![table_type(&slot)], nu);
+    let m = registry.m_total();
+    let union = UnionInstance::new(&registry, vec![slot.n]);
+
+    let mut z_addr = vec![false; 1 << m];
+    let mut a_addr = vec![false; 1 << m];
+    let mut b_addr = vec![false; 1 << m];
+    place_addr(
+        &mut z_addr,
+        &slot.z_sem,
+        slot.k_log,
+        nu,
+        registry.slots()[0].offset,
+    );
+    place_addr(
+        &mut a_addr,
+        &slot.a_sem,
+        slot.k_log,
+        nu,
+        registry.slots()[0].offset,
+    );
+    place_addr(
+        &mut b_addr,
+        &slot.b_sem,
+        slot.k_log,
+        nu,
+        registry.slots()[0].offset,
+    );
+    let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+    let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+
+    let stripe = pack_z_lincheck(&slot.z_sem, nu + slot.k_log, slot.k_log);
+    let circ = SparseMatrixCircuit::new(&slot.a0, &slot.b0).with_const_pin(slot.pin);
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) =
+        prove_packed_padded(&a_p, &b_p, &c_p, m, &union.padding_spec(), &mut ch_p);
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let lc_slots = [UnionLincheckSlot {
+        z_lincheck: &stripe,
+        circuit: &circ,
+    }];
+    let (lc_proof, _claim, _g) = prove_union_capture_z_vec(&union, &lc_slots, &x_ab, &mut ch_p);
+
+    let circuits: Vec<&dyn LincheckCircuit> = vec![&circ];
+    let mut ch_v = FsChallenger::new(DOMAIN);
+    let zc = verify_zerocheck(m, &zc_proof, &mut ch_v).expect("zerocheck accepts");
+    let x = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+    let (_, assertion) = verify_union_deferred(
+        &union, &circuits, &x, zc.a_eval, zc.b_eval, &lc_proof, &mut ch_v,
+    )
+    .expect("deferred verify accepts");
+    assert!(
+        assertion.check(&union, &circuits).is_ok(),
+        "assertion is honest"
+    );
+
+    // ---- Decompose into the two per-matrix claims.
+    let inner = slot.k_log - K_SKIP;
+    let row = Weight::low_eq(
+        assertion.z_skip.weights(K_SKIP),
+        assertion.x_inner_rest[..inner].to_vec(),
+    );
+    let col = Weight::low_eq(assertion.z_partial.clone(), assertion.rr.clone());
+    assert_eq!(row.n_vars(), slot.k_log, "row weight spans the block");
+    assert_eq!(col.n_vars(), slot.k_log, "column weight spans the block");
+
+    let claim_a = MatrixClaim::honest(row.clone(), col.clone(), &slot.a0);
+    let claim_b = MatrixClaim::honest(row, col.clone(), &slot.b0);
+    let beta = assertion.betas[0].expect("this slot is pinned");
+    let pin_term = beta * col.materialize()[slot.pin.unwrap()];
+
+    assert_eq!(
+        assertion.alpha * claim_a.value + claim_b.value + pin_term,
+        assertion.target,
+        "the assertion must decompose as α·⟨W,A⟩ + ⟨W,B⟩ + β·W_col[pin]"
+    );
+
+    // ---- And the claims fold. A second honest claim about the SAME matrix
+    // stands in for a second proof's claim; folding is over one matrix, which
+    // is why A and B get their own accumulators.
+    let other = MatrixClaim::honest(
+        Weight::eq(
+            (0..slot.k_log)
+                .map(|i| F128::new(0x51 + i as u64, 7))
+                .collect(),
+        ),
+        Weight::eq(
+            (0..slot.k_log)
+                .map(|i| F128::new(0x77 + i as u64, 3))
+                .collect(),
+        ),
+        &slot.a0,
+    );
+    let pair = [claim_a, other];
+    let combs: Vec<Vec<F128>> = pair
+        .iter()
+        .map(|c| col_marginal(&slot.a0, &c.row.materialize(), slot.a0.num_cols))
+        .collect();
+    let mut ch = FsChallenger::new(b"fold");
+    let (fold_proof, _) = prove_fold(&slot.a0, &combs, &pair, &mut ch);
+    let mut chv = FsChallenger::new(b"fold");
+    let acc = verify_fold(&pair, &fold_proof, &mut chv).expect("fold verifies");
+    assert!(
+        acc.check_direct(&slot.a0),
+        "the accumulated claim must discharge against the real base matrix"
+    );
+}
+
+/// The accumulated path agrees with the direct one, on a TWO-type registry
+/// where the slot prefix weights are not 1.
+///
+/// `check` reads the matrices (`O(Σ_t nnz_t)`); `check_reported` reads only
+/// the prover's reported per-matrix values and the verifier's own scalars.
+/// They must accept the same proofs — and the reported values must be the
+/// honest bilinear forms, which is what `claims()` hands to the accumulator.
+/// Corrupting a reported value has to be caught by one side or the other:
+/// the equation if it is inconsistent, the claim's own discharge if it is
+/// consistent-but-wrong.
+#[test]
+fn reported_matrix_evals_agree_with_reading_the_matrices() {
+    let nu = 4usize;
+    let slot_a = build_slot(9, 300, nu, 11, Some(0), 0x2A_2A_01);
+    let slot_b = build_slot(8, 120, nu, 13, None, 0x2B_2B_02);
+    let registry = Registry::new(vec![table_type(&slot_a), table_type(&slot_b)], nu);
+    let m = registry.m_total();
+    let union = UnionInstance::new(&registry, vec![slot_a.n, slot_b.n]);
+
+    let mut z_addr = vec![false; 1 << m];
+    let mut a_addr = vec![false; 1 << m];
+    let mut b_addr = vec![false; 1 << m];
+    for (slot, layout) in [&slot_a, &slot_b].into_iter().zip(registry.slots()) {
+        place_addr(&mut z_addr, &slot.z_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut a_addr, &slot.a_sem, slot.k_log, nu, layout.offset);
+        place_addr(&mut b_addr, &slot.b_sem, slot.k_log, nu, layout.offset);
+    }
+    let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+    let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+
+    let stripe_a = pack_z_lincheck(&slot_a.z_sem, nu + slot_a.k_log, slot_a.k_log);
+    let stripe_b = pack_z_lincheck(&slot_b.z_sem, nu + slot_b.k_log, slot_b.k_log);
+    let circ_a = SparseMatrixCircuit::new(&slot_a.a0, &slot_a.b0).with_const_pin(slot_a.pin);
+    let circ_b = SparseMatrixCircuit::new(&slot_b.a0, &slot_b.b0);
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) =
+        prove_packed_padded(&a_p, &b_p, &c_p, m, &union.padding_spec(), &mut ch_p);
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let lc_slots = [
+        UnionLincheckSlot {
+            z_lincheck: &stripe_a,
+            circuit: &circ_a,
+        },
+        UnionLincheckSlot {
+            z_lincheck: &stripe_b,
+            circuit: &circ_b,
+        },
+    ];
+    let (lc_proof, _c, _g) = prove_union_capture_z_vec(&union, &lc_slots, &x_ab, &mut ch_p);
+
+    let circuits: Vec<&dyn LincheckCircuit> = vec![&circ_a, &circ_b];
+    let assertion_for = |proof: &LincheckProof| {
+        let mut ch = FsChallenger::new(DOMAIN);
+        let zc = verify_zerocheck(m, &zc_proof, &mut ch).expect("zerocheck accepts");
+        let x = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+        verify_union_deferred(&union, &circuits, &x, zc.a_eval, zc.b_eval, proof, &mut ch)
+            .map(|(_, a)| a)
+    };
+
+    // Honest: both routes accept, and every reported value is the honest
+    // bilinear form of a real base matrix.
+    let assertion = assertion_for(&lc_proof).expect("deferred verify accepts");
+    assert!(
+        assertion.check(&union, &circuits).is_ok(),
+        "matrix route accepts"
+    );
+    assert!(
+        assertion.check_reported(&registry).is_ok(),
+        "reported route accepts"
+    );
+    for ((ca, cb), slot) in assertion
+        .claims(&registry)
+        .into_iter()
+        .zip([&slot_a, &slot_b])
+    {
+        assert!(ca.check_direct(&slot.a0), "reported A eval must be honest");
+        assert!(cb.check_direct(&slot.b0), "reported B eval must be honest");
+    }
+
+    // The claims fold, and the accumulator stays true.
+    let (ca0, _) = assertion.claims(&registry).swap_remove(0);
+    let other = MatrixClaim::honest(
+        Weight::eq(
+            (0..slot_a.k_log)
+                .map(|i| F128::new(9 + i as u64, 4))
+                .collect(),
+        ),
+        Weight::eq(
+            (0..slot_a.k_log)
+                .map(|i| F128::new(5 + i as u64, 6))
+                .collect(),
+        ),
+        &slot_a.a0,
+    );
+    let pair = [ca0, other];
+    let combs: Vec<Vec<F128>> = pair
+        .iter()
+        .map(|c| col_marginal(&slot_a.a0, &c.row.materialize(), slot_a.a0.num_cols))
+        .collect();
+    let mut ch = FsChallenger::new(b"fold");
+    let (fp, _) = prove_fold(&slot_a.a0, &combs, &pair, &mut ch);
+    let mut chv = FsChallenger::new(b"fold");
+    let acc = verify_fold(&pair, &fp, &mut chv).expect("fold verifies");
+    assert!(acc.check_direct(&slot_a.a0), "accumulator must stay true");
+
+    // Tampered report: caught by the equation, or by the claim's discharge.
+    for idx in 0..2 {
+        for which in 0..2 {
+            let mut bad = lc_proof.clone();
+            if which == 0 {
+                bad.matrix_evals[idx].0 += F128::ONE;
+            } else {
+                bad.matrix_evals[idx].1 += F128::ONE;
+            }
+            let a = assertion_for(&bad).expect("shape is still fine");
+            let equation = a.check_reported(&registry).is_err();
+            let claims = a.claims(&registry);
+            let slot = if idx == 0 { &slot_a } else { &slot_b };
+            let honest =
+                claims[idx].0.check_direct(&slot.a0) && claims[idx].1.check_direct(&slot.b0);
+            assert!(
+                equation || !honest,
+                "a tampered report survived both the equation and the claim (slot {idx}, {which})"
+            );
+        }
+    }
+}
+
+/// The actual 2→1 step: two INDEPENDENT proofs of the same circuit, their A
+/// and B claims folded into one accumulator each, and a third proof folded in
+/// on top.
+///
+/// The other fold tests use synthetic claims; these come from two real
+/// lincheck runs at unrelated points, which is what aggregation actually
+/// presents. Both accumulators must stay discharge-true, and a corrupted
+/// report must not yield a true one — either the fold rejects it outright or
+/// the accumulator it produces fails the root discharge. Both outcomes are
+/// sound; only a true-looking accumulator would not be.
+#[test]
+fn two_proofs_fold_two_to_one_per_matrix() {
+    const SEED: u64 = 0x5EED_5EED;
+    let nu = 4usize;
+    // Same seed ⇒ same base matrices (drawn before the witness); different
+    // declared counts ⇒ genuinely different proofs of the same circuit.
+    let slots = [
+        build_slot(9, 300, nu, 11, Some(0), SEED),
+        build_slot(9, 300, nu, 7, Some(0), SEED),
+        build_slot(9, 300, nu, 14, Some(0), SEED),
+    ];
+    for s in &slots[1..] {
+        assert_eq!(slots[0].a0.rows, s.a0.rows, "same circuit, by seed");
+        assert_eq!(slots[0].b0.rows, s.b0.rows, "same circuit, by seed");
+    }
+    let (a0, b0) = (&slots[0].a0, &slots[0].b0);
+
+    let registry = Registry::new(vec![table_type(&slots[0])], nu);
+    let m = registry.m_total();
+
+    // Prove one instance and return its (A, B) claim pair.
+    let claims_of = |slot: &SlotData, tamper: bool| -> (MatrixClaim, MatrixClaim) {
+        let union = UnionInstance::new(&registry, vec![slot.n]);
+        let off = registry.slots()[0].offset;
+        let mut z_addr = vec![false; 1 << m];
+        let mut a_addr = vec![false; 1 << m];
+        let mut b_addr = vec![false; 1 << m];
+        place_addr(&mut z_addr, &slot.z_sem, slot.k_log, nu, off);
+        place_addr(&mut a_addr, &slot.a_sem, slot.k_log, nu, off);
+        place_addr(&mut b_addr, &slot.b_sem, slot.k_log, nu, off);
+        let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+        let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+        let stripe = pack_z_lincheck(&slot.z_sem, nu + slot.k_log, slot.k_log);
+        let circ = SparseMatrixCircuit::new(&slot.a0, &slot.b0).with_const_pin(slot.pin);
+
+        let mut ch = FsChallenger::new(DOMAIN);
+        let (zc_proof, zc) =
+            prove_packed_padded(&a_p, &b_p, &c_p, m, &union.padding_spec(), &mut ch);
+        let x_ab = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+        let (mut proof, _c, _g) = prove_union_capture_z_vec(
+            &union,
+            &[UnionLincheckSlot {
+                z_lincheck: &stripe,
+                circuit: &circ,
+            }],
+            &x_ab,
+            &mut ch,
+        );
+        if tamper {
+            proof.matrix_evals[0].0 += F128::ONE;
+        }
+
+        let circuits: Vec<&dyn LincheckCircuit> = vec![&circ];
+        let mut chv = FsChallenger::new(DOMAIN);
+        let zcv = verify_zerocheck(m, &zc_proof, &mut chv).expect("zerocheck accepts");
+        let xv = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zcv.z), &zcv.mlv_challenges);
+        let (_, assertion) = verify_union_deferred(
+            &union, &circuits, &xv, zcv.a_eval, zcv.b_eval, &proof, &mut chv,
+        )
+        .expect("deferred verify accepts");
+        assertion.claims(&registry).swap_remove(0)
+    };
+
+    // One accumulator per matrix — A and B never mix.
+    let fold2 =
+        |mat: &SparseBinaryMatrix, pair: [MatrixClaim; 2]| -> Result<MatrixClaim, FoldError> {
+            let combs: Vec<Vec<F128>> = pair
+                .iter()
+                .map(|c| col_marginal(mat, &c.row.materialize(), mat.num_cols))
+                .collect();
+            let mut chp = FsChallenger::new(b"acc");
+            let (proof, _) = prove_fold(mat, &combs, &pair, &mut chp);
+            let mut chv = FsChallenger::new(b"acc");
+            verify_fold(&pair, &proof, &mut chv)
+        };
+
+    let (a1, b1) = claims_of(&slots[0], false);
+    let (a2, b2) = claims_of(&slots[1], false);
+    assert_ne!(a1.row.point, a2.row.point, "two proofs, two points");
+
+    let acc_a = fold2(a0, [a1, a2]).expect("A fold verifies");
+    let acc_b = fold2(b0, [b1, b2]).expect("B fold verifies");
+    assert!(acc_a.check_direct(a0), "A accumulator must be true");
+    assert!(acc_b.check_direct(b0), "B accumulator must be true");
+
+    // A third proof folds in on top — the tree continues, and an accumulated
+    // claim (plain eq ⊗ eq) folds against a fresh one (λ ⊗ eq shape).
+    let (a3, b3) = claims_of(&slots[2], false);
+    let acc_a = fold2(a0, [acc_a, a3]).expect("A fold verifies at depth 2");
+    let acc_b = fold2(b0, [acc_b, b3]).expect("B fold verifies at depth 2");
+    assert!(acc_a.check_direct(a0), "A accumulator survives depth 2");
+    assert!(acc_b.check_direct(b0), "B accumulator survives depth 2");
+
+    // A corrupted report must not yield a true accumulator — and must not
+    // disturb the other matrix, since A and B accumulate separately.
+    let (bad_a, good_b) = claims_of(&slots[1], true);
+    let (a1, b1) = claims_of(&slots[0], false);
+    match fold2(a0, [a1, bad_a]) {
+        Err(_) => {}
+        Ok(acc) => assert!(!acc.check_direct(a0), "a corrupted A report survived"),
+    }
+    assert!(
+        fold2(b0, [b1, good_b])
+            .expect("B fold verifies")
+            .check_direct(b0),
+        "the B accumulator is unaffected by the A-side tamper"
+    );
+}
+
+/// The aggregation driver end to end: succinctly verify real proofs, fold
+/// their matrix work into one accumulator, discharge once.
+///
+/// This is the composition the recursion circuit arithmetises — and the
+/// native payoff on its own, since N proofs now cost N succinct replays plus
+/// ONE `O(Σ_t nnz_t)` discharge instead of N of them. `verify_aggregate`
+/// reads no matrix, which is what makes it circuit-shaped; the only place
+/// anything looks at `A₀`/`B₀` is the prover and the final discharge.
+#[test]
+fn aggregating_real_proofs_defers_all_matrix_work_to_one_discharge() {
+    const SEED: u64 = 0xA66_5EED;
+    let nu = 4usize;
+    // Same seed ⇒ same base matrices; different counts ⇒ different proofs.
+    let slots: Vec<SlotData> = [11usize, 7, 14, 5]
+        .into_iter()
+        .map(|n| build_slot(9, 300, nu, n, Some(0), SEED))
+        .collect();
+    let registry = Registry::new(vec![table_type(&slots[0])], nu);
+    let m = registry.m_total();
+    let mats: Vec<(&SparseBinaryMatrix, &SparseBinaryMatrix)> = vec![(&slots[0].a0, &slots[0].b0)];
+    // The tuned column-marginal path the fold uses for its k·nnz work.
+    let agg_circ =
+        SparseMatrixCircuit::new(&slots[0].a0, &slots[0].b0).with_const_pin(slots[0].pin);
+
+    // Prove one instance and return the assertion its succinct verify emits.
+    let assert_of = |slot: &SlotData, tamper: bool| -> MatrixAssertion {
+        let union = UnionInstance::new(&registry, vec![slot.n]);
+        let off = registry.slots()[0].offset;
+        let mut z_addr = vec![false; 1 << m];
+        let mut a_addr = vec![false; 1 << m];
+        let mut b_addr = vec![false; 1 << m];
+        place_addr(&mut z_addr, &slot.z_sem, slot.k_log, nu, off);
+        place_addr(&mut a_addr, &slot.a_sem, slot.k_log, nu, off);
+        place_addr(&mut b_addr, &slot.b_sem, slot.k_log, nu, off);
+        let c_addr: Vec<bool> = a_addr.iter().zip(&b_addr).map(|(x, y)| *x & *y).collect();
+        let (a_p, b_p, c_p) = (pack_bits(&a_addr), pack_bits(&b_addr), pack_bits(&c_addr));
+        let stripe = pack_z_lincheck(&slot.z_sem, nu + slot.k_log, slot.k_log);
+        let circ = SparseMatrixCircuit::new(&slot.a0, &slot.b0).with_const_pin(slot.pin);
+
+        let mut ch = FsChallenger::new(DOMAIN);
+        let (zc_proof, zc) =
+            prove_packed_padded(&a_p, &b_p, &c_p, m, &union.padding_spec(), &mut ch);
+        let x_ab = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc.z), &zc.mlv_challenges);
+        let (mut proof, _c, _g) = prove_union_capture_z_vec(
+            &union,
+            &[UnionLincheckSlot {
+                z_lincheck: &stripe,
+                circuit: &circ,
+            }],
+            &x_ab,
+            &mut ch,
+        );
+        if tamper {
+            proof.matrix_evals[0].1 += F128::ONE;
+        }
+        let circuits: Vec<&dyn LincheckCircuit> = vec![&circ];
+        let mut chv = FsChallenger::new(DOMAIN);
+        let zcv = verify_zerocheck(m, &zc_proof, &mut chv).expect("zerocheck accepts");
+        let xv = union.x_ab_from_multilinear_values(SkipPoint::Phi8(zcv.z), &zcv.mlv_challenges);
+        verify_union_deferred(
+            &union, &circuits, &xv, zcv.a_eval, zcv.b_eval, &proof, &mut chv,
+        )
+        .expect("deferred verify accepts")
+        .1
+    };
+
+    let run = |asserts: &[MatrixAssertion],
+               priors: &[&Accumulator]|
+     -> Result<Accumulator, AggregateError> {
+        let mut chp = FsChallenger::new(b"agg");
+        let circs: Vec<&dyn LincheckCircuit> = vec![&agg_circ];
+        let (proof, acc_p) = prove_aggregate(&registry, &mats, &circs, asserts, priors, &mut chp)?;
+        let mut chv = FsChallenger::new(b"agg");
+        let acc_v = verify_aggregate(&registry, asserts, priors, &proof, &mut chv)?;
+        assert_eq!(acc_p, acc_v, "prover and verifier accumulators must agree");
+        Ok(acc_v)
+    };
+
+    // Leaf: two proofs, 2 → 1 per accumulator.
+    let a0 = assert_of(&slots[0], false);
+    let a1 = assert_of(&slots[1], false);
+    let acc = run(&[a0, a1], &[]).expect("leaf aggregation verifies");
+    assert!(acc.discharge(&mats), "leaf accumulator must discharge");
+    assert_eq!(acc.registry_digest, registry.digest());
+
+    // Merge: two more proofs folded in on top — 3 → 1 per accumulator (one
+    // inherited, two fresh). Still one discharge at the end.
+    let a2 = assert_of(&slots[2], false);
+    let a3 = assert_of(&slots[3], false);
+    let acc2 = run(&[a2, a3], &[&acc]).expect("merge aggregation verifies");
+    assert!(acc2.discharge(&mats), "merged accumulator must discharge");
+
+    // The true merge-node shape: TWO priors — each child of a merge brings
+    // its own accumulator — plus fresh assertions, folding 4 → 1 per
+    // matrix (two inherited, two fresh).
+    let leaf = |i: usize, j: usize| {
+        run(
+            &[assert_of(&slots[i], false), assert_of(&slots[j], false)],
+            &[],
+        )
+        .expect("leaf aggregation verifies")
+    };
+    let (acc_l, acc_r) = (leaf(0, 1), leaf(2, 3));
+    let fresh = [assert_of(&slots[1], false), assert_of(&slots[2], false)];
+    let acc_m = run(&fresh, &[&acc_l, &acc_r]).expect("two-prior merge verifies");
+    assert!(
+        acc_m.discharge(&mats),
+        "the 4->1 accumulator must discharge"
+    );
+
+    // A tampered INHERITED claim must poison the merge: the fold verifier
+    // targets the claimed values, so the replay diverges from the honest
+    // prover's rounds — rejection or a false accumulator, both sound.
+    let mut bad_prior = acc_l.clone();
+    bad_prior.per_type[0].0.value += F128::ONE;
+    let fresh2 = [assert_of(&slots[1], false), assert_of(&slots[2], false)];
+    match run(&fresh2, &[&bad_prior, &acc_r]) {
+        Err(_) => {}
+        Ok(a) => assert!(
+            !a.discharge(&mats),
+            "a tampered inherited claim produced a true accumulator"
+        ),
+    }
+
+    // SHARED BINDING: each assertion bound once, its claims folded without
+    // being observed again — same accumulators' validity, a different
+    // transcript, and the binding still covers every claim: a proof made
+    // for one assertion set does not verify for another.
+    let run_shared = |asserts: &[MatrixAssertion],
+                      priors: &[&Accumulator]|
+     -> Result<(AggregateProof, Accumulator), AggregateError> {
+        let mut chp = FsChallenger::new(b"agg");
+        let circs: Vec<&dyn LincheckCircuit> = vec![&agg_circ];
+        let (proof, acc_p) = prove_aggregate_classes_shared_with_grinding(
+            &registry,
+            &aggregate::Dropped::none(&registry),
+            &mats,
+            &circs,
+            asserts,
+            &[],
+            &[],
+            &[],
+            &[],
+            priors,
+            FoldGrinding::disabled(),
+            &mut chp,
+        )?;
+        let mut chv = FsChallenger::new(b"agg");
+        let acc_v = verify_aggregate_classes_shared_with_grinding(
+            &registry,
+            &aggregate::Dropped::none(&registry),
+            asserts,
+            &[],
+            &[],
+            &[],
+            priors,
+            &proof,
+            FoldGrinding::disabled(),
+            &mut chv,
+        )?;
+        assert_eq!(acc_p, acc_v, "shared: prover and verifier agree");
+        Ok((proof, acc_v))
+    };
+    let fresh_s = [assert_of(&slots[1], false), assert_of(&slots[2], false)];
+    let (proof_s, acc_s) = run_shared(&fresh_s, &[&acc_l, &acc_r]).expect("shared merge verifies");
+    assert!(acc_s.discharge(&mats), "the shared accumulator discharges");
+    assert_ne!(acc_s, acc_m, "shared binding is a different transcript");
+    let swapped = [assert_of(&slots[1], false), assert_of(&slots[3], false)];
+    let mut chv = FsChallenger::new(b"agg");
+    match verify_aggregate_classes_shared_with_grinding(
+        &registry,
+        &aggregate::Dropped::none(&registry),
+        &swapped,
+        &[],
+        &[],
+        &[],
+        &[&acc_l, &acc_r],
+        &proof_s,
+        FoldGrinding::disabled(),
+        &mut chv,
+    ) {
+        Err(_) => {}
+        Ok(a) => assert!(
+            !a.discharge(&mats),
+            "a shared proof verified for another assertion set"
+        ),
+    }
+
+    // A tampered report is caught by the equation check inside
+    // `verify_aggregate` — a caller cannot forget it.
+    let bad = assert_of(&slots[1], true);
+    assert!(
+        matches!(run(&[bad], &[]), Err(AggregateError::Reported(_))),
+        "a tampered matrix report must be rejected"
+    );
+
+    // An accumulator from another registry must not be folded in.
+    let other_slot = build_slot(8, 120, nu, 9, None, 0xBAD_5EED);
+    let other = Registry::new(vec![table_type(&other_slot)], nu);
+    let alien = Accumulator {
+        registry_digest: other.digest(),
+        per_type: acc.per_type.clone(),
+        per_element: Vec::new(),
+        per_linear: Vec::new(),
+        sigma: Vec::new(),
+        jagged: Vec::new(),
+    };
+    let a0b = assert_of(&slots[0], false);
+    assert!(
+        matches!(
+            run(&[a0b], &[&alien]),
+            Err(AggregateError::RegistryMismatch)
+        ),
+        "an accumulator from a different registry must be rejected"
+    );
+}
+
+/// `⊕_{c ∈ cols} z[c]`.
+fn dot(z: &[bool], cols: &[usize]) -> bool {
+    cols.iter().fold(false, |acc, &c| acc ^ z[c])
+}
+
+/// A gate-shaped κ = 9 type pinned at column 0 — word 0 the inputs
+/// (`x·1 = x`, the pin's own row among them), word 1 products of inputs,
+/// word 2 outputs defined as XORs of inputs and products (`(A z)·1 = x`) —
+/// and a satisfying witness on `n` of `2^nu` rows.
+fn gate_slot(nu: usize, n: usize, seed: u64) -> (TableType, Vec<bool>) {
+    let mut rng = Rng::new(seed);
+    let (k, pin) = (512, 0);
+    let mut pick = |lo: usize, hi: usize| -> Vec<usize> {
+        let mut cols: Vec<usize> = (0..3)
+            .map(|_| lo + rng.next_u64() as usize % (hi - lo))
+            .collect();
+        cols.sort_unstable();
+        cols.dedup();
+        cols
+    };
+    let (a, b): (Vec<Vec<usize>>, Vec<Vec<usize>>) = (0..k)
+        .map(|i| match i / 128 {
+            0 => (vec![i], vec![pin]),
+            1 => (pick(1, 128), pick(1, 128)),
+            2 => (pick(1, 256), vec![pin]),
+            _ => (Vec::new(), Vec::new()),
+        })
+        .unzip();
+    let ty = TableType {
+        k_log: 9,
+        useful_bits: 384,
+        a_0: SparseBinaryMatrix::new(k, k, a),
+        b_0: SparseBinaryMatrix::new(k, k, b),
+        c_0: identity(k),
+        const_pin: Some(pin),
+        class: TableClass::Boolean,
+        io_schema: Vec::new(),
+        zeroed_word_cols: Vec::new(),
+    };
+    let mut z = vec![false; k << nu];
+    for z_row in z.chunks_mut(k).take(n) {
+        z_row[pin] = true;
+        for v in 1..128 {
+            z_row[v] = rng.bit();
+        }
+        // Words 1 and 2 read only earlier words.
+        for i in 128..384 {
+            let bit = dot(z_row, &ty.a_0.rows[i]) & dot(z_row, &ty.b_0.rows[i]);
+            z_row[i] = bit;
+        }
+    }
+    (ty, z)
+}
+
+/// Which boolean zerocheck runs before the lincheck: RS (φ₈ skip, the x86
+/// default) or AG (the genus-95 base-code skip, the aarch64 default).
+#[derive(Clone, Copy, Debug)]
+enum Route {
+    Rs,
+    #[cfg(target_arch = "aarch64")]
+    Ag,
+}
+
+/// Every route this target can run.
+fn routes() -> Vec<Route> {
+    vec![
+        Route::Rs,
+        #[cfg(target_arch = "aarch64")]
+        Route::Ag,
+    ]
+}
+
+/// The union zerocheck (over the run-list that drops the slot's zeroed
+/// words, `a = A'z`, `b = B'z`, `c = C'z`) and lincheck on one gate slot:
+/// whether the zerocheck verifies, and the lincheck verifier's verdict.
+fn zerocheck_then_lincheck(
+    ty: TableType,
+    z: &[bool],
+    nu: usize,
+    n: usize,
+    grinding: LincheckGrinding,
+    route: Route,
+) -> (bool, Result<LincheckClaim, LincheckError>) {
+    zerocheck_then_lincheck_with(ty, z, nu, n, grinding, route, false, None)
+}
+
+/// [`zerocheck_then_lincheck`] under the full-height commit or not, with
+/// the zerocheck optionally reading the first `rows_read` rows of every
+/// column instead of the declared ones. The honest prover reads only the
+/// declared rows; a cheater who commits a dummy row must read it too, or
+/// its claims do not open against its commitment.
+#[allow(clippy::too_many_arguments)]
+fn zerocheck_then_lincheck_with(
+    ty: TableType,
+    z: &[bool],
+    nu: usize,
+    n: usize,
+    grinding: LincheckGrinding,
+    route: Route,
+    full_height: bool,
+    rows_read: Option<usize>,
+) -> (bool, Result<LincheckClaim, LincheckError>) {
+    let registry = Registry::new(vec![ty], nu);
+    let mut union = UnionInstance::new(&registry, vec![n]);
+    if full_height {
+        union.set_full_height_commit();
+    }
+    let union = union;
+    let ty = &registry.types()[0];
+    let (k_log, k) = (ty.k_log, 1usize << ty.k_log);
+    let dropped = |i: usize| union.zeroed_word_cols(0).contains(&(i / 128));
+    let apply = |row_bit: &dyn Fn(&[bool], usize) -> bool| -> Vec<bool> {
+        z.chunks(k)
+            .flat_map(|z_row| (0..k).map(move |i| !dropped(i) && row_bit(z_row, i)))
+            .collect()
+    };
+    let a_sem = apply(&|z_row, i| dot(z_row, &ty.a_0.rows[i]));
+    let b_sem = apply(&|z_row, i| dot(z_row, &ty.b_0.rows[i]));
+    let c_sem = apply(&|z_row, i| z_row[i]);
+    let m = registry.m_total();
+    let offset = registry.slots()[0].offset;
+    let addr = |sem: &[bool]| {
+        let mut out = vec![false; 1 << m];
+        place_addr(&mut out, sem, k_log, nu, offset);
+        pack_bits(&out)
+    };
+    let padding = match rows_read {
+        None => union.boolean_padding_spec(),
+        Some(rows) => Instance::new(&registry, vec![rows])
+            .boolean_padding_spec_dropping(|t| union.zeroed_word_cols(t)),
+    };
+    let (a_bits, b_bits, c_bits) = (addr(&a_sem), addr(&b_sem), addr(&c_sem));
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    // The zerocheck's point for the lincheck, and its verifier: the `(A, B)`
+    // evaluations it hands on, `None` when it rejects.
+    type ZcVerify = Box<dyn FnOnce(&mut FsChallenger) -> Option<(F128, F128)>>;
+    let (x_ab, verify_zc): (QuirkyPoint, ZcVerify) = match route {
+        Route::Rs => {
+            let (zc_proof, zc_claim) =
+                prove_packed_padded(&a_bits, &b_bits, &c_bits, m, &padding, &mut ch_p);
+            let x_ab = union.x_ab_from_multilinear_values(
+                SkipPoint::Phi8(zc_claim.z),
+                &zc_claim.mlv_challenges,
+            );
+            let verify = move |ch: &mut FsChallenger| {
+                verify_zerocheck(m, &zc_proof, ch)
+                    .ok()
+                    .map(|zc| (zc.a_eval, zc.b_eval))
+            };
+            (x_ab, Box::new(verify))
+        }
+        #[cfg(target_arch = "aarch64")]
+        Route::Ag => {
+            use zerocheck::{ZerocheckGrinding, ag_skip};
+            let (zc_proof, zc_claim, _) = ag_skip::prove_capture_s_hat_v_c_with_grinding(
+                &a_bits,
+                &b_bits,
+                &c_bits,
+                m,
+                &padding,
+                ZerocheckGrinding::disabled(),
+                &mut ch_p,
+            );
+            let x_ab = union
+                .x_ab_from_multilinear_values(SkipPoint::Ag(zc_claim.r1), &zc_claim.mlv_challenges);
+            let verify = move |ch: &mut FsChallenger| {
+                ag_skip::verify_with_grinding(m, &zc_proof, ZerocheckGrinding::disabled(), ch)
+                    .ok()
+                    .map(|zc| (zc.a_eval, zc.b_eval))
+            };
+            (x_ab, Box::new(verify))
+        }
+    };
+    let stripe = pack_z_lincheck(z, nu + k_log, k_log);
+    let circuit = SparseMatrixCircuit::new(&ty.a_0, &ty.b_0).with_const_pin(ty.const_pin);
+    let slot = UnionLincheckSlot {
+        z_lincheck: &stripe,
+        circuit: &circuit,
+    };
+    let (lc_proof, _, _) =
+        prove_union_capture_z_vec_with_grinding(&union, &[slot], &x_ab, grinding, &mut ch_p);
+
+    let mut ch_v = FsChallenger::new(DOMAIN);
+    let Some((a_eval, b_eval)) = verify_zc(&mut ch_v) else {
+        return (
+            false,
+            Err(LincheckError::ConsistencyFailed { which: "zerocheck" }),
+        );
+    };
+    let circuits: [&dyn LincheckCircuit; 1] = [&circuit];
+    let lc = verify_union_with_grinding(
+        &union, &circuits, &x_ab, a_eval, b_eval, &lc_proof, grinding, &mut ch_v,
+    );
+    (true, lc)
+}
+
+/// Dropping a word of XORed outputs moves its check from the zerocheck to
+/// the lincheck. A witness whose output bit disagrees with its XOR passes
+/// the zerocheck once the word is dropped (nothing there reads it) and is
+/// rejected by the lincheck's `η` term; with only the input word dropped,
+/// the zerocheck rejects it itself.
+#[test]
+fn dropped_linear_rows_are_checked_by_the_lincheck() {
+    // nu >= 6: below it no word drops (`UnionInstance::zeroed_word_cols`).
+    let (nu, n) = (6, 43);
+    let (ty, z) = gate_slot(nu, n, 0x1D_E7A);
+    let linear = ty.clone().with_zeroed_linear_words();
+    let identity = ty.clone().with_zeroed_identity_words();
+    assert_eq!(linear.zeroed_word_cols, [0, 2]);
+    assert_eq!(identity.zeroed_word_cols, [0]);
+    let checks_linear = |ty: &TableType| {
+        let registry = Registry::new(vec![ty.clone()], nu);
+        UnionInstance::new(&registry, vec![n]).checks_linear_rows()
+    };
+    assert!(checks_linear(&linear) && !checks_linear(&identity));
+
+    let mut bad = z.clone();
+    bad[(n / 2) * 512 + 300] ^= true; // an output bit of a declared row
+    for route in routes() {
+        for grinding in [
+            LincheckGrinding::disabled(),
+            LincheckGrinding::per_challenge_128(),
+        ] {
+            for honest_ty in [&ty, &identity, &linear] {
+                let (zc_ok, lc) =
+                    zerocheck_then_lincheck(honest_ty.clone(), &z, nu, n, grinding, route);
+                assert!(zc_ok && lc.is_ok(), "{route:?}, honest witness: {lc:?}");
+            }
+            let (zc_ok, lc) = zerocheck_then_lincheck(linear.clone(), &bad, nu, n, grinding, route);
+            assert!(
+                zc_ok,
+                "{route:?}: the dropped word is invisible to the zerocheck"
+            );
+            assert!(
+                matches!(lc, Err(LincheckError::ConsistencyFailed { .. })),
+                "{route:?}: the lincheck must reject: {lc:?}"
+            );
+            let (zc_ok, _) =
+                zerocheck_then_lincheck(identity.clone(), &bad, nu, n, grinding, route);
+            assert!(
+                !zc_ok,
+                "{route:?}: a kept output word is the zerocheck's to reject"
+            );
+        }
+    }
+}
+
+/// The pin's own row `pin·pin = pin` sits in word 0 and drops with it. The
+/// lincheck's const-pin claim (`β`, the count target) still holds the pin at
+/// `1` on every declared row: a witness with the pin cleared on one
+/// declared row (its other words unchanged) passes the zerocheck when every
+/// row that reads the pin is dropped, and the lincheck rejects it. Where
+/// word 2's `(A z)·pin = x` rows are kept, the zerocheck rejects it itself.
+#[test]
+fn tampered_pin_is_checked_while_its_word_drops() {
+    let (nu, n) = (6, 43);
+    let (ty, z) = gate_slot(nu, n, 0x1D_E7B);
+    let linear = ty.clone().with_zeroed_linear_words();
+    let identity = ty.clone().with_zeroed_identity_words();
+    assert_eq!(
+        (&linear.zeroed_word_cols[..], &identity.zeroed_word_cols[..]),
+        (&[0, 2][..], &[0][..])
+    );
+    let pin = ty.const_pin.unwrap();
+    assert!(pin < 128, "the pin is in word 0");
+    let mut bad = z.clone();
+    bad[(n / 2) * 512 + pin] = false;
+    let grinding = LincheckGrinding::per_challenge_128();
+    for route in routes() {
+        let (zc_ok, lc) = zerocheck_then_lincheck(linear.clone(), &bad, nu, n, grinding, route);
+        assert!(zc_ok, "{route:?}: no kept row reads the pin");
+        assert!(
+            matches!(lc, Err(LincheckError::ConsistencyFailed { .. })),
+            "{route:?}: the pin claim must reject: {lc:?}"
+        );
+        let (zc_ok, _) = zerocheck_then_lincheck(identity.clone(), &bad, nu, n, grinding, route);
+        assert!(!zc_ok, "{route:?}: word 2 keeps its (A z)·pin = x rows");
+    }
+}
+
+/// The full-height dummy-row attack (`docs/zeroed-linear-words.md`,
+/// soundness item 4). Under the full-height commit a partial slot's dummy
+/// rows are committed, with the pin at `0`. A cheater commits a dummy row
+/// whose input word holds `1` (its other words satisfying their rows) and
+/// runs the zerocheck over every committed row, as it must for its claims to
+/// open against that commitment. The slot keeps its degree-one rows
+/// (`UnionInstance::zeroed_word_cols` drops nothing for it), so the input's
+/// `x·pin = x` row is in the zerocheck, and the zerocheck rejects. Were the
+/// row dropped (the first version of the change), nothing in the boolean
+/// PIOP would read it, and the wiring's dead leaf `1 + w = 0` would zero
+/// both grand products — which the product verifier now rejects too
+/// (`circuit::tests::a_dead_io_word_of_one_is_rejected`). The honest prover
+/// commits dummy rows as zeros whatever its buffers hold
+/// (`UnionInstance::compact_witness`), so the attack needs this cheater's
+/// view; the same view on an honest witness verifies.
+#[test]
+fn full_height_dummy_row_input_word_is_rejected() {
+    let (nu, n) = (6, 43);
+    let (ty, z) = gate_slot(nu, n, 0x1D_E7D);
+    let linear = ty.clone().with_zeroed_linear_words();
+    assert_eq!(linear.zeroed_word_cols, [0, 2]);
+    let registry = Registry::new(vec![linear.clone()], nu);
+    let mut union = UnionInstance::new(&registry, vec![n]);
+    union.set_full_height_commit();
+    assert!(
+        union.zeroed_word_cols(0).is_empty(),
+        "a slot that commits dummy rows keeps its rows"
+    );
+    // Dummy row 50: pin 0, input bit 5 set, words 1 and 2 recomputed so
+    // that their own rows hold (word 2 reads `(A z)·pin`, so it stays 0).
+    let row = 50;
+    assert!(row >= n && row < 1 << nu);
+    let mut bad = z.clone();
+    let bad_row = &mut bad[row * 512..(row + 1) * 512];
+    assert!(bad_row.iter().all(|&x| !x), "an honest dummy row is zero");
+    bad_row[5] = true;
+    for i in 128..384 {
+        let bit = dot(bad_row, &ty.a_0.rows[i]) & dot(bad_row, &ty.b_0.rows[i]);
+        bad_row[i] = bit;
+    }
+    let grinding = LincheckGrinding::per_challenge_128();
+    for route in routes() {
+        let rows_read = Some(1 << nu);
+        let (zc_ok, lc) = zerocheck_then_lincheck_with(
+            linear.clone(),
+            &z,
+            nu,
+            n,
+            grinding,
+            route,
+            true,
+            rows_read,
+        );
+        assert!(zc_ok && lc.is_ok(), "{route:?}, honest witness: {lc:?}");
+        let (zc_ok, _) = zerocheck_then_lincheck_with(
+            linear.clone(),
+            &bad,
+            nu,
+            n,
+            grinding,
+            route,
+            true,
+            rows_read,
+        );
+        assert!(
+            !zc_ok,
+            "{route:?}: the kept x·pin = x row rejects the dummy input word"
+        );
+        // The rule is what catches it: with words 0 and 2 dropped, the same
+        // view of the same rows passes the zerocheck.
+        let (zc_ok, _) = zerocheck_then_lincheck_with(
+            linear.clone(),
+            &bad,
+            nu,
+            n,
+            grinding,
+            route,
+            false,
+            rows_read,
+        );
+        assert!(
+            zc_ok,
+            "{route:?}: a dropped row does not see the dummy word"
+        );
+    }
+}
+
+/// A word of forced-zero rows `0·0 = x` is degree one too, and drops with
+/// the linear words; its identity `(A + I)_i·z = z_i` is the lincheck's to
+/// check. A witness with one such bit set on a declared row passes the
+/// zerocheck once the word is dropped and the lincheck rejects it; with the
+/// word kept the zerocheck rejects it.
+#[test]
+fn forced_zero_rows_are_checked_by_the_lincheck() {
+    let (nu, n) = (6, 43);
+    let (mut ty, z) = gate_slot(nu, n, 0x1D_E7C);
+    // Rows 384..512 have A = B = ∅ and C = I: `0·0 = x`. Make them useful.
+    ty.useful_bits = 512;
+    let linear = ty.clone().with_zeroed_linear_words();
+    let identity = ty.clone().with_zeroed_identity_words();
+    assert_eq!(
+        (&linear.zeroed_word_cols[..], &identity.zeroed_word_cols[..]),
+        (&[0, 2, 3][..], &[0][..])
+    );
+    let mut bad = z.clone();
+    bad[(n / 2) * 512 + 400] = true;
+    let grinding = LincheckGrinding::per_challenge_128();
+    for route in routes() {
+        for honest_ty in [&ty, &identity, &linear] {
+            let (zc_ok, lc) =
+                zerocheck_then_lincheck(honest_ty.clone(), &z, nu, n, grinding, route);
+            assert!(zc_ok && lc.is_ok(), "{route:?}, honest witness: {lc:?}");
+        }
+        let (zc_ok, lc) = zerocheck_then_lincheck(linear.clone(), &bad, nu, n, grinding, route);
+        assert!(
+            zc_ok,
+            "{route:?}: the dropped word is invisible to the zerocheck"
+        );
+        assert!(
+            matches!(lc, Err(LincheckError::ConsistencyFailed { .. })),
+            "{route:?}: the lincheck must reject: {lc:?}"
+        );
+        let (zc_ok, _) = zerocheck_then_lincheck(identity.clone(), &bad, nu, n, grinding, route);
+        assert!(
+            !zc_ok,
+            "{route:?}: a kept 0·0 = x row is the zerocheck's to reject"
+        );
+    }
+}
+
+/// Types with the same base block share a matrix class, in first-occurrence
+/// order; a different block is its own class.
+#[test]
+fn matrix_classes_group_identical_blocks() {
+    let nu = 4usize;
+    let a = build_slot(9, 300, nu, 11, Some(0), 0xC1A5_5001);
+    let b = build_slot(9, 300, nu, 7, Some(0), 0xC1A5_5002);
+    let registry = Registry::new(vec![table_type(&a), table_type(&b), table_type(&a)], nu);
+    let none = aggregate::Dropped::none(&registry);
+    assert_eq!(
+        aggregate::matrix_classes(&registry, &none.zeroed),
+        vec![0, 1, 0]
+    );
+    // The same block dropping different words is a different matrix.
+    let split = vec![Vec::new(), Vec::new(), vec![0usize]];
+    assert_eq!(aggregate::matrix_classes(&registry, &split), vec![0, 1, 2]);
+    let tables = aggregate::SharedTables::new(&registry, &none);
+    assert_eq!(tables.kept.len(), 2);
+    assert!(tables.linear.is_empty(), "nothing dropped, nothing linear");
+    assert_eq!(*tables.kept[1].0.rows, *b.a0.rows);
+}
+
+/// With dropped words under `η`, the deferred lincheck reports each type's
+/// values over its KEPT rows plus the dropped rows' identity value: they
+/// reproduce the target ([`MatrixAssertion::check_reported`]), and every
+/// claim discharges against its static matrix — the kept `A_0`/`B_0`
+/// ([`TableType::kept_matrices`]) and `D·(A_0 + I)`
+/// ([`TableType::linear_identity_matrix`]). A moved linear value fails the
+/// reported check.
+#[test]
+fn dropped_words_report_static_claims() {
+    let (nu, n) = (6, 43);
+    let (ty, z) = gate_slot(nu, n, 0x1D_E7B);
+    let ty = ty.with_zeroed_linear_words();
+    let registry = Registry::new(vec![ty], nu);
+    let union = UnionInstance::new(&registry, vec![n]);
+    assert!(union.checks_linear_rows());
+    let ty = &registry.types()[0];
+    let (k_log, k) = (ty.k_log, 1usize << ty.k_log);
+    let dropped = |i: usize| union.zeroed_word_cols(0).contains(&(i / 128));
+    let apply = |row_bit: &dyn Fn(&[bool], usize) -> bool| -> Vec<bool> {
+        z.chunks(k)
+            .flat_map(|z_row| (0..k).map(move |i| !dropped(i) && row_bit(z_row, i)))
+            .collect()
+    };
+    let a_sem = apply(&|z_row, i| dot(z_row, &ty.a_0.rows[i]));
+    let b_sem = apply(&|z_row, i| dot(z_row, &ty.b_0.rows[i]));
+    let c_sem = apply(&|z_row, i| z_row[i]);
+    let m = registry.m_total();
+    let offset = registry.slots()[0].offset;
+    let addr = |sem: &[bool]| {
+        let mut out = vec![false; 1 << m];
+        place_addr(&mut out, sem, k_log, nu, offset);
+        pack_bits(&out)
+    };
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) = prove_packed_padded(
+        &addr(&a_sem),
+        &addr(&b_sem),
+        &addr(&c_sem),
+        m,
+        &union.boolean_padding_spec(),
+        &mut ch_p,
+    );
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let stripe = pack_z_lincheck(&z, nu + k_log, k_log);
+    let circuit = SparseMatrixCircuit::new(&ty.a_0, &ty.b_0).with_const_pin(ty.const_pin);
+    let slot = UnionLincheckSlot {
+        z_lincheck: &stripe,
+        circuit: &circuit,
+    };
+    let (lc_proof, _, _) = prove_union_capture_z_vec(&union, &[slot], &x_ab, &mut ch_p);
+    assert_eq!(
+        lc_proof.matrix_evals.len(),
+        2,
+        "the type's pair, then its dropped rows' value"
+    );
+
+    let mut ch_v = FsChallenger::new(DOMAIN);
+    let zc = verify_zerocheck(m, &zc_proof, &mut ch_v).expect("zerocheck accepts");
+    let circuits: [&dyn LincheckCircuit; 1] = [&circuit];
+    // The extra pair's second slot is padding: a nonzero one is refused
+    // rather than accepted as an unbound, malleable word.
+    {
+        let mut padded = lc_proof.clone();
+        padded.matrix_evals[1].1 = F128::ONE;
+        let mut ch_v = ch_v.clone();
+        assert!(
+            matches!(
+                verify_union_deferred(
+                    &union, &circuits, &x_ab, zc.a_eval, zc.b_eval, &padded, &mut ch_v,
+                ),
+                Err(LincheckError::ConsistencyFailed {
+                    which: "linear-evals padding"
+                })
+            ),
+            "a nonzero padding word in the extra pair"
+        );
+    }
+    let (_, assertion) = verify_union_deferred(
+        &union, &circuits, &x_ab, zc.a_eval, zc.b_eval, &lc_proof, &mut ch_v,
+    )
+    .expect("deferred verify accepts");
+    assertion
+        .check_reported(&registry)
+        .expect("the decomposed report");
+    let zeroed = union.zeroed_word_cols(0);
+    let (a_keep, b_keep) = ty.kept_matrices(zeroed);
+    let (ca, cb) = &assertion.claims(&registry)[0];
+    assert!(ca.check_direct(&a_keep), "A over the kept rows");
+    assert!(cb.check_direct(&b_keep), "B over the kept rows");
+    let cl = assertion.linear_claims(&registry)[0]
+        .clone()
+        .expect("a linear claim");
+    assert!(
+        cl.check_direct(&ty.linear_identity_matrix(zeroed)),
+        "the dropped rows' identity"
+    );
+    let mut bad = assertion.clone();
+    bad.linear_evals[0] = bad.linear_evals[0].map(|v| v + F128::ONE);
+    assert!(
+        bad.check_reported(&registry).is_err(),
+        "a moved linear value"
+    );
+}
+
+/// One honest witness of a single dropping type per seed, and its deferred
+/// assertion (the union's one slot, under `η`).
+fn dropped_word_assertion(
+    (nu, n): (usize, usize),
+    registry: &Registry,
+    union: &UnionInstance<'_>,
+    circuit: &SparseMatrixCircuit,
+    seed: u64,
+) -> MatrixAssertion {
+    let ty = &registry.types()[0];
+    let (k_log, k) = (ty.k_log, 1usize << ty.k_log);
+    let mut rng = Rng::new(seed);
+    let pin = ty.const_pin.unwrap();
+    let mut z = vec![false; k << nu];
+    for z_row in z.chunks_mut(k).take(n) {
+        z_row[pin] = true;
+        for v in 1..128 {
+            z_row[v] = rng.bit();
+        }
+        for i in 128..384 {
+            z_row[i] = dot(z_row, &ty.a_0.rows[i]) & dot(z_row, &ty.b_0.rows[i]);
+        }
+    }
+    let dropped = |i: usize| union.zeroed_word_cols(0).contains(&(i / 128));
+    let apply = |row_bit: &dyn Fn(&[bool], usize) -> bool| -> Vec<bool> {
+        z.chunks(k)
+            .flat_map(|z_row| (0..k).map(move |i| !dropped(i) && row_bit(z_row, i)))
+            .collect()
+    };
+    let a_sem = apply(&|z_row, i| dot(z_row, &ty.a_0.rows[i]));
+    let b_sem = apply(&|z_row, i| dot(z_row, &ty.b_0.rows[i]));
+    let c_sem = apply(&|z_row, i| z_row[i]);
+    let m = registry.m_total();
+    let offset = registry.slots()[0].offset;
+    let addr = |sem: &[bool]| {
+        let mut out = vec![false; 1 << m];
+        place_addr(&mut out, sem, k_log, nu, offset);
+        pack_bits(&out)
+    };
+    let mut ch_p = FsChallenger::new(DOMAIN);
+    let (zc_proof, zc_claim) = prove_packed_padded(
+        &addr(&a_sem),
+        &addr(&b_sem),
+        &addr(&c_sem),
+        m,
+        &union.boolean_padding_spec(),
+        &mut ch_p,
+    );
+    let x_ab =
+        union.x_ab_from_multilinear_values(SkipPoint::Phi8(zc_claim.z), &zc_claim.mlv_challenges);
+    let stripe = pack_z_lincheck(&z, nu + k_log, k_log);
+    let slot = UnionLincheckSlot {
+        z_lincheck: &stripe,
+        circuit,
+    };
+    let (lc_proof, _, _) = prove_union_capture_z_vec(union, &[slot], &x_ab, &mut ch_p);
+    let mut ch_v = FsChallenger::new(DOMAIN);
+    let zc = verify_zerocheck(m, &zc_proof, &mut ch_v).expect("zerocheck accepts");
+    let circuits: [&dyn LincheckCircuit; 1] = [circuit];
+    verify_union_deferred(
+        union, &circuits, &x_ab, zc.a_eval, zc.b_eval, &lc_proof, &mut ch_v,
+    )
+    .expect("deferred verify accepts")
+    .1
+}
+
+/// Shared binding over a type that drops words under `η`: two proofs'
+/// assertions fold 2 → 1 into one KEPT pair and one linear-identity claim,
+/// and a merge folds two such accumulators with a third proof; every
+/// accumulator discharges against [`aggregate::SharedTables`].
+#[test]
+fn shared_binding_folds_dropped_words() {
+    let (nu, n) = (6, 43);
+    let (ty, _) = gate_slot(nu, n, 0x5_4A12);
+    let registry = Registry::new(vec![ty.with_zeroed_linear_words()], nu);
+    let union = UnionInstance::new(&registry, vec![n]);
+    assert!(union.checks_linear_rows());
+    let ty = &registry.types()[0];
+    let circuit = SparseMatrixCircuit::new(&ty.a_0, &ty.b_0).with_const_pin(ty.const_pin);
+    let assertion = |seed: u64| dropped_word_assertion((nu, n), &registry, &union, &circuit, seed);
+    let dropped = aggregate::Dropped::of(&union);
+    let tables = aggregate::SharedTables::new(&registry, &dropped);
+    let mats = [(&ty.a_0, &ty.b_0)];
+    let circs: Vec<&dyn LincheckCircuit> = vec![&circuit];
+    let run = |asserts: &[MatrixAssertion], priors: &[&Accumulator]| -> Accumulator {
+        let mut chp = FsChallenger::new(b"agg-dropped");
+        let (proof, acc_p) = prove_aggregate_classes_shared_with_grinding(
+            &registry,
+            &dropped,
+            &mats,
+            &circs,
+            asserts,
+            &[],
+            &[],
+            &[],
+            &[],
+            priors,
+            FoldGrinding::disabled(),
+            &mut chp,
+        )
+        .expect("shared aggregation proves");
+        let mut chv = FsChallenger::new(b"agg-dropped");
+        let acc_v = verify_aggregate_classes_shared_with_grinding(
+            &registry,
+            &dropped,
+            asserts,
+            &[],
+            &[],
+            &[],
+            priors,
+            &proof,
+            FoldGrinding::disabled(),
+            &mut chv,
+        )
+        .expect("shared aggregation verifies");
+        assert_eq!(acc_p, acc_v);
+        acc_v
+    };
+    let acc = run(&[assertion(1), assertion(2)], &[]);
+    assert_eq!(acc.per_linear.len(), 1, "one linear group");
+    assert!(
+        acc.discharge(&tables.kept_refs()),
+        "the kept pair discharges"
+    );
+    assert!(
+        acc.discharge_linear(&tables.linear_refs()),
+        "the linear claim discharges"
+    );
+    let acc2 = run(&[assertion(3), assertion(4)], &[]);
+    let merged = run(&[assertion(5)], &[&acc, &acc2]);
+    assert!(
+        merged.discharge(&tables.kept_refs()) && merged.discharge_linear(&tables.linear_refs()),
+        "the 3 -> 1 merge discharges"
+    );
+    let mut bad = acc.clone();
+    bad.per_linear[0].value += F128::ONE;
+    assert!(
+        !bad.discharge_linear(&tables.linear_refs()),
+        "a moved linear claim"
+    );
+}
+
+/// Ron's probe (#70 review, item 2): on the PER-CLAIM path nothing folds a
+/// linear-identity claim, so an assertion's `α·η·v_L` term would be checked
+/// against nothing. Report the FULL-matrix `(A, B)` values (they discharge
+/// against `A_0`/`B_0`), shift the target, and solve for `v_L`: the
+/// reported check passes, and only the aggregate's binding-surface check
+/// stands between it and an accumulator. Both sides reject it, and the
+/// honest dropping assertion too; the shared path still takes the honest one
+/// and rejects one whose linear values disagree with its `Dropped`.
+#[test]
+fn unshared_aggregate_rejects_dropped_words() {
+    let (nu, n) = (6, 43);
+    let (ty, _) = gate_slot(nu, n, 0x5_4A12);
+    let registry = Registry::new(vec![ty.with_zeroed_linear_words()], nu);
+    let union = UnionInstance::new(&registry, vec![n]);
+    assert!(union.checks_linear_rows());
+    let ty = &registry.types()[0];
+    let circuit = SparseMatrixCircuit::new(&ty.a_0, &ty.b_0).with_const_pin(ty.const_pin);
+    let honest = dropped_word_assertion((nu, n), &registry, &union, &circuit, 7);
+    honest.check_reported(&registry).expect("honest report");
+
+    // The forgery: full-matrix (A, B) values, a shifted target, v_L solved.
+    let mut forged = honest.clone();
+    let (ca, cb) = &honest.claims(&registry)[0];
+    let full_a = MatrixClaim::honest(ca.row.clone(), ca.col.clone(), &ty.a_0).value;
+    let full_b = MatrixClaim::honest(cb.row.clone(), cb.col.clone(), &ty.b_0).value;
+    let inner = ty.k_log - K_SKIP;
+    let slot = &registry.slots()[0];
+    let w_t = eq_prefix_weight(&honest.x_inner_rest[inner..], slot.prefix);
+    let p_t = eq_prefix_weight(&honest.rr[inner..], slot.prefix);
+    let (alpha, eta) = (honest.alpha, honest.eta.expect("η checks the dropped rows"));
+    let (v_a, v_b) = honest.evals[0];
+    let delta = F128::new(0x5EED, 0xF0F0);
+    forged.target += delta;
+    forged.evals[0] = (full_a, full_b);
+    // p·w·(α·Δa + Δb + α·η·Δl) = δ (characteristic 2: Δ is a sum).
+    let moved = p_t * w_t * (alpha * (full_a + v_a) + (full_b + v_b));
+    let dl = (delta + moved) * (p_t * w_t * alpha * eta).inv();
+    forged.linear_evals[0] = forged.linear_evals[0].map(|v| v + dl);
+    forged
+        .check_reported(&registry)
+        .expect("the forged report reproduces the shifted target");
+    assert!(
+        MatrixClaim::honest(ca.row.clone(), ca.col.clone(), &ty.a_0).check_direct(&ty.a_0),
+        "the full-matrix A value discharges"
+    );
+
+    let mats = [(&ty.a_0, &ty.b_0)];
+    let circs: Vec<&dyn LincheckCircuit> = vec![&circuit];
+    for (what, a) in [("forged", &forged), ("honest", &honest)] {
+        let mut chp = FsChallenger::new(b"agg-unshared");
+        let got = prove_aggregate(
+            &registry,
+            &mats,
+            &circs,
+            std::slice::from_ref(a),
+            &[],
+            &mut chp,
+        );
+        assert!(
+            matches!(got, Err(AggregateError::DroppedWordsUnshared)),
+            "the per-claim prover refuses the {what} dropping assertion"
+        );
+    }
+    // The verifier, fed a proof made over the honest-but-undropped surface:
+    // an empty fold set would be `Malformed`, so build the proof the
+    // per-claim prover would have made with the drop stripped.
+    let mut stripped = forged.clone();
+    stripped.zeroed = vec![Vec::new(); registry.num_boolean()];
+    stripped.linear_evals = vec![None; registry.num_boolean()];
+    let mut chp = FsChallenger::new(b"agg-unshared");
+    let (proof, _) = prove_aggregate(
+        &registry,
+        &mats,
+        &circs,
+        std::slice::from_ref(&stripped),
+        &[],
+        &mut chp,
+    )
+    .expect("a non-dropping surface proves");
+    let mut chv = FsChallenger::new(b"agg-unshared");
+    assert!(
+        matches!(
+            verify_aggregate(
+                &registry,
+                std::slice::from_ref(&forged),
+                &[],
+                &proof,
+                &mut chv
+            ),
+            Err(AggregateError::DroppedWordsUnshared)
+        ),
+        "the per-claim verifier refuses the forged assertion"
+    );
+
+    // Shared binding: the honest assertion folds; one whose linear value
+    // disappears (η's presence disagreeing with `Dropped::checked`) is
+    // malformed, not a panic in the linear gather.
+    let dropped = aggregate::Dropped::of(&union);
+    let shared = |a: &MatrixAssertion| {
+        let mut chp = FsChallenger::new(b"agg-unshared");
+        prove_aggregate_classes_shared_with_grinding(
+            &registry,
+            &dropped,
+            &mats,
+            &circs,
+            std::slice::from_ref(a),
+            &[],
+            &[],
+            &[],
+            &[],
+            &[],
+            FoldGrinding::disabled(),
+            &mut chp,
+        )
+        .map(|_| ())
+    };
+    shared(&honest).expect("the shared path folds the honest assertion");
+    let mut no_linear = honest.clone();
+    no_linear.linear_evals = vec![None; registry.num_boolean()];
+    assert!(
+        matches!(shared(&no_linear), Err(AggregateError::Malformed)),
+        "a linear value missing where Dropped checks one"
+    );
+}

@@ -1,0 +1,14 @@
+name: fast20-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=20 profile=fast rates=1,3,6 fold=4,5,5 affine_eta=0.003,0.01,0.02 affine_fold=6,6,5 eta=0.02,0.001 beepaff=0.02:7,8,10/0.001:14,14,14 fold_nf=7,5,5 affine_fold_nf=10,6,5 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepaff,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 02:27:47
+power_before: AC Power
+load_before: 1.17 2.20 2.31
+swap_before: total = 5120.00M used = 4395.38M free = 724.62M (encrypted)
+top_before: CPU usage: 1.3% user, 9.32% sys, 89.63% idle  PhysMem: 11G used (3180M wired, 609M compressor), 12G unused. 
+end: 2026-11-14 02:27:49
+exit: 0
+power_after: AC Power
+load_after: 1.17 2.20 2.31
+swap_after: total = 5120.00M used = 4395.38M free = 724.62M (encrypted)

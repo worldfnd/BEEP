@@ -1,0 +1,18 @@
+# Rerun of the 2^25 cells of the three-way comparison, one variant per process (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+#
+# In the run 20261113 the six provers of the cell fast25 shared one process, whose peak footprint (14.5 GiB) did not
+# fit in the free memory of the machine. Here each variant has its own process (5 to 6.4 GiB each in a probe): the
+# witness and the commitment are deterministic, so every process opens the same commitment as before. A BEEP ladder
+# shares its process with its timing control. A cell name is `<shape>.<process>`; collect.py files its rows under
+# the shape, so they replace the rows of fast25 when make_tables.py merges this rerun into the run.
+
+fast25.split         log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split
+fast25.affine        log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.beep02        log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02  variants=beep,control
+fast25.beep001       log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control
+
+fast25.split-nopow   FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split
+fast25.affine-nopow  FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.beep02-nopow  FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02  variants=beep,control
+fast25.beep001-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control

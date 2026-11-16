@@ -1,0 +1,14 @@
+name: fast25.affine-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=25 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref reps=9
+start: 2026-11-14 10:30:50
+power_before: AC Power
+load_before: 2.69 3.43 3.44
+swap_before: total = 6144.00M used = 5095.38M free = 1048.62M (encrypted)
+top_before: CPU usage: 7.99% user, 15.63% sys, 76.37% idle  PhysMem: 20G used (4062M wired, 5286M compressor), 3662M unused. 
+end: 2026-11-14 10:30:59
+exit: 0
+power_after: AC Power
+load_after: 3.52 3.58 3.49
+swap_after: total = 6144.00M used = 5095.38M free = 1048.62M (encrypted)

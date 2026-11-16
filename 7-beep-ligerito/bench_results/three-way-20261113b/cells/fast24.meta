@@ -1,0 +1,14 @@
+name: fast24
+attempt: 1
+env: 
+args: log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control reps=9
+start: 2026-11-13 17:43:08
+power_before: AC Power
+load_before: 1.24 1.93 2.10
+swap_before: total = 3072.00M used = 2074.56M free = 997.44M (encrypted)
+top_before: CPU usage: 4.6% user, 9.13% sys, 86.80% idle  PhysMem: 19G used (3010M wired, 1433M compressor), 3996M unused. 
+end: 2026-11-13 17:43:18
+exit: 0
+power_after: AC Power
+load_after: 3.00 2.29 2.22
+swap_after: total = 3072.00M used = 2074.56M free = 997.44M (encrypted)

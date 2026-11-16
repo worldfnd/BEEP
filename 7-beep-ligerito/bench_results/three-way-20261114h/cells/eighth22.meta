@@ -1,0 +1,14 @@
+name: eighth22
+attempt: 1
+env: 
+args: log_n=22 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 fold=0,0,0,0 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 09:49:44
+power_before: AC Power
+load_before: 2.79 2.54 2.41
+swap_before: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)
+top_before: CPU usage: 6.71% user, 10.86% sys, 82.41% idle  PhysMem: 23G used (3659M wired, 6656M compressor), 290M unused. 
+end: 2026-11-14 09:49:55
+exit: 0
+power_after: AC Power
+load_after: 4.29 2.87 2.53
+swap_after: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)

@@ -1,0 +1,140 @@
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.11s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-100bits-3-fast16: idle 81% (streak 1/1)
+fast16 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast17: idle 81% (streak 1/1)
+fast17 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast18: idle 86% (streak 1/1)
+fast18 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast20: idle 81% (streak 1/1)
+fast20 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast22: idle 96% (streak 1/1)
+fast22 (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim22: idle 96% (streak 1/1)
+slim22 (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth15: idle 96% (streak 1/1)
+eighth15 (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth22: idle 95% (streak 1/1)
+eighth22 (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth22: idle 95% (streak 1/1)
+sixteenth22 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.split: idle 94% (streak 1/1)
+fast24.split (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.affine: idle 95% (streak 1/1)
+fast24.affine (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.affsmall: idle 96% (streak 1/1)
+fast24.affsmall (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.beep02: idle 94% (streak 1/1)
+fast24.beep02 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.beep001: idle 95% (streak 1/1)
+fast24.beep001 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.split: idle 95% (streak 1/1)
+fast25.split (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.affine: idle 95% (streak 1/1)
+fast25.affine (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.affsmall: idle 95% (streak 1/1)
+fast25.affsmall (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.beep02: idle 95% (streak 1/1)
+fast25.beep02 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.beep001: idle 84% (streak 1/1)
+fast25.beep001 (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.split: idle 92% (streak 1/1)
+slim24.split (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.affine: idle 95% (streak 1/1)
+slim24.affine (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.affsmall: idle 94% (streak 1/1)
+slim24.affsmall (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.beep02: idle 96% (streak 1/1)
+slim24.beep02 (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.beep001: idle 95% (streak 1/1)
+slim24.beep001 (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.split: idle 95% (streak 1/1)
+eighth24.split (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.affine: idle 96% (streak 1/1)
+eighth24.affine (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.affsmall: idle 95% (streak 1/1)
+eighth24.affsmall (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.beep02: idle 96% (streak 1/1)
+eighth24.beep02 (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.beep001: idle 96% (streak 1/1)
+eighth24.beep001 (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.split: idle 96% (streak 1/1)
+sixteenth24.split (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.affine: idle 95% (streak 1/1)
+sixteenth24.affine (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.affsmall: idle 86% (streak 1/1)
+sixteenth24.affsmall (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.beep02: idle 93% (streak 1/1)
+sixteenth24.beep02 (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.beep001: idle 95% (streak 1/1)
+sixteenth24.beep001 (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast16-nopow: idle 95% (streak 1/1)
+fast16-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast17-nopow: idle 94% (streak 1/1)
+fast17-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast18-nopow: idle 95% (streak 1/1)
+fast18-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast20-nopow: idle 94% (streak 1/1)
+fast20-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast22-nopow: idle 95% (streak 1/1)
+fast22-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim22-nopow: idle 95% (streak 1/1)
+slim22-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth15-nopow: idle 96% (streak 1/1)
+eighth15-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth22-nopow: idle 94% (streak 1/1)
+eighth22-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth22-nopow: idle 93% (streak 1/1)
+sixteenth22-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.split-nopow: idle 96% (streak 1/1)
+fast24.split-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.affine-nopow: idle 91% (streak 1/1)
+fast24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.affsmall-nopow: idle 95% (streak 1/1)
+fast24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.beep02-nopow: idle 95% (streak 1/1)
+fast24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast24.beep001-nopow: idle 95% (streak 1/1)
+fast24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.split-nopow: idle 95% (streak 1/1)
+fast25.split-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.affine-nopow: idle 96% (streak 1/1)
+fast25.affine-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.affsmall-nopow: idle 96% (streak 1/1)
+fast25.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.beep02-nopow: idle 95% (streak 1/1)
+fast25.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-fast25.beep001-nopow: idle 95% (streak 1/1)
+fast25.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.split-nopow: idle 95% (streak 1/1)
+slim24.split-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.affine-nopow: idle 89% (streak 1/1)
+slim24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.affsmall-nopow: idle 96% (streak 1/1)
+slim24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.beep02-nopow: idle 95% (streak 1/1)
+slim24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-slim24.beep001-nopow: idle 95% (streak 1/1)
+slim24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.split-nopow: idle 95% (streak 1/1)
+eighth24.split-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.affine-nopow: idle 93% (streak 1/1)
+eighth24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.affsmall-nopow: idle 95% (streak 1/1)
+eighth24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.beep02-nopow: idle 95% (streak 1/1)
+eighth24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-eighth24.beep001-nopow: idle 93% (streak 1/1)
+eighth24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.split-nopow: idle 95% (streak 1/1)
+sixteenth24.split-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.affine-nopow: idle 95% (streak 1/1)
+sixteenth24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.affsmall-nopow: idle 93% (streak 1/1)
+sixteenth24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.beep02-nopow: idle 95% (streak 1/1)
+sixteenth24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-100bits-3-sixteenth24.beep001-nopow: idle 94% (streak 1/1)
+sixteenth24.beep001-nopow (attempt 1): ok
+done: 2026-11-15 02:10:42, failures: 0

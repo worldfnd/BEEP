@@ -1,0 +1,14 @@
+name: eighth22-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,6 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,11,7,7 eta=0.02,0.001 beepaff=0.02:8,9,10,11/0.001:13,18,17,16 variants=split,affine,affine-small,beep,control,beepaff reps=9
+start: 2026-11-13 21:18:44
+power_before: AC Power
+load_before: 1.97 3.04 3.34
+swap_before: total = 4096.00M used = 3323.12M free = 772.88M (encrypted)
+top_before: CPU usage: 2.55% user, 8.16% sys, 89.28% idle  PhysMem: 13G used (3604M wired, 1134M compressor), 10G unused. 
+end: 2026-11-13 21:18:49
+exit: 0
+power_after: AC Power
+load_after: 2.77 3.19 3.39
+swap_after: total = 4096.00M used = 3323.12M free = 772.88M (encrypted)

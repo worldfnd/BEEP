@@ -1,0 +1,75 @@
+# The cells of the comparison of Ligerito variants at 100 bits (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-14, at the author's request ("run experiments for 100 bits of security,
+#  same parameter regimes as for 128 bits of security"); please review]
+# Written by scripts/make_cells100.py from scripts/cells.txt: do not edit by hand. The same cells, with
+# bits=100, Flock's profiles fast100 and slim100 in place of fast and slim, the fold grinding of the affine
+# ladders for 100 bits, and without the variant beepaff. See cells.txt for the format and the variants.
+
+fast16 log_n=16 profile=fast100 bits=100 rates=1,6 fold=0,0 affine_eta=0.02,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast17 log_n=17 profile=fast100 bits=100 rates=1,5 fold=0,0 affine_eta=0.01,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast18 log_n=18 profile=fast100 bits=100 rates=1,5 fold=0,0 affine_eta=0.01,0.01 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast20 log_n=20 profile=fast100 bits=100 rates=1,3,6 fold=0,0,0 affine_eta=0.003,0.01,0.02 affine_fold=0,0,0 eta=0.02,0.001 fold_nf=0,0,0 affine_fold_nf=0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast22 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 affine_eta=0.001,0.003,0.01,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+slim22 log_n=22 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 affine_eta=0.001,0.003,0.005,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+eighth15 log_n=15 profile=slim100 bits=100 l0_rate=3 rates=3,7 fold=0,0 affine_eta=0.02,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+eighth22 log_n=22 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 fold=0,0,0,0 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+sixteenth22 log_n=22 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast24.split log_n=24 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+fast24.affine log_n=24 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+fast24.affsmall log_n=24 profile=fast100 bits=100 rates=1,3,5,7 affine_eta=0.001,0.002,0.005,0.02 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+fast24.beep02 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+fast24.beep001 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+fast25.split log_n=25 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+fast25.affine log_n=25 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+fast25.affsmall log_n=25 profile=fast100 bits=100 rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+fast25.beep02 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+fast25.beep001 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+slim24.split log_n=24 profile=slim100 bits=100 rates=2,4,6,8 variants=split
+slim24.affine log_n=24 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+slim24.affsmall log_n=24 profile=slim100 bits=100 rates=2,4,6,8 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+slim24.beep02 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+slim24.beep001 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+eighth24.split log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 variants=split
+eighth24.affine log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+eighth24.affsmall log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+eighth24.beep02 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+eighth24.beep001 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+sixteenth24.split log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 variants=split
+sixteenth24.affine log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+sixteenth24.affsmall log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 affine_eta=0.001,0.001,0.002,0.005 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+sixteenth24.beep02 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+sixteenth24.beep001 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+fast16-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,6 fold=0,0 affine_eta=0.02,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast17-nopow FLOCK_NO_GRIND=1 log_n=17 profile=fast100 bits=100 rates=1,5 fold=0,0 affine_eta=0.01,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast18-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast100 bits=100 rates=1,5 fold=0,0 affine_eta=0.01,0.01 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast20-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast100 bits=100 rates=1,3,6 fold=0,0,0 affine_eta=0.003,0.01,0.02 affine_fold=0,0,0 eta=0.02,0.001 fold_nf=0,0,0 affine_fold_nf=0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 affine_eta=0.001,0.003,0.01,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+slim22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 affine_eta=0.001,0.003,0.005,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+eighth15-nopow FLOCK_NO_GRIND=1 log_n=15 profile=slim100 bits=100 l0_rate=3 rates=3,7 fold=0,0 affine_eta=0.02,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+eighth22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 fold=0,0,0,0 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+sixteenth22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits
+fast24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+fast24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+fast24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 affine_eta=0.001,0.002,0.005,0.02 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+fast24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+fast24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+fast25.split-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+fast25.affine-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+fast25.affsmall-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+fast25.beep02-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+fast25.beep001-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast100 bits=100 rates=1,3,5,7 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+slim24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 variants=split
+slim24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+slim24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+slim24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+slim24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 rates=2,4,6,8 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+eighth24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 variants=split
+eighth24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+eighth24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+eighth24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+eighth24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits
+sixteenth24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 variants=split
+sixteenth24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref
+sixteenth24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 affine_eta=0.001,0.001,0.002,0.005 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small
+sixteenth24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.02 variants=beep,control,beepb,beepref,beepold,beepbits
+sixteenth24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits

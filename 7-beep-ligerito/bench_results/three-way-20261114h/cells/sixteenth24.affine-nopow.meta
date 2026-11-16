@@ -1,0 +1,14 @@
+name: sixteenth24.affine-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref reps=9
+start: 2026-11-14 10:45:29
+power_before: AC Power
+load_before: 3.98 3.58 3.42
+swap_before: total = 6144.00M used = 4683.25M free = 1460.75M (encrypted)
+top_before: CPU usage: 9.15% user, 12.20% sys, 78.63% idle  PhysMem: 20G used (4335M wired, 6362M compressor), 3049M unused. 
+end: 2026-11-14 10:45:47
+exit: 0
+power_after: AC Power
+load_after: 5.81 4.01 3.57
+swap_after: total = 6144.00M used = 5723.00M free = 421.00M (encrypted)

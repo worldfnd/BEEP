@@ -1,0 +1,14 @@
+name: eighth24.affine
+attempt: 1
+env: 
+args: log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,5 variants=affine reps=9
+start: 2026-11-13 23:51:56
+power_before: AC Power
+load_before: 1.44 1.98 2.06
+swap_before: total = 3072.00M used = 2249.75M free = 822.25M (encrypted)
+top_before: CPU usage: 1.49% user, 8.95% sys, 89.55% idle  PhysMem: 17G used (3237M wired, 1693M compressor), 6359M unused. 
+end: 2026-11-13 23:52:02
+exit: 0
+power_after: AC Power
+load_after: 2.84 2.27 2.16
+swap_after: total = 3072.00M used = 2249.75M free = 822.25M (encrypted)

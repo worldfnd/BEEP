@@ -1,0 +1,14 @@
+name: fast25.beep001-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control reps=9
+start: 2026-11-13 16:41:18
+power_before: AC Power
+load_before: 3.06 2.95 2.77
+swap_before: total = 4096.00M used = 2456.25M free = 1639.75M (encrypted)
+top_before: CPU usage: 5.42% user, 10.33% sys, 84.23% idle  PhysMem: 19G used (3623M wired, 4843M compressor), 4196M unused. 
+end: 2026-11-13 16:41:24
+exit: 0
+power_after: AC Power
+load_after: 3.14 2.96 2.78
+swap_after: total = 4096.00M used = 2456.25M free = 1639.75M (encrypted)

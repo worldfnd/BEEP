@@ -1,0 +1,15 @@
+# affine ladder, log_n=18 k0=6 ks=4 rates=1,5: per level the smallest slack of ['0.001', '0.0015', '0.002', '0.003', '0.005', '0.01', '0.02'] with a certificate
+# for every fold round, in the form of Flock's script (flock/scripts/affine_fold_params.py) with the
+# wider search of scripts/beep_params.py; every (m, D) passes lemma31_feasible of Flock's script
+level round   rho  log n  degree  slack  agreement     m        D      M  list        B  log2 eps_aff  log2 eps_round  grinding
+    0     1  2^-1    13    4096   0.01       5875    23      304     32    14     5873       -124.19         -124.00         4
+    0     2  2^-1    13    4097   0.01       5875    21      375     30    14     5874       -124.19         -124.00         4
+    0     3  2^-1    13    4098   0.01       5875    22      335     31    14     5875       -124.19         -124.00         4
+    0     4  2^-1    13    4099   0.01       5875    22      353     31    14     5875       -124.19         -124.00         4
+    0     5  2^-1    13    4100   0.01       5875    22      377     31    15     5873       -124.09         -123.91         5
+    0     6  2^-1    13    4101   0.01       5875    22      416     31    15     5871       -124.09         -123.91         5
+    1     1  2^-5    13     256   0.01       1531    48     1603    280    43     1530       -122.57         -122.51         6
+    1     2  2^-5    13     257   0.01       1531    61     2051    355    44     1530       -122.54         -122.48         6
+    1     3  2^-5    13     258   0.01       1531    85     2816    493    45     1531       -122.51         -122.45         6
+    1     4  2^-5    13     259   0.01       1531   136     4516    786    48     1531       -122.42         -122.36         6
+affine_eta=0.01,0.01 affine_fold=5,6

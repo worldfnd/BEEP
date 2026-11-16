@@ -1,0 +1,14 @@
+name: sixteenth24.affsmall-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 affine_eta=0.001,0.001,0.002,0.005 affine_fold=9,9,8,7 variants=affine-small reps=9
+start: 2026-11-13 23:21:04
+power_before: AC Power
+load_before: 2.35 2.18 2.06
+swap_before: total = 3072.00M used = 2265.75M free = 806.25M (encrypted)
+top_before: CPU usage: 12.69% user, 8.99% sys, 78.30% idle  PhysMem: 16G used (3248M wired, 1824M compressor), 6904M unused. 
+end: 2026-11-13 23:21:13
+exit: 0
+power_after: AC Power
+load_after: 2.95 2.32 2.11
+swap_after: total = 3072.00M used = 2265.75M free = 806.25M (encrypted)

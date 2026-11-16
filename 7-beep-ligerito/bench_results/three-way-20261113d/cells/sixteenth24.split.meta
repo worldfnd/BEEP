@@ -1,0 +1,14 @@
+name: sixteenth24.split
+attempt: 1
+env: 
+args: log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 variants=split reps=9
+start: 2026-11-13 22:50:56
+power_before: AC Power
+load_before: 2.62 2.55 2.33
+swap_before: total = 3072.00M used = 2305.75M free = 766.25M (encrypted)
+top_before: CPU usage: 2.57% user, 9.27% sys, 88.14% idle  PhysMem: 18G used (3222M wired, 1133M compressor), 5282M unused. 
+end: 2026-11-13 22:51:08
+exit: 0
+power_after: AC Power
+load_after: 3.61 2.79 2.41
+swap_after: total = 3072.00M used = 2305.75M free = 766.25M (encrypted)

@@ -1,0 +1,14 @@
+name: fast25.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=25 profile=fast rates=1,3,5,7 variants=split reps=9
+start: 2026-11-13 17:52:17
+power_before: AC Power
+load_before: 1.39 1.56 1.84
+swap_before: total = 3072.00M used = 2066.56M free = 1005.44M (encrypted)
+top_before: CPU usage: 3.10% user, 9.32% sys, 87.56% idle  PhysMem: 16G used (2979M wired, 1806M compressor), 7551M unused. 
+end: 2026-11-13 17:52:21
+exit: 0
+power_after: AC Power
+load_after: 2.56 1.80 1.93
+swap_after: total = 3072.00M used = 2066.56M free = 1005.44M (encrypted)

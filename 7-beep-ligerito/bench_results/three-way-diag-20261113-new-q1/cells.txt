@@ -1,0 +1,8 @@
+# Diagnostic cells for the timing anomaly of the affine prover (research, unaudited; not measurements).
+# [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+# The cells fast22 and fast24 of the run 20261113b, with their arguments, and their twins without proofs of work.
+# Run with CAMPAIGN_BIN=<a bench binary> through the gate and the driver, as a campaign.
+fast22          log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24          log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22-nopow    FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24-nopow    FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control

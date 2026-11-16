@@ -1,0 +1,14 @@
+name: slim24.affsmall-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim rates=2,4,6,8 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,9,7,6 variants=affine-small reps=9
+start: 2026-11-13 23:12:25
+power_before: AC Power
+load_before: 1.26 1.64 1.92
+swap_before: total = 3072.00M used = 2281.75M free = 790.25M (encrypted)
+top_before: CPU usage: 3.70% user, 8.99% sys, 87.30% idle  PhysMem: 17G used (3247M wired, 1609M compressor), 6347M unused. 
+end: 2026-11-13 23:12:28
+exit: 0
+power_after: AC Power
+load_after: 1.26 1.64 1.92
+swap_after: total = 3072.00M used = 2281.75M free = 790.25M (encrypted)

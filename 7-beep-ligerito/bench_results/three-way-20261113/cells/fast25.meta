@@ -1,0 +1,14 @@
+name: fast25
+attempt: 1
+env: 
+args: log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9
+start: 2026-11-13 16:16:27
+power_before: AC Power
+load_before: 3.47 3.27 3.21
+swap_before: total = 5120.00M used = 4153.44M free = 966.56M (encrypted)
+top_before: CPU usage: 4.11% user, 11.52% sys, 84.36% idle  PhysMem: 16G used (3289M wired, 2985M compressor), 7609M unused. 
+end: 2026-11-13 16:17:11
+exit: 0
+power_after: AC Power
+load_after: 2.47 3.04 3.13
+swap_after: total = 7168.00M used = 5979.94M free = 1188.06M (encrypted)

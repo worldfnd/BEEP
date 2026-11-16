@@ -1,0 +1,14 @@
+name: eighth24.beep001
+attempt: 1
+env: 
+args: log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 eta=0.001 beepaff=0.001:13,19,18,16 variants=beep,control,beepaff reps=9
+start: 2026-11-13 21:08:39
+power_before: AC Power
+load_before: 3.53 3.62 3.44
+swap_before: total = 6144.00M used = 4606.00M free = 1538.00M (encrypted)
+top_before: CPU usage: 5.18% user, 11.39% sys, 83.41% idle  PhysMem: 14G used (3601M wired, 805M compressor), 9486M unused. 
+end: 2026-11-13 21:08:51
+exit: 0
+power_after: AC Power
+load_after: 3.80 3.68 3.46
+swap_after: total = 6144.00M used = 4606.00M free = 1538.00M (encrypted)

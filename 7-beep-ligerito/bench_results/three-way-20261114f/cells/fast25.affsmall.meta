@@ -1,0 +1,14 @@
+name: fast25.affsmall
+attempt: 1
+env: 
+args: log_n=25 profile=fast rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=8,8,7,6 affine_fold_nf=11,8,7,6 variants=affine-small,afast-small,anf-small,anfref-small reps=9
+start: 2026-11-14 02:07:29
+power_before: AC Power
+load_before: 2.29 2.40 2.16
+swap_before: total = 6144.00M used = 5091.38M free = 1052.62M (encrypted)
+top_before: CPU usage: 2.59% user, 9.32% sys, 88.8% idle  PhysMem: 10G used (3190M wired, 447M compressor), 13G unused. 
+end: 2026-11-14 02:07:50
+exit: 0
+power_after: AC Power
+load_after: 3.56 2.70 2.28
+swap_after: total = 12288.00M used = 6251.31M free = 6036.69M (encrypted)

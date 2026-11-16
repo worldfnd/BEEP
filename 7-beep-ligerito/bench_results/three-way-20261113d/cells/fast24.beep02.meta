@@ -1,0 +1,14 @@
+name: fast24.beep02
+attempt: 1
+env: 
+args: log_n=24 profile=fast rates=1,3,5,7 eta=0.02 beepaff=0.02:7,8,9,10 variants=beep,control,beepaff,beepb,beepref,beepold reps=9
+start: 2026-11-13 22:36:01
+power_before: AC Power
+load_before: 1.48 2.17 2.15
+swap_before: total = 4096.00M used = 2563.00M free = 1533.00M (encrypted)
+top_before: CPU usage: 3.7% user, 9.74% sys, 87.17% idle  PhysMem: 18G used (3415M wired, 1221M compressor), 5704M unused. 
+end: 2026-11-13 22:36:08
+exit: 0
+power_after: AC Power
+load_after: 2.79 2.43 2.24
+swap_after: total = 4096.00M used = 2563.00M free = 1533.00M (encrypted)

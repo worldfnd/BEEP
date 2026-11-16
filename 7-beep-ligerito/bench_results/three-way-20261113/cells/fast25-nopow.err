@@ -1,0 +1,18 @@
+       22.04 real        79.04 user        22.35 sys
+         11680677888  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+             2781095  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+               29850  voluntary context switches
+              471884  involuntary context switches
+       1037150635950  instructions retired
+        341629354525  cycles elapsed
+         15834869328  peak memory footprint

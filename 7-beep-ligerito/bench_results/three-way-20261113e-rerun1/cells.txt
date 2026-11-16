@@ -1,0 +1,4 @@
+# [AI-drafted (claude-fable-5-2), 2026-11-14] A rerun of the two processes of Ligerito (Flock) for 2^24 words at rate 1/16 of the run 20261113e:
+# its process without proofs of work had part of its memory compressed (peak footprint 7.19 GiB, resident 6.82 GiB).
+sixteenth24.split log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 variants=split
+sixteenth24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 variants=split

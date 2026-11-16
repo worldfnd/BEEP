@@ -1,0 +1,14 @@
+name: fast25.affine
+attempt: 1
+env: 
+args: log_n=25 profile=fast100 bits=100 rates=1,3,5,7 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref reps=9
+start: 2026-11-15 01:23:19
+power_before: AC Power
+load_before: 1.19 1.70 1.59
+swap_before: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)
+top_before: CPU usage: 2.34% user, 8.93% sys, 88.72% idle  PhysMem: 19G used (2921M wired, 5944M compressor), 4520M unused. 
+end: 2026-11-15 01:23:27
+exit: 0
+power_after: AC Power
+load_after: 1.16 1.67 1.58
+swap_after: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)

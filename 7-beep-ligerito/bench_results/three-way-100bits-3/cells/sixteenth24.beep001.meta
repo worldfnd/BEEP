@@ -1,0 +1,14 @@
+name: sixteenth24.beep001
+attempt: 1
+env: 
+args: log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-15 01:40:05
+power_before: AC Power
+load_before: 2.28 2.49 2.15
+swap_before: total = 4096.00M used = 3456.88M free = 639.12M (encrypted)
+top_before: CPU usage: 3.53% user, 9.14% sys, 87.31% idle  PhysMem: 18G used (2935M wired, 5920M compressor), 5384M unused. 
+end: 2026-11-15 01:40:21
+exit: 0
+power_after: AC Power
+load_after: 4.89 3.08 2.36
+swap_after: total = 4096.00M used = 3456.88M free = 639.12M (encrypted)

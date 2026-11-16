@@ -1,0 +1,14 @@
+name: slim24.affine
+attempt: 1
+env: 
+args: log_n=24 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 fold_nf=0,0,0,0 variants=affine,afast,anf,anfref reps=9
+start: 2026-11-15 01:27:52
+power_before: AC Power
+load_before: 1.24 1.71 1.63
+swap_before: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)
+top_before: CPU usage: 2.53% user, 9.51% sys, 87.94% idle  PhysMem: 20G used (2945M wired, 5677M compressor), 3773M unused. 
+end: 2026-11-15 01:27:58
+exit: 0
+power_after: AC Power
+load_after: 2.10 1.88 1.69
+swap_after: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)

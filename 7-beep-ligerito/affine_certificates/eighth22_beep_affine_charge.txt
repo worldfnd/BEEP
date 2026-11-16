@@ -1,0 +1,38 @@
+# BEEP ladder with the charge of the affine fold, log_n=22 k0=5 ks=4,4,4 rates=3,5,7,9 etas=0.02,0.001: an accounting experiment,
+# not a sound configuration (see scripts/beep_params.py). Per level: the fold grinding of BEEP, for
+# (t + 3 L)/q; the grinding if the squeeze is charged (E_aff + 3 L + 1)/q, where E_aff = eps_aff q is
+# the bound of the affine fold in the form of Flock's script, at the worst round of the level ("-" if
+# some round has no certificate at this slack); and the smaller of the two. kappa_2 bits is
+# -log2((E_aff + 2 L)/q), the second round of the paper's construction alone.
+  slack level   rho  log n     L  BEEP: log2 t  grinding | affine: log2 E_aff  kappa_2 bits  squeeze bits  grinding | charge  fold grinding
+   0.02     0  2^-3    20    70         19.33        20 |               4.00        120.71        120.17         8 | affine              8
+#   certificate, level 0 round 1: degree 131072, m = 9, D = 150, M = 26, B = 390764, list 16, log2 eps_aff = -124.00
+#   certificate, level 0 round 2: degree 131073, m = 9, D = 150, M = 26, B = 390764, list 16, log2 eps_aff = -124.00
+#   certificate, level 0 round 3: degree 131074, m = 9, D = 150, M = 26, B = 390764, list 16, log2 eps_aff = -124.00
+#   certificate, level 0 round 4: degree 131075, m = 9, D = 150, M = 26, B = 390764, list 16, log2 eps_aff = -124.00
+#   certificate, level 0 round 5: degree 131076, m = 9, D = 150, M = 26, B = 390764, list 16, log2 eps_aff = -124.00
+   0.02     1  2^-5    18   141         17.68        18 |               4.39        119.76        119.20         9 | affine              9
+#   certificate, level 1 round 1: degree 8192, m = 4, D = 257, M = 25, B = 51480, list 21, log2 eps_aff = -123.61
+#   certificate, level 1 round 2: degree 8193, m = 4, D = 258, M = 25, B = 51428, list 21, log2 eps_aff = -123.61
+#   certificate, level 1 round 3: degree 8194, m = 4, D = 259, M = 25, B = 51428, list 21, log2 eps_aff = -123.61
+#   certificate, level 1 round 4: degree 8195, m = 4, D = 260, M = 25, B = 51428, list 21, log2 eps_aff = -123.61
+   0.02     2  2^-7    16   282         15.84        16 |               4.52        118.80        118.24        10 | affine             10
+#   certificate, level 2 round 1: degree 512, m = 3, D = 102, M = 41, B = 7104, list 22, log2 eps_aff = -123.54
+#   certificate, level 2 round 2: degree 513, m = 3, D = 103, M = 41, B = 7104, list 22, log2 eps_aff = -123.54
+#   certificate, level 2 round 3: degree 514, m = 3, D = 104, M = 41, B = 7062, list 23, log2 eps_aff = -123.48
+#   certificate, level 2 round 4: degree 515, m = 3, D = 105, M = 41, B = 7092, list 23, log2 eps_aff = -123.48
+   0.02     3  2^-9    14   565         14.11        15 |               4.95        117.82        117.25        11 | affine             11
+#   certificate, level 3 round 1: degree 32, m = 2, D = 84, M = 63, B = 1044, list 25, log2 eps_aff = -123.36
+#   certificate, level 3 round 2: degree 33, m = 2, D = 93, M = 60, B = 1052, list 26, log2 eps_aff = -123.30
+#   certificate, level 3 round 3: degree 34, m = 2, D = 107, M = 58, B = 1052, list 31, log2 eps_aff = -123.05
+#   certificate, level 3 round 4: degree 35, m = 3, D = 104, M = 87, B = 1052, list 31, log2 eps_aff = -123.05
+  0.001     0  2^-3    20  1414         19.37        20 |               8.55        116.36        115.83        13 | affine             13
+#   certificate, level 0 round 1: degree 131072, m = 346, D = 87373, M = 980, B = 371687, list 354, log2 eps_aff = -119.46
+#   certificate, level 0 round 2: degree 131073, m = 346, D = 87998, M = 980, B = 371682, list 356, log2 eps_aff = -119.46
+#   certificate, level 0 round 3: degree 131074, m = 346, D = 88644, M = 980, B = 371682, list 356, log2 eps_aff = -119.46
+#   certificate, level 0 round 4: degree 131075, m = 346, D = 89314, M = 980, B = 371692, list 353, log2 eps_aff = -119.45
+#   certificate, level 0 round 5: degree 131076, m = 346, D = 90008, M = 980, B = 371677, list 359, log2 eps_aff = -119.45
+  0.001     1  2^-5    18  2828         17.88        18 |                  -             -             -         - |   beep             18
+  0.001     2  2^-7    16  5656         15.86        17 |                  -             -             -         - |   beep             17
+  0.001     3  2^-9    14 11313         13.93        16 |                  -             -             -         - |   beep             16
+beepaff=0.02:8,9,10,11/0.001:13,18,17,16

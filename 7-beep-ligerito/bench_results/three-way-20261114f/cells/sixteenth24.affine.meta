@@ -1,0 +1,14 @@
+name: sixteenth24.affine
+attempt: 1
+env: 
+args: log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 fold_nf=8,5,5,5 variants=affine,afast,anf,anfref reps=9
+start: 2026-11-14 02:20:50
+power_before: AC Power
+load_before: 2.45 2.45 2.25
+swap_before: total = 7168.00M used = 5756.25M free = 1411.75M (encrypted)
+top_before: CPU usage: 2.7% user, 8.80% sys, 89.11% idle  PhysMem: 11G used (3196M wired, 383M compressor), 13G unused. 
+end: 2026-11-14 02:21:08
+exit: 0
+power_after: AC Power
+load_after: 3.87 2.77 2.37
+swap_after: total = 8192.00M used = 5526.50M free = 2665.50M (encrypted)

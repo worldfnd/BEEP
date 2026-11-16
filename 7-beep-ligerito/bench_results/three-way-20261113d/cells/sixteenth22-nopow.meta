@@ -1,0 +1,14 @@
+name: sixteenth22-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 eta=0.02,0.001 beepaff=0.02:9,10,11,12/0.001:13,19,18,17 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold reps=9
+start: 2026-11-13 23:01:39
+power_before: AC Power
+load_before: 1.32 2.01 2.26
+swap_before: total = 3072.00M used = 2305.75M free = 766.25M (encrypted)
+top_before: CPU usage: 3.9% user, 11.34% sys, 85.56% idle  PhysMem: 16G used (3221M wired, 1651M compressor), 6920M unused. 
+end: 2026-11-13 23:01:48
+exit: 0
+power_after: AC Power
+load_after: 2.73 2.29 2.36
+swap_after: total = 3072.00M used = 2305.75M free = 766.25M (encrypted)

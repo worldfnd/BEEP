@@ -1,0 +1,1841 @@
+{
+ "binaries": [
+  "ligerito_three_way 260159033caa44cc /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987",
+  "d71a52552958447a2ac371f84177cfac574116841a28727b4cb6497ac29f73d0  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/src/pcs/ligerito/beep.rs",
+  "eed9d53144f4fe240026d430979d3f5531bdb29cb4188822e077aa1ae29072e6  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/benches/ligerito_three_way.rs",
+  "81ef1636b07c07b832bd35336526fac98c33a3a2d0ed0ad2197cc8d528d6638e  scripts/cells_rerun25.txt"
+ ],
+ "cells": {
+  "fast25.affine": {
+   "context": {
+    "commit_ms": 241.616917,
+    "commit_ms_reps": [
+     599.327041,
+     204.69079100000002,
+     285.25475,
+     326.64437499999997,
+     267.928,
+     209.833958,
+     212.157542,
+     202.40212499999998,
+     241.616917
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 208344.6771412784,
+    "pow_hashes_per_ms_sequential": 36856.61775371937,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:36:11",
+    "env": "",
+    "exit": "0",
+    "load_after": "3.51 2.67 2.63",
+    "load_before": "3.12 2.57 2.60",
+    "name": "fast25.affine",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:36:05",
+    "swap_after": "total = 4096.00M used = 2528.25M free = 1567.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2528.25M free = 1567.75M (encrypted)",
+    "top_before": "CPU usage: 20.8% user, 16.49% sys, 63.42% idle  PhysMem: 23G used (3858M wired, 3187M compressor), 144M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 104318430115,
+    "effective_ghz": 3.3510578257308063,
+    "instructions": 317788178781,
+    "max_rss_bytes": 5119197184,
+    "peak_footprint_bytes": 5468017008,
+    "real_s": 5.81,
+    "swaps": 0,
+    "sys_s": 4.22,
+    "user_s": 26.91
+   }
+  },
+  "fast25.affine-nopow": {
+   "context": {
+    "commit_ms": 186.526792,
+    "commit_ms_reps": [
+     203.787292,
+     195.144667,
+     183.942708,
+     183.220333,
+     186.875542,
+     183.421791,
+     182.428125,
+     186.526792,
+     186.74175000000002
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:39:41",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "3.41 3.01 2.78",
+    "load_before": "3.62 3.04 2.79",
+    "name": "fast25.affine-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:39:36",
+    "swap_after": "total = 4096.00M used = 2480.25M free = 1615.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2480.25M free = 1615.75M (encrypted)",
+    "top_before": "CPU usage: 4.13% user, 9.56% sys, 86.30% idle  PhysMem: 19G used (3247M wired, 4487M compressor), 3994M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 99127172527,
+    "effective_ghz": 3.33986430347035,
+    "instructions": 300368994392,
+    "max_rss_bytes": 5339955200,
+    "peak_footprint_bytes": 5466706288,
+    "real_s": 4.6,
+    "swaps": 0,
+    "sys_s": 3.91,
+    "user_s": 25.77
+   }
+  },
+  "fast25.beep001": {
+   "context": {
+    "commit_ms": 204.90487499999998,
+    "commit_ms_reps": [
+     209.789291,
+     191.539625,
+     197.593667,
+     204.90487499999998,
+     196.590792,
+     208.004208,
+     212.147667,
+     196.238417,
+     221.949708
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 225566.19318246143,
+    "pow_hashes_per_ms_sequential": 40284.3015791284,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:38:00",
+    "env": "",
+    "exit": "0",
+    "load_after": "3.27 2.81 2.69",
+    "load_before": "2.59 2.68 2.64",
+    "name": "fast25.beep001",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:37:51",
+    "swap_after": "total = 4096.00M used = 2520.25M free = 1575.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2520.25M free = 1575.75M (encrypted)",
+    "top_before": "CPU usage: 8.9% user, 13.33% sys, 78.57% idle  PhysMem: 19G used (3746M wired, 4878M compressor), 4007M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 172991300757,
+    "effective_ghz": 3.3577504028920804,
+    "instructions": 515780520746,
+    "max_rss_bytes": 5028200448,
+    "peak_footprint_bytes": 6098244360,
+    "real_s": 8.86,
+    "swaps": 0,
+    "sys_s": 6.75,
+    "user_s": 44.77
+   }
+  },
+  "fast25.beep001-nopow": {
+   "context": {
+    "commit_ms": 190.556,
+    "commit_ms_reps": [
+     202.069208,
+     188.611375,
+     188.250041,
+     189.789667,
+     190.556,
+     192.576,
+     189.37025,
+     193.25129099999998,
+     205.398875
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.001 variants=beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:41:24",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "3.14 2.96 2.78",
+    "load_before": "3.06 2.95 2.77",
+    "name": "fast25.beep001-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:41:18",
+    "swap_after": "total = 4096.00M used = 2456.25M free = 1639.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2456.25M free = 1639.75M (encrypted)",
+    "top_before": "CPU usage: 5.42% user, 10.33% sys, 84.23% idle  PhysMem: 19G used (3623M wired, 4843M compressor), 4196M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 139535862167,
+    "effective_ghz": 3.3769569740319456,
+    "instructions": 452677431729,
+    "max_rss_bytes": 5412945920,
+    "peak_footprint_bytes": 6098178824,
+    "real_s": 6.26,
+    "swaps": 0,
+    "sys_s": 4.29,
+    "user_s": 37.03
+   }
+  },
+  "fast25.beep02": {
+   "context": {
+    "commit_ms": 201.035959,
+    "commit_ms_reps": [
+     263.592083,
+     185.952708,
+     186.606875,
+     238.073,
+     196.88454099999998,
+     213.460042,
+     209.034959,
+     201.035959,
+     200.8135
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 236701.4350056754,
+    "pow_hashes_per_ms_sequential": 40811.2176003092,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02 variants=beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:37:06",
+    "env": "",
+    "exit": "0",
+    "load_after": "3.20 2.77 2.67",
+    "load_before": "3.15 2.75 2.67",
+    "name": "fast25.beep02",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:36:57",
+    "swap_after": "total = 4096.00M used = 2520.25M free = 1575.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2520.25M free = 1575.75M (encrypted)",
+    "top_before": "CPU usage: 7.83% user, 11.87% sys, 80.28% idle  PhysMem: 20G used (3967M wired, 4631M compressor), 2998M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 168368357714,
+    "effective_ghz": 3.382249050100442,
+    "instructions": 511291274143,
+    "max_rss_bytes": 4277141504,
+    "peak_footprint_bytes": 6097376008,
+    "real_s": 8.48,
+    "swaps": 0,
+    "sys_s": 6.57,
+    "user_s": 43.21
+   }
+  },
+  "fast25.beep02-nopow": {
+   "context": {
+    "commit_ms": 196.33404199999998,
+    "commit_ms_reps": [
+     208.357166,
+     199.02108399999997,
+     191.603416,
+     190.72074999999998,
+     210.623542,
+     190.010416,
+     195.532042,
+     199.49741600000002,
+     196.33404199999998
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02 variants=beep,control reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:40:33",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "3.34 2.99 2.78",
+    "load_before": "2.50 2.82 2.72",
+    "name": "fast25.beep02-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:40:26",
+    "swap_after": "total = 4096.00M used = 2464.25M free = 1631.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2464.25M free = 1631.75M (encrypted)",
+    "top_before": "CPU usage: 6.4% user, 11.33% sys, 82.61% idle  PhysMem: 20G used (3660M wired, 4441M compressor), 3750M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 138436689121,
+    "effective_ghz": 3.369929141212269,
+    "instructions": 452389836848,
+    "max_rss_bytes": 4954882048,
+    "peak_footprint_bytes": 6098342664,
+    "real_s": 6.28,
+    "swaps": 0,
+    "sys_s": 3.8,
+    "user_s": 37.28
+   }
+  },
+  "fast25.split": {
+   "context": {
+    "commit_ms": 190.062916,
+    "commit_ms_reps": [
+     204.653208,
+     187.523584,
+     188.317625,
+     190.062916,
+     188.006291,
+     189.06975,
+     191.243625,
+     191.39904199999998,
+     200.483875
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": false,
+    "pow_hashes_per_ms_parallel": 217356.01109847988,
+    "pow_hashes_per_ms_sequential": 38785.609706383024,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:35:20",
+    "env": "",
+    "exit": "0",
+    "load_after": "2.83 2.47 2.57",
+    "load_before": "2.12 2.32 2.52",
+    "name": "fast25.split",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:35:14",
+    "swap_after": "total = 4096.00M used = 2536.25M free = 1559.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2536.25M free = 1559.75M (encrypted)",
+    "top_before": "CPU usage: 6.86% user, 11.76% sys, 81.37% idle  PhysMem: 19G used (3499M wired, 1070M compressor), 3958M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 117334010310,
+    "effective_ghz": 3.3210871868100766,
+    "instructions": 367961437772,
+    "max_rss_bytes": 5924110336,
+    "peak_footprint_bytes": 6349935560,
+    "real_s": 5.46,
+    "swaps": 0,
+    "sys_s": 5.13,
+    "user_s": 30.2
+   }
+  },
+  "fast25.split-nopow": {
+   "context": {
+    "commit_ms": 191.4385,
+    "commit_ms_reps": [
+     203.94479099999998,
+     191.4385,
+     194.765416,
+     187.712291,
+     209.95429199999998,
+     188.73758400000003,
+     189.995708,
+     190.486875,
+     222.88275
+    ],
+    "initial_k": 6,
+    "log_n": 25,
+    "no_grind": true,
+    "pow_hashes_per_ms_parallel": null,
+    "pow_hashes_per_ms_sequential": null,
+    "profile": "fast",
+    "rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "reps": 9,
+    "threads": 10
+   },
+   "meta": {
+    "args": "log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split reps=9",
+    "attempt": "1",
+    "end": "2026-11-13 16:38:51",
+    "env": "FLOCK_NO_GRIND=1",
+    "exit": "0",
+    "load_after": "3.93 3.00 2.76",
+    "load_before": "2.73 2.74 2.67",
+    "name": "fast25.split-nopow",
+    "power_after": "AC Power",
+    "power_before": "AC Power",
+    "start": "2026-11-13 16:38:45",
+    "swap_after": "total = 4096.00M used = 2488.25M free = 1607.75M (encrypted)",
+    "swap_before": "total = 4096.00M used = 2488.25M free = 1607.75M (encrypted)",
+    "top_before": "CPU usage: 5.72% user, 11.45% sys, 82.81% idle  PhysMem: 19G used (3623M wired, 4996M compressor), 4185M unused."
+   },
+   "status": "ok",
+   "time": {
+    "cycles": 107835765540,
+    "effective_ghz": 3.330320121680049,
+    "instructions": 350833404486,
+    "max_rss_bytes": 5093801984,
+    "peak_footprint_bytes": 6350066632,
+    "real_s": 5.31,
+    "swaps": 0,
+    "sys_s": 4.24,
+    "user_s": 28.14
+   }
+  }
+ },
+ "folder": "bench_results/three-way-20261113-rerun25",
+ "machine": {
+  "cells": "scripts/cells_rerun25.txt",
+  "cooldown": "45 s, reps: 9",
+  "date": "2026-11-13 16:34:29 CET",
+  "flock": "succinctlabs/flock 14b78c09b182fdbf0c88fbbf999adbc0ea394fe0 (branch affine-fold-f128) + the local changes of VENDORED.md",
+  "hw.memsize": "25769803776",
+  "hw.ncpu": "10",
+  "hw.perflevel0.physicalcpu": "4",
+  "hw.perflevel1.physicalcpu": "6",
+  "label": "20261113-rerun25",
+  "load": "1.59 2.31 2.53",
+  "machdep.cpu.brand_string": "Apple M5",
+  "os": "27.0.1 arm64",
+  "power": "AC Power",
+  "repository": "9a496b5b49e5f736b24e0024ab30c3431cafc4c5 7 changed or untracked paths",
+  "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+  "swap": "total = 4096.00M used = 2648.25M free = 1447.75M (encrypted)",
+  "top": "CPU usage: 1.19% user, 8.92% sys, 89.88% idle  PhysMem: 17G used (2933M wired, 1179M compressor), 6048M unused."
+ },
+ "rows": [
+  {
+   "breakdown": {
+    "binding_answers": 176,
+    "caps": 11264,
+    "final_message": 512,
+    "fold_answers": 0,
+    "merkle_paths": 207072,
+    "nonces": 232,
+    "opened_rows": 338688,
+    "round_messages": 2688
+   },
+   "cell": "fast25",
+   "commit_ms": 190.062916,
+   "commit_ms_both": [
+    190.062916,
+    191.4385
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     6,
+     7,
+     7,
+     8,
+     8
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     9,
+     10,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     119,
+     79,
+     60,
+     48,
+     41
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     16,
+     13,
+     10,
+     7,
+     4
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.73 2.74 2.67",
+     "max_rss_bytes": 5093801984,
+     "peak_footprint_bytes": 6350066632,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "2.12 2.32 2.52",
+     "max_rss_bytes": 5924110336,
+     "peak_footprint_bytes": 6349935560,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 399360.0,
+   "pow_expected_ms": 1.967496570322397,
+   "pow_hashes_mean": 489127.22222222225,
+   "pow_hashes_per_ms_parallel": 217356.01109847988,
+   "pow_hashes_per_ms_sequential": 38785.609706383024,
+   "pow_searches_bits": [
+    6,
+    16,
+    9,
+    6,
+    6,
+    6,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    9,
+    7,
+    7,
+    7,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16,
+    10,
+    8,
+    8,
+    8,
+    16
+   ],
+   "process": "fast25.split",
+   "profile": "fast",
+   "proof_bytes": 560632.0,
+   "prove_expected_ms": 147.4847465703224,
+   "prove_ms": 151.194125,
+   "prove_ms_reps": [
+    1071.6435,
+    172.90012499999997,
+    159.55291699999998,
+    149.44850000000002,
+    148.445625,
+    151.194125,
+    155.48475,
+    148.848625,
+    146.89849999999998
+   ],
+   "prove_nopow_ms": 145.51725,
+   "prove_nopow_ms_reps": [
+    253.43712499999998,
+    151.50395899999998,
+    145.51725,
+    144.256208,
+    146.256541,
+    143.668833,
+    146.489167,
+    142.611458,
+    141.034833
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "split",
+   "verify_ms": 1.563292
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2336,
+    "fold_answers": 0,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 1440
+   },
+   "cell": "fast25",
+   "commit_ms": 241.616917,
+   "commit_ms_both": [
+    241.616917,
+    186.526792
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     4,
+     5,
+     5,
+     5
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "3.62 3.04 2.79",
+     "max_rss_bytes": 5339955200,
+     "peak_footprint_bytes": 5466706288,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.12 2.57 2.60",
+     "max_rss_bytes": 5119197184,
+     "peak_footprint_bytes": 5468017008,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 267424.0,
+   "pow_expected_ms": 1.4014805443716203,
+   "pow_hashes_mean": 240754.55555555556,
+   "pow_hashes_per_ms_parallel": 208344.6771412784,
+   "pow_hashes_per_ms_sequential": 36856.61775371937,
+   "pow_searches_bits": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    16,
+    9,
+    7,
+    5,
+    5,
+    5,
+    5,
+    7,
+    7,
+    16,
+    9,
+    8,
+    5,
+    5,
+    5,
+    5,
+    8,
+    8,
+    16,
+    10,
+    9,
+    5,
+    5,
+    5,
+    5,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25.affine",
+   "profile": "fast",
+   "proof_bytes": 462504.0,
+   "prove_expected_ms": 104.08614654437162,
+   "prove_ms": 133.26399999999998,
+   "prove_ms_reps": [
+    133.26399999999998,
+    116.445708,
+    158.276417,
+    115.986667,
+    109.211708,
+    107.654375,
+    169.602916,
+    137.788666,
+    156.136458
+   ],
+   "prove_nopow_ms": 102.68466599999999,
+   "prove_nopow_ms_reps": [
+    243.4145,
+    106.550333,
+    113.199125,
+    101.241209,
+    101.61129100000001,
+    102.68466599999999,
+    102.455667,
+    104.10345799999999,
+    98.534542
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": null,
+   "timings_nopow_ms": null,
+   "variant": "affine",
+   "verify_ms": 1.1997920000000002
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 2432,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "cell": "fast25",
+   "commit_ms": 201.035959,
+   "commit_ms_both": [
+    201.035959,
+    196.33404199999998
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     14
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 762427,
+      "claim_batch_bits": 122.81590465461862,
+      "claim_batch_grinding_bits": 6,
+      "consistency_batch_bits": 119.85614381022528,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 109.87305359277447,
+      "fold_grinding_bits": 19,
+      "folds": 6,
+      "line_bound": 286150,
+      "list_size": 35,
+      "log_inv_rate": 1,
+      "log_msg_cols": 19,
+      "max_variables": 24,
+      "ood_bits": 237.06843143067582,
+      "ood_samples": 1,
+      "queries": 244,
+      "query_bits": 112.1816460319758,
+      "query_grinding_bits": 16,
+      "sample_bits": 130.52513015066307,
+      "samples": 4,
+      "threshold": 286151
+     },
+     {
+      "agreement": 97925,
+      "claim_batch_bits": 121.83588394487712,
+      "claim_batch_grinding_bits": 7,
+      "consistency_batch_bits": 119.04878888816768,
+      "consistency_batch_grinding_bits": 9,
+      "eta": 0.02,
+      "fold_bits": 110.67286843731715,
+      "fold_grinding_bits": 18,
+      "folds": 4,
+      "line_bound": 164220,
+      "list_size": 70,
+      "log_inv_rate": 3,
+      "log_msg_cols": 15,
+      "max_variables": 18,
+      "ood_bits": 236.21643259356338,
+      "ood_samples": 2,
+      "queries": 79,
+      "query_bits": 112.2284774109194,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.58301792861724,
+      "samples": 4,
+      "threshold": 164222
+     },
+     {
+      "agreement": 12896,
+      "claim_batch_bits": 120.8459783140087,
+      "claim_batch_grinding_bits": 8,
+      "consistency_batch_bits": 118.27118130950412,
+      "consistency_batch_grinding_bits": 10,
+      "eta": 0.02,
+      "fold_bits": 112.30349425352912,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 52641,
+      "list_size": 141,
+      "log_inv_rate": 5,
+      "log_msg_cols": 11,
+      "max_variables": 14,
+      "ood_bits": 234.89850642923352,
+      "ood_samples": 2,
+      "queries": 48,
+      "query_bits": 112.57769883302473,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00723653745268,
+      "samples": 4,
+      "threshold": 52680
+     },
+     {
+      "agreement": 1776,
+      "claim_batch_bits": 119.85105210863959,
+      "claim_batch_grinding_bits": 9,
+      "consistency_batch_bits": 117.27118130950412,
+      "consistency_batch_grinding_bits": 11,
+      "eta": 0.02,
+      "fold_bits": 114.08412062116423,
+      "fold_grinding_bits": 14,
+      "folds": 4,
+      "line_bound": 14609,
+      "list_size": 282,
+      "log_inv_rate": 7,
+      "log_msg_cols": 7,
+      "max_variables": 10,
+      "ood_bits": 233.79342438317596,
+      "ood_samples": 2,
+      "queries": 35,
+      "query_bits": 112.2001449666912,
+      "query_grinding_bits": 16,
+      "sample_bits": 242.64094383327503,
+      "samples": 5,
+      "threshold": 14610
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00723653745268,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     4,
+     4,
+     4,
+     5
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.50 2.82 2.72",
+     "max_rss_bytes": 4954882048,
+     "peak_footprint_bytes": 6098342664,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.15 2.75 2.67",
+     "max_rss_bytes": 4277141504,
+     "peak_footprint_bytes": 6097376008,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4788928.0,
+   "pow_expected_ms": 20.329270810238544,
+   "pow_hashes_mean": 3989799.888888889,
+   "pow_hashes_per_ms_parallel": 236701.4350056754,
+   "pow_hashes_per_ms_sequential": 40811.2176003092,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    6,
+    16,
+    9,
+    7,
+    18,
+    18,
+    18,
+    18,
+    7,
+    7,
+    16,
+    9,
+    8,
+    16,
+    16,
+    16,
+    16,
+    8,
+    8,
+    16,
+    10,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25.beep02",
+   "profile": "fast",
+   "proof_bytes": 463784.0,
+   "prove_expected_ms": 176.23877081023855,
+   "prove_ms": 185.19887500000002,
+   "prove_ms_reps": [
+    353.070708,
+    171.19145799999998,
+    227.106542,
+    202.633917,
+    175.98070800000002,
+    184.873334,
+    185.69245800000002,
+    185.19887500000002,
+    180.064875
+   ],
+   "prove_nopow_ms": 155.9095,
+   "prove_nopow_ms_reps": [
+    168.941375,
+    146.820166,
+    155.185209,
+    158.069917,
+    155.9095,
+    156.191417,
+    150.676583,
+    162.300667,
+    149.50150000000002
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.051666,
+    "fold_answers": 45.900458,
+    "fold_grinding": 20.296084,
+    "folds": 74.384039,
+    "induce": 5.041917,
+    "ood": 19.483956,
+    "opens": 0.984834,
+    "other_grinding": 1.8831259999999999,
+    "total": 185.194625
+   },
+   "timings_nopow_ms": {
+    "commits": 15.238584,
+    "fold_answers": 43.043583000000005,
+    "fold_grinding": 0.019544000000000002,
+    "folds": 67.803416,
+    "induce": 5.060083,
+    "ood": 19.978665,
+    "opens": 1.0704580000000001,
+    "other_grinding": 0.027998,
+    "total": 155.90354200000002
+   },
+   "variant": "beep-0.02",
+   "verify_ms": 1.054
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 0,
+    "merkle_paths": 158816,
+    "nonces": 280,
+    "opened_rows": 291328,
+    "round_messages": 576
+   },
+   "cell": "fast25",
+   "commit_ms": 201.035959,
+   "commit_ms_both": [
+    201.035959,
+    196.33404199999998
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "consistency_batch_grinding_bits": [
+     9,
+     9,
+     10,
+     11
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     14
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     244,
+     79,
+     48,
+     35
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "2.50 2.82 2.72",
+     "max_rss_bytes": 4954882048,
+     "peak_footprint_bytes": 6098342664,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "3.15 2.75 2.67",
+     "max_rss_bytes": 4277141504,
+     "peak_footprint_bytes": 6097376008,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4788928.0,
+   "pow_expected_ms": 20.329270810238544,
+   "pow_hashes_mean": 4232641.111111111,
+   "pow_hashes_per_ms_parallel": 236701.4350056754,
+   "pow_hashes_per_ms_sequential": 40811.2176003092,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    6,
+    16,
+    9,
+    7,
+    18,
+    18,
+    18,
+    18,
+    7,
+    7,
+    16,
+    9,
+    8,
+    16,
+    16,
+    16,
+    16,
+    8,
+    8,
+    16,
+    10,
+    9,
+    14,
+    14,
+    14,
+    14,
+    9,
+    9,
+    16
+   ],
+   "process": "fast25.beep02",
+   "profile": "fast",
+   "proof_bytes": 461352.0,
+   "prove_expected_ms": 110.56210381023854,
+   "prove_ms": 113.248,
+   "prove_ms_reps": [
+    112.144458,
+    116.373167,
+    157.64754200000002,
+    112.256542,
+    104.77775,
+    113.248,
+    118.520916,
+    121.475375,
+    106.547291
+   ],
+   "prove_nopow_ms": 90.232833,
+   "prove_nopow_ms_reps": [
+    91.897542,
+    90.877167,
+    83.74508399999999,
+    108.528292,
+    86.288875,
+    93.20587499999999,
+    90.232833,
+    84.263958,
+    87.933917
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.438165999999999,
+    "fold_answers": 0.01046,
+    "fold_grinding": 25.30871,
+    "folds": 47.675126999999996,
+    "induce": 5.386668,
+    "ood": 19.697917,
+    "opens": 1.042999,
+    "other_grinding": 1.3967910000000001,
+    "total": 113.2435
+   },
+   "timings_nopow_ms": {
+    "commits": 15.851625,
+    "fold_answers": 0.01154,
+    "fold_grinding": 0.019168,
+    "folds": 47.119294,
+    "induce": 5.083625,
+    "ood": 19.052789,
+    "opens": 0.935875,
+    "other_grinding": 0.028333,
+    "total": 90.229
+   },
+   "variant": "control-0.02",
+   "verify_ms": 1.014875
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 2560,
+    "merkle_paths": 147744,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "cell": "fast25",
+   "commit_ms": 204.90487499999998,
+   "commit_ms_both": [
+    204.90487499999998,
+    190.556
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "levels": [
+     {
+      "agreement": 742504,
+      "claim_batch_bits": 118.53217687778101,
+      "claim_batch_grinding_bits": 10,
+      "consistency_batch_bits": 115.53421571533791,
+      "consistency_batch_grinding_bits": 13,
+      "eta": 0.001,
+      "fold_bits": 109.76071847486493,
+      "fold_grinding_bits": 19,
+      "folds": 6,
+      "line_bound": 306073,
+      "list_size": 707,
+      "log_inv_rate": 1,
+      "log_msg_cols": 19,
+      "max_variables": 24,
+      "ood_bits": 228.42457524090108,
+      "ood_samples": 1,
+      "queries": 225,
+      "query_bits": 112.04126154969802,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00061286802298,
+      "samples": 4,
+      "threshold": 307315
+     },
+     {
+      "agreement": 92945,
+      "claim_batch_bits": 117.53319593639515,
+      "claim_batch_grinding_bits": 11,
+      "consistency_batch_bits": 114.72686079328031,
+      "consistency_batch_grinding_bits": 14,
+      "eta": 0.001,
+      "fold_bits": 110.52044075397836,
+      "fold_grinding_bits": 18,
+      "folds": 4,
+      "line_bound": 169200,
+      "list_size": 1414,
+      "log_inv_rate": 3,
+      "log_msg_cols": 15,
+      "max_variables": 18,
+      "ood_bits": 227.57257640378864,
+      "ood_samples": 2,
+      "queries": 75,
+      "query_bits": 112.194390160149,
+      "query_grinding_bits": 16,
+      "sample_bits": 128.00013325852152,
+      "samples": 4,
+      "threshold": 178514
+     },
+     {
+      "agreement": 11651,
+      "claim_batch_bits": 116.53370573576181,
+      "claim_batch_grinding_bits": 12,
+      "consistency_batch_bits": 113.94925321461676,
+      "consistency_batch_grinding_bits": 15,
+      "eta": 0.001,
+      "fold_bits": 112.07141223048492,
+      "fold_grinding_bits": 16,
+      "folds": 4,
+      "line_bound": 53886,
+      "list_size": 2828,
+      "log_inv_rate": 5,
+      "log_msg_cols": 11,
+      "max_variables": 14,
+      "ood_bits": 226.25465023945878,
+      "ood_samples": 2,
+      "queries": 45,
+      "query_bits": 112.1337846388641,
+      "query_grinding_bits": 16,
+      "sample_bits": 234.00179870386802,
+      "samples": 5,
+      "threshold": 53887
+     },
+     {
+      "agreement": 1465,
+      "claim_batch_bits": 115.53396070301572,
+      "claim_batch_grinding_bits": 13,
+      "consistency_batch_bits": 112.94925321461676,
+      "consistency_batch_grinding_bits": 16,
+      "eta": 0.001,
+      "fold_bits": 113.03922876330131,
+      "fold_grinding_bits": 15,
+      "folds": 4,
+      "line_bound": 14920,
+      "list_size": 5656,
+      "log_inv_rate": 7,
+      "log_msg_cols": 7,
+      "max_variables": 10,
+      "ood_bits": 225.14956819340122,
+      "ood_samples": 2,
+      "queries": 33,
+      "query_bits": 114.96439055567949,
+      "query_grinding_bits": 16,
+      "sample_bits": 229.72367683355785,
+      "samples": 5,
+      "threshold": 14921
+     }
+    ],
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "min_bits": 128.00013325852152,
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     4,
+     4,
+     5,
+     5
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "3.06 2.95 2.77",
+     "max_rss_bytes": 5412945920,
+     "peak_footprint_bytes": 6098178824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "2.59 2.68 2.64",
+     "max_rss_bytes": 5028200448,
+     "peak_footprint_bytes": 6098244360,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4951040.0,
+   "pow_expected_ms": 22.34610170135569,
+   "pow_hashes_mean": 5251339.333333333,
+   "pow_hashes_per_ms_parallel": 225566.19318246143,
+   "pow_hashes_per_ms_sequential": 40284.3015791284,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    18,
+    18,
+    18,
+    18,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast25.beep001",
+   "profile": "fast",
+   "proof_bytes": 431080.0,
+   "prove_expected_ms": 179.27618570135567,
+   "prove_ms": 193.33225000000002,
+   "prove_ms_reps": [
+    317.8865,
+    189.334875,
+    184.7875,
+    204.119708,
+    208.929917,
+    195.902208,
+    193.33225000000002,
+    181.834417,
+    182.722209
+   ],
+   "prove_nopow_ms": 156.930084,
+   "prove_nopow_ms_reps": [
+    224.69920900000002,
+    159.783709,
+    148.100125,
+    158.548792,
+    151.58029100000002,
+    149.184166,
+    177.721708,
+    150.532625,
+    156.930084
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 15.981668,
+    "fold_answers": 43.944790999999995,
+    "fold_grinding": 21.575541,
+    "folds": 72.20366,
+    "induce": 5.70825,
+    "ood": 21.325625000000002,
+    "opens": 1.222001,
+    "other_grinding": 3.0682069999999997,
+    "total": 193.327125
+   },
+   "timings_nopow_ms": {
+    "commits": 14.991543,
+    "fold_answers": 43.240711000000005,
+    "fold_grinding": 0.02,
+    "folds": 67.220208,
+    "induce": 5.146915,
+    "ood": 19.464164999999998,
+    "opens": 1.0998329999999998,
+    "other_grinding": 0.026168,
+    "total": 156.925959
+   },
+   "variant": "beep-0.001",
+   "verify_ms": 0.993208
+  },
+  {
+   "breakdown": {
+    "binding_answers": 112,
+    "caps": 8192,
+    "final_message": 2048,
+    "fold_answers": 0,
+    "merkle_paths": 147744,
+    "nonces": 280,
+    "opened_rows": 269568,
+    "round_messages": 576
+   },
+   "cell": "fast25",
+   "commit_ms": 204.90487499999998,
+   "commit_ms_both": [
+    204.90487499999998,
+    190.556
+   ],
+   "config": {
+    "claim_batch_grinding_bits": [
+     10,
+     11,
+     12,
+     13
+    ],
+    "consistency_batch_grinding_bits": [
+     13,
+     14,
+     15,
+     16
+    ],
+    "fold_grinding_bits": [
+     19,
+     18,
+     16,
+     15
+    ],
+    "initial_k": 6,
+    "log_inv_rates": [
+     1,
+     3,
+     5,
+     7
+    ],
+    "ood_samples": [
+     1,
+     2,
+     2,
+     2
+    ],
+    "queries": [
+     225,
+     75,
+     45,
+     33
+    ],
+    "query_grinding_bits": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "recursive_ks": [
+     4,
+     4,
+     4
+    ],
+    "recursive_log_msg_cols": [
+     15,
+     11,
+     7
+    ],
+    "samples": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "log_n": 25,
+   "memory": {
+    "nopow": {
+     "limited": true,
+     "load_before": "3.06 2.95 2.77",
+     "max_rss_bytes": 5412945920,
+     "peak_footprint_bytes": 6098178824,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    },
+    "pow": {
+     "limited": true,
+     "load_before": "2.59 2.68 2.64",
+     "max_rss_bytes": 5028200448,
+     "peak_footprint_bytes": 6098244360,
+     "power": [
+      "AC Power",
+      "AC Power"
+     ]
+    }
+   },
+   "pow_expected_hashes": 4951040.0,
+   "pow_expected_ms": 22.34610170135569,
+   "pow_hashes_mean": 5244476.111111111,
+   "pow_hashes_per_ms_parallel": 225566.19318246143,
+   "pow_hashes_per_ms_sequential": 40284.3015791284,
+   "pow_searches_bits": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    10,
+    16,
+    13,
+    11,
+    18,
+    18,
+    18,
+    18,
+    11,
+    11,
+    16,
+    14,
+    12,
+    16,
+    16,
+    16,
+    16,
+    12,
+    12,
+    16,
+    15,
+    13,
+    15,
+    15,
+    15,
+    15,
+    13,
+    13,
+    16
+   ],
+   "process": "fast25.beep001",
+   "profile": "fast",
+   "proof_bytes": 428520.0,
+   "prove_expected_ms": 107.5760187013557,
+   "prove_ms": 138.907958,
+   "prove_ms_reps": [
+    201.73350000000002,
+    138.907958,
+    143.43866699999998,
+    142.056334,
+    139.185167,
+    113.874791,
+    119.982416,
+    120.799458,
+    124.751166
+   ],
+   "prove_nopow_ms": 85.229917,
+   "prove_nopow_ms_reps": [
+    86.252291,
+    84.996583,
+    85.229917,
+    86.227584,
+    87.610542,
+    84.596333,
+    89.338583,
+    83.49879200000001,
+    83.083958
+   ],
+   "reps": 9,
+   "threads": 10,
+   "timings_ms": {
+    "commits": 17.885958,
+    "fold_answers": 0.015083,
+    "fold_grinding": 27.732416,
+    "folds": 54.621666,
+    "induce": 5.504459,
+    "ood": 22.385206,
+    "opens": 1.283833,
+    "other_grinding": 2.831833,
+    "total": 138.902667
+   },
+   "timings_nopow_ms": {
+    "commits": 14.974833,
+    "fold_answers": 0.009207,
+    "fold_grinding": 0.021959,
+    "folds": 44.522752,
+    "induce": 5.039334,
+    "ood": 19.019416,
+    "opens": 1.163501,
+    "other_grinding": 0.025581,
+    "total": 85.226167
+   },
+   "variant": "control-0.001",
+   "verify_ms": 0.95825
+  }
+ ],
+ "warnings": []
+}

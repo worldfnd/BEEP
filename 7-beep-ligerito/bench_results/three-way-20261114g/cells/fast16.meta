@@ -1,0 +1,14 @@
+name: fast16
+attempt: 1
+env: 
+args: log_n=16 profile=fast rates=1,6 fold=4,5 affine_eta=0.02,0.02 affine_fold=4,5 eta=0.02,0.001 beepaff=0.02:7,10/0.001:12,14 fold_nf=7,5 affine_fold_nf=7,5 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepaff,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 03:07:45
+power_before: AC Power
+load_before: 0.95 1.42 1.81
+swap_before: total = 5120.00M used = 4264.19M free = 855.81M (encrypted)
+top_before: CPU usage: 8.99% user, 13.22% sys, 77.77% idle  PhysMem: 13G used (3140M wired, 580M compressor), 10G unused. 
+end: 2026-11-14 03:07:49
+exit: 0
+power_after: AC Power
+load_after: 0.95 1.42 1.81
+swap_after: total = 5120.00M used = 4264.19M free = 855.81M (encrypted)

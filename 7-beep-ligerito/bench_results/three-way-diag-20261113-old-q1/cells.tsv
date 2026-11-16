@@ -1,0 +1,5 @@
+name	status	start	end	power	power_after	load_before	cell
+fast22	ok	21:48:52	21:48:56	AC Power	AC Power	1.20 1.66 1.91	 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02 affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24	ok	21:49:41	21:49:50	AC Power	AC Power	1.31 1.62 1.88	 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22-nopow	ok	21:50:35	21:50:37	AC Power	AC Power	1.60 1.70 1.89	FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02 affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24-nopow	ok	21:51:22	21:51:28	AC Power	AC Power	1.18 1.57 1.83	FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control

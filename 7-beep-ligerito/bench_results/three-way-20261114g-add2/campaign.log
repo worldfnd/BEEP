@@ -1,0 +1,14 @@
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.11s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-20261114g-add2-eighth15: idle 83% (streak 1/3)
+[bench_gate] three-way-20261114g-add2-eighth15: idle 51% (streak 0/3)
+[bench_gate] three-way-20261114g-add2-eighth15: idle 88% (streak 1/3)
+[bench_gate] three-way-20261114g-add2-eighth15: idle 88% (streak 2/3)
+[bench_gate] three-way-20261114g-add2-eighth15: idle 88% (streak 3/3)
+eighth15 (attempt 1): ok
+[bench_gate] three-way-20261114g-add2-eighth15-nopow: idle 86% (streak 1/3)
+[bench_gate] three-way-20261114g-add2-eighth15-nopow: idle 85% (streak 2/3)
+[bench_gate] three-way-20261114g-add2-eighth15-nopow: idle 90% (streak 3/3)
+eighth15-nopow (attempt 1): ok
+done: 2026-11-14 09:19:57, failures: 0

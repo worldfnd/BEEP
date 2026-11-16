@@ -1,0 +1,14 @@
+# affine ladder eighth_n15_r37: levels (k, c, rate, queries) as built by affine_ladder(); eta = 0.02
+[[levels]]
+log_inv_rate = 3
+log_msg_cols = 9
+log_num_interleaved = 6
+eta = 0.02
+queries = 80
+
+[[levels]]
+log_inv_rate = 7
+log_msg_cols = 5
+log_num_interleaved = 4
+eta = 0.02
+queries = 36

@@ -1,0 +1,14 @@
+name: fast24-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control reps=9
+start: 2026-11-13 21:55:27
+power_before: AC Power
+load_before: 1.28 1.58 1.77
+swap_before: total = 4096.00M used = 2699.06M free = 1396.94M (encrypted)
+top_before: CPU usage: 1.57% user, 7.89% sys, 90.52% idle  PhysMem: 16G used (3262M wired, 1327M compressor), 7669M unused. 
+end: 2026-11-13 21:55:34
+exit: 0
+power_after: AC Power
+load_after: 2.77 1.89 1.88
+swap_after: total = 4096.00M used = 2699.06M free = 1396.94M (encrypted)

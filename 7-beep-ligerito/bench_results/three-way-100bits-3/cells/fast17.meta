@@ -1,0 +1,14 @@
+name: fast17
+attempt: 1
+env: 
+args: log_n=17 profile=fast100 bits=100 rates=1,5 fold=0,0 affine_eta=0.01,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-15 01:11:11
+power_before: AC Power
+load_before: 2.01 1.62 1.35
+swap_before: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)
+top_before: CPU usage: 13.47% user, 9.89% sys, 76.63% idle  PhysMem: 20G used (2972M wired, 5837M compressor), 3760M unused. 
+end: 2026-11-15 01:11:13
+exit: 0
+power_after: AC Power
+load_after: 2.01 1.62 1.35
+swap_after: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)

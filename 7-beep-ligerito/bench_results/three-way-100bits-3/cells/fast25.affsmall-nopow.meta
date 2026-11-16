@@ -1,0 +1,14 @@
+name: fast25.affsmall-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=25 profile=fast100 bits=100 rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small reps=9
+start: 2026-11-15 01:54:45
+power_before: AC Power
+load_before: 1.45 1.66 1.87
+swap_before: total = 4096.00M used = 3448.88M free = 647.12M (encrypted)
+top_before: CPU usage: 2.93% user, 8.59% sys, 88.46% idle  PhysMem: 18G used (2927M wired, 5367M compressor), 5099M unused. 
+end: 2026-11-15 01:54:52
+exit: 0
+power_after: AC Power
+load_after: 2.69 1.92 1.96
+swap_after: total = 4096.00M used = 3448.88M free = 647.12M (encrypted)

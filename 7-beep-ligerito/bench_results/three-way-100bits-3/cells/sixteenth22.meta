@@ -1,0 +1,14 @@
+name: sixteenth22
+attempt: 1
+env: 
+args: log_n=22 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 fold=0,0,0,0 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-15 01:17:09
+power_before: AC Power
+load_before: 2.27 1.74 1.46
+swap_before: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)
+top_before: CPU usage: 3.14% user, 9.1% sys, 87.84% idle  PhysMem: 19G used (2925M wired, 5577M compressor), 4005M unused. 
+end: 2026-11-15 01:17:23
+exit: 0
+power_after: AC Power
+load_after: 4.41 2.24 1.65
+swap_after: total = 3072.00M used = 2759.19M free = 312.81M (encrypted)

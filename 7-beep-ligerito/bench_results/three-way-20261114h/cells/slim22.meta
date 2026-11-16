@@ -1,0 +1,14 @@
+name: slim22
+attempt: 1
+env: 
+args: log_n=22 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 affine_eta=0.001,0.003,0.005,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 09:48:01
+power_before: AC Power
+load_before: 2.49 2.43 2.36
+swap_before: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)
+top_before: CPU usage: 7.85% user, 11.77% sys, 80.37% idle  PhysMem: 23G used (4160M wired, 6848M compressor), 156M unused. 
+end: 2026-11-14 09:48:09
+exit: 0
+power_after: AC Power
+load_after: 3.34 2.60 2.42
+swap_after: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)

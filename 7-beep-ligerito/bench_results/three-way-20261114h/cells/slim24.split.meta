@@ -1,0 +1,14 @@
+name: slim24.split
+attempt: 1
+env: 
+args: log_n=24 profile=slim100 bits=100 rates=2,4,6,8 variants=split reps=9
+start: 2026-11-14 10:01:55
+power_before: AC Power
+load_before: 4.31 3.79 3.11
+swap_before: total = 4096.00M used = 3069.00M free = 1027.00M (encrypted)
+top_before: CPU usage: 8.67% user, 11.62% sys, 79.70% idle  PhysMem: 23G used (3923M wired, 6779M compressor), 229M unused. 
+end: 2026-11-14 10:02:00
+exit: 0
+power_after: AC Power
+load_after: 5.16 3.97 3.18
+swap_after: total = 4096.00M used = 3069.00M free = 1027.00M (encrypted)

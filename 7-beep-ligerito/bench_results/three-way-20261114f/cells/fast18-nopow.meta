@@ -1,0 +1,14 @@
+name: fast18-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=18 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.01 affine_fold=5,6 eta=0.02,0.001 beepaff=0.02:7,9/0.001:13,14 fold_nf=7,5 affine_fold_nf=8,6 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepaff,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 02:27:01
+power_before: AC Power
+load_before: 1.44 2.40 2.38
+swap_before: total = 6144.00M used = 4416.25M free = 1727.75M (encrypted)
+top_before: CPU usage: 2.7% user, 9.32% sys, 88.60% idle  PhysMem: 12G used (3206M wired, 608M compressor), 12G unused. 
+end: 2026-11-14 02:27:02
+exit: 0
+power_after: AC Power
+load_after: 1.44 2.40 2.38
+swap_after: total = 6144.00M used = 4416.25M free = 1727.75M (encrypted)

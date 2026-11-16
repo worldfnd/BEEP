@@ -1,0 +1,14 @@
+name: fast18
+attempt: 1
+env: 
+args: log_n=18 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.01 affine_fold=5,6 eta=0.02,0.001 beepaff=0.02:7,9/0.001:13,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold reps=9
+start: 2026-11-13 22:28:15
+power_before: AC Power
+load_before: 1.21 2.30 2.16
+swap_before: total = 4096.00M used = 2563.00M free = 1533.00M (encrypted)
+top_before: CPU usage: 2.52% user, 9.9% sys, 88.38% idle  PhysMem: 17G used (3220M wired, 1256M compressor), 6337M unused. 
+end: 2026-11-13 22:28:17
+exit: 0
+power_after: AC Power
+load_after: 1.20 2.28 2.15
+swap_after: total = 4096.00M used = 2563.00M free = 1533.00M (encrypted)

@@ -1,0 +1,14 @@
+[bench_gate] beep-three-way-20261114g-add1: idle 87% (streak 1/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 87% (streak 2/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 79% (streak 0/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 71% (streak 0/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 78% (streak 0/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 92% (streak 1/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 96% (streak 2/3)
+[bench_gate] beep-three-way-20261114g-add1: idle 94% (streak 3/3)
+[bench_gate] beep-three-way-20261114g-add1: starting (swap baseline 2.37 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+eighth15 (attempt 1): ok
+eighth15-nopow (attempt 1): ok
+done: 2026-11-14 09:10:36, failures: 0
+gate exit 0

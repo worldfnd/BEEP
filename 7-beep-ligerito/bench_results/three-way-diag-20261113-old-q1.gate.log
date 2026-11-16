@@ -1,0 +1,11 @@
+[bench_gate] beep-diag-20261113-old-q1: idle 96% (streak 1/3)
+[bench_gate] beep-diag-20261113-old-q1: idle 96% (streak 2/3)
+[bench_gate] beep-diag-20261113-old-q1: idle 95% (streak 3/3)
+[bench_gate] beep-diag-20261113-old-q1: starting (swap baseline 2.64 GB, guard +12 GB)
+using the bench binary /private/tmp/claude-501/-Users-albertgarretafontelles-random-domain-ligerito/0974254a-86ca-4a2c-9276-75f6d0e34974/scratchpad/target_b/release/deps/ligerito_three_way-e93fe6fa1d98f987 (CAMPAIGN_BIN): not built here
+fast22 (attempt 1): ok
+fast24 (attempt 1): ok
+fast22-nopow (attempt 1): ok
+fast24-nopow (attempt 1): ok
+done: 2026-11-13 21:51:28, failures: 0
+gate exit 0

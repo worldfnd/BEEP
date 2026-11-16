@@ -1,0 +1,28 @@
+# affine ladder slim_n24_r2468: levels (k, c, rate, queries) as built by affine_ladder(); eta = 0.02
+[[levels]]
+log_inv_rate = 2
+log_msg_cols = 18
+log_num_interleaved = 6
+eta = 0.02
+queries = 119
+
+[[levels]]
+log_inv_rate = 4
+log_msg_cols = 14
+log_num_interleaved = 4
+eta = 0.02
+queries = 60
+
+[[levels]]
+log_inv_rate = 6
+log_msg_cols = 10
+log_num_interleaved = 4
+eta = 0.02
+queries = 41
+
+[[levels]]
+log_inv_rate = 8
+log_msg_cols = 6
+log_num_interleaved = 4
+eta = 0.02
+queries = 32

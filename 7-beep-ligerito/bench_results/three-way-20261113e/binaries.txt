@@ -1,0 +1,4 @@
+ligerito_three_way 031e4920edde4108 /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987
+f1879d80f03534c4cbc0c4ba90b49286924bd7114e44c5d0aa226d8f5831c2a3  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/src/pcs/ligerito/beep.rs
+37c12d6814313add40da73ccdef83f99978932a291686c44579504aa743ec7f8  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/flock/crates/flock-core/benches/ligerito_three_way.rs
+2ecfbe1b0d761fe7ba518ae4fbad41b7e62797264e0acbcfecf79f555e98283e  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/scripts/cells.txt

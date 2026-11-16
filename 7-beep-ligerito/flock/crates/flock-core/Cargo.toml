@@ -1,0 +1,63 @@
+[package]
+name = "flock-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Protocol library and verifier for the Flock R1CS-over-GF(2) PIOP."
+
+[features]
+# Count hash invocations (Merkle leaf/pair compressions, FS transcript
+# absorption and squeezes, PoW evaluations) via global relaxed atomics. Counts
+# whichever hash each component is configured with. See `flock_hash::HashKind`. Off
+# by default; used by flock-prover's benches/verifier_hash_count.rs.
+hash-count = ["flock-merkle/hash-count", "flock-transcript/hash-count"]
+
+# Count F128 multiplications and inversions via global relaxed atomics, so the
+# verifier's arithmetic can be attributed per routine. Reports BOTH the native
+# mul count (inversions are ~255 muls each) and the circuit constraint count
+# (an inversion is one witnessed constraint) -- they rank routines differently.
+# Off by default; used by flock-prover's benches/verifier_mul_count.rs.
+mul-count = ["flock-field/mul-count"]
+
+# Compile the insecure `RandomChallenger` (no Fiat-Shamir binding) into a
+# non-test build. Off by default so real proofs *cannot* reference it — see
+# `flock-transcript::challenger`. This feature supports benchmarks and examples only.
+# flock-prover enables it for development targets. Never use it for real proofs.
+unsound-challenger = ["flock-transcript/unsound-challenger"]
+
+# Run the ranked PCS commit (RS encoding and the BLAKE3 Merkle tree) on the
+# Apple GPU through Metal, ported from the flock-challenge tree. Compiled only
+# on macOS/aarch64; elsewhere the feature builds the CPU path unchanged. No
+# crate dependency: Metal and libobjc are loaded at runtime. With the feature
+# on, `FLOCK_METAL=0` keeps every commit on the CPU (same-binary A/B).
+metal = []
+
+[dependencies]
+flock-field = { workspace = true }
+flock-merkle = { workspace = true }
+flock-transcript = { workspace = true }
+flock-hash = { workspace = true }
+flock-multilinear = { workspace = true }
+flock-parallel = { workspace = true }
+rayon = { workspace = true }
+sha2 = { workspace = true }
+rand_core = { workspace = true }
+blake3 = { workspace = true }
+serde = { workspace = true }
+bincode = { workspace = true }
+toml = { workspace = true }
+
+[dev-dependencies]
+# Used by `LigeritoSecurityConfig` serde round-trip tests.
+serde_json = { workspace = true }
+flock-transcript = { workspace = true, features = ["unsound-challenger"] }
+
+# Local addition (not upstream Flock): the three-way Ligerito comparison of
+# `7-beep-ligerito` (split F256, affine F128, BEEP F128).
+[[bench]]
+name = "ligerito_three_way"
+harness = false
+
+[lints]
+workspace = true

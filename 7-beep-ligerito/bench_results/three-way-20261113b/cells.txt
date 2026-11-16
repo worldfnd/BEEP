@@ -1,0 +1,48 @@
+# The cells of the comparison of Ligerito variants (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+# [AI-revised (claude-fable-5-2), 2026-11-13, for the run 20261113b: the affine ladder at its least certified slack
+#  (affine-small), and 2^25 words with one variant per process from the start]
+#
+# One cell per line: a name, then environment words (NAME=value, upper case) and the arguments of
+# flock/crates/flock-core/benches/ligerito_three_way.rs (key=value, lower case). `#` starts a comment.
+# `reps=` is appended by the driver (CAMPAIGN_REPS). A cell named `<shape>.<process>` is one of several processes
+# of the same shape: collect.py files its rows under the shape.
+#
+# Every shape opens the same commitment with
+#   split         Flock's Ligerito at 128 bits (fold challenges in GF(2^256), its `fast` or `slim` configuration);
+#   affine        the affine ladder at the slack 0.02 of Flock (fold=: the fold grinding per level);
+#   affine-small  the affine ladder with, at each level, the least slack of 0.001, 0.0015, 0.002, 0.003, 0.005, 0.01,
+#                 0.02 at which every fold round has a certificate (affine_eta=, affine_fold=);
+#   beep          the BEEP ladder at the slacks of eta=, the same at every level;
+#   control       each BEEP ladder with no points per fold round (a timing control, not a sound configuration).
+# The affine and BEEP ladders share their shapes and rates. The affine fold grindings are certified per round:
+# `python3 scripts/beep_params.py --affine-ladder log_n=.. k0=.. ks=.. rates=.. [slacks=0.02]` prints them, and
+# affine_certificates/ has the outputs. At the slack 0.02 they are those of flock/scripts/affine_fold_params.py
+# (2^25 fast and 2^22 slim are ladders that Flock registers; at 2^20 the ladder 1,3,5 has no certificate at its last
+# level, and 1,3,6 has one).
+#
+# A cell with FLOCK_NO_GRIND=1 runs the same provers with no proof of work (their proofs do not verify): it
+# gives the prove times without grinding, to which collect.py adds the proofs of work at their expected cost.
+#
+# 2^25 words: the provers of one shape do not fit together in the memory of the machine (24 GB), so each variant has
+# its own process. The witness and the commitment are deterministic: every process opens the same commitment.
+
+fast20          log_n=20 profile=fast rates=1,3,6   fold=4,5,5   affine_eta=0.003,0.01,0.02        affine_fold=6,6,5   eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22          log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24          log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+slim22          log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast25.split    log_n=25 profile=fast rates=1,3,5,7 variants=split
+fast25.affine   log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.affsmall log_n=25 profile=fast rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=8,8,7,6 variants=affine-small
+fast25.beep02   log_n=25 profile=fast rates=1,3,5,7 eta=0.02  variants=beep,control
+fast25.beep001  log_n=25 profile=fast rates=1,3,5,7 eta=0.001 variants=beep,control
+
+fast20-nopow          FLOCK_NO_GRIND=1 log_n=20 profile=fast rates=1,3,6   fold=4,5,5   affine_eta=0.003,0.01,0.02        affine_fold=6,6,5   eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast22-nopow          FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02  affine_fold=8,7,6,6 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast24-nopow          FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+slim22-nopow          FLOCK_NO_GRIND=1 log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 variants=split,affine,affine-small,beep,control
+fast25.split-nopow    FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 variants=split
+fast25.affine-nopow   FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.affsmall-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=8,8,7,6 variants=affine-small
+fast25.beep02-nopow   FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 eta=0.02  variants=beep,control
+fast25.beep001-nopow  FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 eta=0.001 variants=beep,control

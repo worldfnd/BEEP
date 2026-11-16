@@ -1,0 +1,151 @@
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-20261114h-fast16: idle 86% (streak 1/1)
+fast16 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast17: idle 86% (streak 1/1)
+fast17 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast18: idle 74% (streak 0/1)
+[bench_gate] three-way-20261114h-fast18: idle 78% (streak 0/1)
+[bench_gate] three-way-20261114h-fast18: idle 89% (streak 1/1)
+fast18 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast20: idle 96% (streak 1/1)
+fast20 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast22: idle 94% (streak 1/1)
+fast22 (attempt 1): ok
+[bench_gate] three-way-20261114h-slim22: idle 82% (streak 1/1)
+slim22 (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth15: idle 82% (streak 1/1)
+eighth15 (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth22: idle 87% (streak 1/1)
+eighth22 (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth22: idle 90% (streak 1/1)
+sixteenth22 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.split: idle 84% (streak 1/1)
+fast24.split (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.affine: idle 81% (streak 1/1)
+fast24.affine (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.affsmall: idle 77% (streak 0/1)
+[bench_gate] three-way-20261114h-fast24.affsmall: idle 88% (streak 1/1)
+fast24.affsmall (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.beep02: idle 58% (streak 0/1)
+[bench_gate] three-way-20261114h-fast24.beep02: idle 83% (streak 1/1)
+fast24.beep02 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.beep001: idle 88% (streak 1/1)
+fast24.beep001 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.split: idle 80% (streak 0/1)
+[bench_gate] three-way-20261114h-fast25.split: idle 88% (streak 1/1)
+fast25.split (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.affine: idle 92% (streak 1/1)
+fast25.affine (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.affsmall: idle 87% (streak 1/1)
+fast25.affsmall (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.beep02: idle 86% (streak 1/1)
+fast25.beep02 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.beep001: idle 81% (streak 1/1)
+fast25.beep001 (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.split: idle 86% (streak 1/1)
+slim24.split (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.affine: idle 84% (streak 1/1)
+slim24.affine (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.affsmall: idle 80% (streak 0/1)
+[bench_gate] three-way-20261114h-slim24.affsmall: idle 78% (streak 0/1)
+[bench_gate] three-way-20261114h-slim24.affsmall: idle 88% (streak 1/1)
+slim24.affsmall (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.beep02: idle 87% (streak 1/1)
+slim24.beep02 (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.beep001: idle 88% (streak 1/1)
+slim24.beep001 (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.split: idle 84% (streak 1/1)
+eighth24.split (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.affine: idle 83% (streak 1/1)
+eighth24.affine (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.affsmall: idle 85% (streak 1/1)
+eighth24.affsmall (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.beep02: idle 89% (streak 1/1)
+eighth24.beep02 (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.beep001: idle 88% (streak 1/1)
+eighth24.beep001 (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.split: idle 88% (streak 1/1)
+sixteenth24.split (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.affine: idle 85% (streak 1/1)
+sixteenth24.affine (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.affsmall: idle 89% (streak 1/1)
+sixteenth24.affsmall (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.beep02: idle 88% (streak 1/1)
+sixteenth24.beep02 (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.beep001: idle 90% (streak 1/1)
+sixteenth24.beep001 (attempt 1): ok
+[bench_gate] three-way-20261114h-fast16-nopow: idle 91% (streak 1/1)
+fast16-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast17-nopow: idle 94% (streak 1/1)
+fast17-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast18-nopow: idle 93% (streak 1/1)
+fast18-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast20-nopow: idle 94% (streak 1/1)
+fast20-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast22-nopow: idle 83% (streak 1/1)
+fast22-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim22-nopow: idle 89% (streak 1/1)
+slim22-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth15-nopow: idle 88% (streak 1/1)
+eighth15-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth22-nopow: idle 76% (streak 0/1)
+[bench_gate] three-way-20261114h-eighth22-nopow: idle 74% (streak 0/1)
+[bench_gate] three-way-20261114h-eighth22-nopow: idle 89% (streak 1/1)
+eighth22-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth22-nopow: idle 84% (streak 1/1)
+sixteenth22-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.split-nopow: idle 86% (streak 1/1)
+fast24.split-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.affine-nopow: idle 87% (streak 1/1)
+fast24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.affsmall-nopow: idle 90% (streak 1/1)
+fast24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.beep02-nopow: idle 88% (streak 1/1)
+fast24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast24.beep001-nopow: idle 85% (streak 1/1)
+fast24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.split-nopow: idle 89% (streak 1/1)
+fast25.split-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.affine-nopow: idle 88% (streak 1/1)
+fast25.affine-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.affsmall-nopow: idle 87% (streak 1/1)
+fast25.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.beep02-nopow: idle 87% (streak 1/1)
+fast25.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-fast25.beep001-nopow: idle 78% (streak 0/1)
+[bench_gate] three-way-20261114h-fast25.beep001-nopow: idle 81% (streak 1/1)
+fast25.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.split-nopow: idle 87% (streak 1/1)
+slim24.split-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.affine-nopow: idle 94% (streak 1/1)
+slim24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.affsmall-nopow: idle 79% (streak 0/1)
+[bench_gate] three-way-20261114h-slim24.affsmall-nopow: idle 84% (streak 1/1)
+slim24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.beep02-nopow: idle 81% (streak 1/1)
+slim24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-slim24.beep001-nopow: idle 88% (streak 1/1)
+slim24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.split-nopow: idle 87% (streak 1/1)
+eighth24.split-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.affine-nopow: idle 88% (streak 1/1)
+eighth24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.affsmall-nopow: idle 88% (streak 1/1)
+eighth24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.beep02-nopow: idle 87% (streak 1/1)
+eighth24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-eighth24.beep001-nopow: idle 82% (streak 1/1)
+eighth24.beep001-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.split-nopow: idle 88% (streak 1/1)
+sixteenth24.split-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.affine-nopow: idle 86% (streak 1/1)
+sixteenth24.affine-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.affsmall-nopow: idle 87% (streak 1/1)
+sixteenth24.affsmall-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.beep02-nopow: idle 86% (streak 1/1)
+sixteenth24.beep02-nopow (attempt 1): ok
+[bench_gate] three-way-20261114h-sixteenth24.beep001-nopow: idle 85% (streak 1/1)
+sixteenth24.beep001-nopow (attempt 1): ok
+done: 2026-11-14 10:48:57, failures: 0

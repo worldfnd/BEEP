@@ -1,0 +1,14 @@
+name: slim24.beep02
+attempt: 1
+env: 
+args: log_n=24 profile=slim rates=2,4,6,8 eta=0.02 beepaff=0.02:8,9,10,11 variants=beep,control,beepaff,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 02:13:10
+power_before: AC Power
+load_before: 1.50 2.05 2.11
+swap_before: total = 6144.00M used = 5073.69M free = 1070.31M (encrypted)
+top_before: CPU usage: 2.6% user, 9.27% sys, 88.65% idle  PhysMem: 10G used (3178M wired, 399M compressor), 13G unused. 
+end: 2026-11-14 02:13:21
+exit: 0
+power_after: AC Power
+load_after: 2.16 2.18 2.15
+swap_after: total = 6144.00M used = 5065.69M free = 1078.31M (encrypted)

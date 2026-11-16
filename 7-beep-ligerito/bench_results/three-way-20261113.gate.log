@@ -1,0 +1,19 @@
+[bench_gate] beep-three-way-20261113: idle 81% (streak 1/3)
+[bench_gate] beep-three-way-20261113: idle 89% (streak 2/3)
+[bench_gate] beep-three-way-20261113: idle 88% (streak 3/3)
+[bench_gate] beep-three-way-20261113: starting (swap baseline 15.95 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+on battery (Battery Power) before fast20: waiting for AC power (at most 14400 s)
+AC power back after 360 s; waiting for 60 s of at least 80 % idle CPU
+fast20 (attempt 1): ok
+fast22 (attempt 1): ok
+fast24 (attempt 1): ok
+fast25 (attempt 1): ok
+slim22 (attempt 1): ok
+fast20-nopow (attempt 1): ok
+fast22-nopow (attempt 1): ok
+fast24-nopow (attempt 1): ok
+fast25-nopow (attempt 1): ok
+slim22-nopow (attempt 1): ok
+done: 2026-11-13 16:22:19, failures: 0
+gate exit: 0

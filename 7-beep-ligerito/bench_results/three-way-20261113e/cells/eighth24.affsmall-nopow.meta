@@ -1,0 +1,14 @@
+name: eighth24.affsmall-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 variants=affine-small reps=9
+start: 2026-11-14 00:21:39
+power_before: AC Power
+load_before: 1.79 1.99 2.10
+swap_before: total = 3072.00M used = 2209.75M free = 862.25M (encrypted)
+top_before: CPU usage: 2.4% user, 9.18% sys, 88.77% idle  PhysMem: 17G used (3244M wired, 1701M compressor), 6086M unused. 
+end: 2026-11-14 00:21:43
+exit: 0
+power_after: AC Power
+load_after: 2.21 2.07 2.13
+swap_after: total = 3072.00M used = 2209.75M free = 862.25M (encrypted)

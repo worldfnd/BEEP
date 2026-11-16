@@ -1,0 +1,14 @@
+name: fast20
+attempt: 1
+env: 
+args: log_n=20 profile=fast rates=1,3,6 fold=4,5,5 affine_eta=0.003,0.01,0.02 affine_fold=6,6,5 eta=0.02,0.001 beepaff=0.02:7,8,10/0.001:14,14,14 fold_nf=7,5,5 affine_fold_nf=10,6,5 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepaff,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 03:10:12
+power_before: AC Power
+load_before: 1.14 1.37 1.73
+swap_before: total = 5120.00M used = 4232.19M free = 887.81M (encrypted)
+top_before: CPU usage: 2.16% user, 8.10% sys, 89.72% idle  PhysMem: 13G used (3090M wired, 589M compressor), 10G unused. 
+end: 2026-11-14 03:10:17
+exit: 0
+power_after: AC Power
+load_after: 1.21 1.38 1.73
+swap_after: total = 5120.00M used = 4232.19M free = 887.81M (encrypted)

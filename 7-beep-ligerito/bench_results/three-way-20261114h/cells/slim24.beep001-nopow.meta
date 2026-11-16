@@ -1,0 +1,14 @@
+name: slim24.beep001-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim100 bits=100 rates=2,4,6,8 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 10:38:54
+power_before: AC Power
+load_before: 2.75 3.07 3.28
+swap_before: total = 6144.00M used = 4535.00M free = 1609.00M (encrypted)
+top_before: CPU usage: 7.2% user, 10.63% sys, 82.34% idle  PhysMem: 22G used (4241M wired, 5242M compressor), 1783M unused. 
+end: 2026-11-14 10:39:01
+exit: 0
+power_after: AC Power
+load_after: 3.33 3.18 3.32
+swap_after: total = 6144.00M used = 4535.00M free = 1609.00M (encrypted)

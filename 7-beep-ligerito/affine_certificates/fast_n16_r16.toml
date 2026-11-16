@@ -1,0 +1,14 @@
+# affine ladder fast_n16_r16: levels (k, c, rate, queries) as built by affine_ladder(); eta = 0.02
+[[levels]]
+log_inv_rate = 1
+log_msg_cols = 10
+log_num_interleaved = 6
+eta = 0.02
+queries = 247
+
+[[levels]]
+log_inv_rate = 6
+log_msg_cols = 6
+log_num_interleaved = 4
+eta = 0.02
+queries = 41

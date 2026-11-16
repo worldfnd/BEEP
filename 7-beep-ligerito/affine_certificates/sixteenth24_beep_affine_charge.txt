@@ -1,0 +1,44 @@
+# BEEP ladder with the charge of the affine fold, log_n=24 k0=6 ks=4,4,4 rates=4,6,8,10 etas=0.02,0.001: an accounting experiment,
+# not a sound configuration (see scripts/beep_params.py). Per level: the fold grinding of BEEP, for
+# (t + 3 L)/q; the grinding if the squeeze is charged (E_aff + 3 L + 1)/q, where E_aff = eps_aff q is
+# the bound of the affine fold in the form of Flock's script, at the worst round of the level ("-" if
+# some round has no certificate at this slack); and the smaller of the two. kappa_2 bits is
+# -log2((E_aff + 2 L)/q), the second round of the paper's construction alone.
+  slack level   rho  log n     L  BEEP: log2 t  grinding | affine: log2 E_aff  kappa_2 bits  squeeze bits  grinding | charge  fold grinding
+   0.02     0  2^-4    22   100         21.55        22 |               4.25        120.23        119.68         9 | affine              9
+#   certificate, level 0 round 1: degree 262144, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+#   certificate, level 0 round 2: degree 262145, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+#   certificate, level 0 round 3: degree 262146, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+#   certificate, level 0 round 4: degree 262147, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+#   certificate, level 0 round 5: degree 262148, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+#   certificate, level 0 round 6: degree 262149, m = 6, D = 181, M = 25, B = 1127435, list 19, log2 eps_aff = -123.75
+   0.02     1  2^-6    20   200         19.77        20 |               4.46        119.28        118.72        10 | affine             10
+#   certificate, level 1 round 1: degree 16384, m = 3, D = 193, M = 27, B = 151628, list 22, log2 eps_aff = -123.54
+#   certificate, level 1 round 2: degree 16385, m = 3, D = 194, M = 27, B = 151628, list 22, log2 eps_aff = -123.54
+#   certificate, level 1 round 3: degree 16386, m = 3, D = 194, M = 27, B = 151628, list 22, log2 eps_aff = -123.54
+#   certificate, level 1 round 4: degree 16387, m = 3, D = 194, M = 27, B = 151628, list 22, log2 eps_aff = -123.54
+   0.02     2  2^-8    18   400         17.88        18 |               4.64        118.31        117.74        11 | affine             11
+#   certificate, level 2 round 1: degree 1024, m = 2, D = 86, M = 42, B = 21601, list 25, log2 eps_aff = -123.36
+#   certificate, level 2 round 2: degree 1025, m = 2, D = 86, M = 42, B = 21601, list 25, log2 eps_aff = -123.36
+#   certificate, level 2 round 3: degree 1026, m = 2, D = 87, M = 42, B = 21575, list 25, log2 eps_aff = -123.36
+#   certificate, level 2 round 4: degree 1027, m = 2, D = 87, M = 42, B = 21575, list 25, log2 eps_aff = -123.36
+   0.02     3  2^-10    16   800         15.94        16 |               4.70        117.33        116.76        12 | affine             12
+#   certificate, level 3 round 1: degree 64, m = 1, D = 70, M = 51, B = 3347, list 25, log2 eps_aff = -123.36
+#   certificate, level 3 round 2: degree 65, m = 1, D = 72, M = 50, B = 3347, list 25, log2 eps_aff = -123.36
+#   certificate, level 3 round 3: degree 66, m = 1, D = 76, M = 49, B = 3347, list 26, log2 eps_aff = -123.30
+#   certificate, level 3 round 4: degree 67, m = 1, D = 79, M = 48, B = 3347, list 26, log2 eps_aff = -123.30
+  0.001     0  2^-4    22  2000         21.58        22 |               8.71        115.89        115.35        13 | affine             13
+#   certificate, level 0 round 1: degree 262144, m = 172, D = 57810, M = 690, B = 1052471, list 404, log2 eps_aff = -119.29
+#   certificate, level 0 round 2: degree 262145, m = 172, D = 57903, M = 690, B = 1052471, list 404, log2 eps_aff = -119.29
+#   certificate, level 0 round 3: degree 262146, m = 172, D = 57996, M = 690, B = 1052471, list 404, log2 eps_aff = -119.29
+#   certificate, level 0 round 4: degree 262147, m = 182, D = 55938, M = 730, B = 1052471, list 404, log2 eps_aff = -119.29
+#   certificate, level 0 round 5: degree 262148, m = 182, D = 56016, M = 730, B = 1052471, list 404, log2 eps_aff = -119.29
+#   certificate, level 0 round 6: degree 262149, m = 182, D = 56095, M = 730, B = 1052471, list 405, log2 eps_aff = -119.29
+  0.001     1  2^-6    20  4000         19.82        20 |               8.86        114.95        114.39        14 | affine             14
+#   certificate, level 1 round 1: degree 16384, m = 230, D = 76058, M = 1850, B = 132086, list 454, log2 eps_aff = -119.16
+#   certificate, level 1 round 2: degree 16385, m = 230, D = 78415, M = 1849, B = 132091, list 454, log2 eps_aff = -119.15
+#   certificate, level 1 round 3: degree 16386, m = 244, D = 77527, M = 1962, B = 132091, list 456, log2 eps_aff = -119.15
+#   certificate, level 1 round 4: degree 16387, m = 244, D = 79416, M = 1962, B = 132096, list 455, log2 eps_aff = -119.14
+  0.001     2  2^-8    18  8000         18.45        19 |                  -             -             -         - |   beep             19
+  0.001     3  2^-10    16 16000         15.95        17 |                  -             -             -         - |   beep             17
+beepaff=0.02:9,10,11,12/0.001:13,14,19,17

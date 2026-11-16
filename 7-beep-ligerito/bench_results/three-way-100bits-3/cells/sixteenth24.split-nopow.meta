@@ -1,0 +1,14 @@
+name: sixteenth24.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 variants=split reps=9
+start: 2026-11-15 02:06:24
+power_before: AC Power
+load_before: 2.12 2.34 2.18
+swap_before: total = 4096.00M used = 3408.88M free = 687.12M (encrypted)
+top_before: CPU usage: 3.74% user, 9.35% sys, 86.90% idle  PhysMem: 19G used (2959M wired, 5306M compressor), 4308M unused. 
+end: 2026-11-15 02:06:35
+exit: 0
+power_after: AC Power
+load_after: 4.09 2.76 2.33
+swap_after: total = 4096.00M used = 3408.88M free = 687.12M (encrypted)

@@ -1,0 +1,114 @@
+# The cells of the comparison of Ligerito variants (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+# [AI-revised (claude-fable-5-2), 2026-11-13, for the run 20261113b: the affine ladder at its least certified slack
+#  (affine-small), and 2^25 words with one variant per process from the start]
+# [AI-revised (claude-fable-5-2), 2026-11-13, at the author's request, for the run 20261113c: smaller rates (2^24
+#  words at rate 1/4, 2^22 and 2^24 words at rates 1/8 and 1/16), and the accounting variant `beepaff`]
+# [AI-revised (claude-fable-5-2), 2026-11-13, at the author's request, for the run 20261113d: short codes (2^16,
+#  2^17 and 2^18 words); `beep` is now the BEEP ladder with no binding sample on the first commitment, proved with
+#  one pass per fold round; `beepb`, `beepref` and `beepold` record what each of the two changes saves]
+#
+# One cell per line: a name, then environment words (NAME=value, upper case) and the arguments of
+# flock/crates/flock-core/benches/ligerito_three_way.rs (key=value, lower case). `#` starts a comment.
+# `reps=` is appended by the driver (CAMPAIGN_REPS). A cell named `<shape>.<process>` is one of several processes
+# of the same shape: collect.py files its rows under the shape.
+#
+# Every shape opens the same commitment with
+#   split         Flock's Ligerito at 128 bits (fold challenges in GF(2^256)): its `fast` configuration at rate 1/2
+#                 and its `slim` configuration at rate 1/4. Flock ships no configuration at rates 1/8 and 1/16: there
+#                 (`l0_rate=3`, `l0_rate=4`) the configuration is Flock's derivation of `slim` at that rate
+#                 (`derive_profile_ladder_at_rate`, a local addition to flock-core);
+#   affine        the affine ladder at the slack 0.02 of Flock (fold=: the fold grinding per level);
+#   affine-small  the affine ladder with, at each level, the least slack of 0.001, 0.0015, 0.002, 0.003, 0.005, 0.01,
+#                 0.02 at which every fold round has a certificate (affine_eta=, affine_fold=);
+#   beep          the BEEP ladder at the slacks of eta=, the same at every level, with no binding sample on the
+#                 first commitment (the points of the first fold round bind it);
+#   control       each BEEP ladder with no points per fold round (a timing control, not a sound configuration);
+#   beepaff       each BEEP ladder with its fold challenges ground for the error of the affine fold where that has a
+#                 certificate at the slack of the level (beepaff=<eta>:<bits per level>/..). An accounting
+#                 experiment, not a sound configuration: `python3 scripts/beep_params.py --beep-affine-charge ..`
+#                 prints the bits, and affine_certificates/<shape>_beep_affine_charge.txt has the outputs;
+#   beepb         each BEEP ladder with the binding sample on the first commitment (as Flock's ladders have it);
+#   beepref       each `beep` with the reference prover (three passes per fold round): the same proofs;
+#   beepold       `beepb` with the reference prover: BEEP-Ligerito as it was in the runs 20261113b and 20261113c.
+# The affine and BEEP ladders share their shapes and rates. The affine fold grindings are certified per round:
+# `python3 scripts/beep_params.py --affine-ladder log_n=.. k0=.. ks=.. rates=.. [slacks=0.02]` prints them, and
+# affine_certificates/ has the outputs. At the slack 0.02 they are those of flock/scripts/affine_fold_params.py
+# (2^25 words at rate 1/2, 2^22 words at rate 1/4 and 2^17 words are ladders that Flock registers; at 2^20 the
+# ladder 1,3,5 has no certificate at its last level, and 1,3,6 has one; at 2^16 and 2^18 words the ladders have two
+# levels: with three, the last level has no certificate).
+#
+# A cell with FLOCK_NO_GRIND=1 runs the same provers with no proof of work (their proofs do not verify): it
+# gives the prove times without grinding, to which collect.py adds the proofs of work at their expected cost.
+#
+# 2^24 and 2^25 words: each variant has its own process (a BEEP ladder shares its process with its controls), so
+# that no process has part of its memory compressed. The witness and the commitment are deterministic: every
+# process opens the same commitment.
+
+fast16 log_n=16 profile=fast rates=1,6 fold=4,5 affine_eta=0.02,0.02 affine_fold=4,5 eta=0.02,0.001 beepaff=0.02:7,10/0.001:12,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast17 log_n=17 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.02 affine_fold=5,5 eta=0.02,0.001 beepaff=0.02:7,9/0.001:12,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast18 log_n=18 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.01 affine_fold=5,6 eta=0.02,0.001 beepaff=0.02:7,9/0.001:13,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast20 log_n=20 profile=fast rates=1,3,6 fold=4,5,5 affine_eta=0.003,0.01,0.02 affine_fold=6,6,5 eta=0.02,0.001 beepaff=0.02:7,8,10/0.001:14,14,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast22 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02 affine_fold=8,7,6,6 eta=0.02,0.001 beepaff=0.02:7,8,9,10/0.001:12,16,15,15 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+slim22 log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 beepaff=0.02:8,9,10,11/0.001:12,17,16,15 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+eighth22 log_n=22 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,6 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,11,7,7 eta=0.02,0.001 beepaff=0.02:8,9,10,11/0.001:13,18,17,16 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+sixteenth22 log_n=22 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 eta=0.02,0.001 beepaff=0.02:9,10,11,12/0.001:13,19,18,17 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast24.split log_n=24 profile=fast rates=1,3,5,7 variants=split
+fast24.affine log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast24.affsmall log_n=24 profile=fast rates=1,3,5,7 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 variants=affine-small
+fast24.beep02 log_n=24 profile=fast rates=1,3,5,7 eta=0.02 beepaff=0.02:7,8,9,10 variants=beep,control,beepaff,beepb,beepref,beepold
+fast24.beep001 log_n=24 profile=fast rates=1,3,5,7 eta=0.001 beepaff=0.001:12,17,16,15 variants=beep,control,beepaff,beepb,beepref,beepold
+fast25.split log_n=25 profile=fast rates=1,3,5,7 variants=split
+fast25.affine log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.affsmall log_n=25 profile=fast rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=8,8,7,6 variants=affine-small
+fast25.beep02 log_n=25 profile=fast rates=1,3,5,7 eta=0.02 beepaff=0.02:7,8,9,10 variants=beep,control,beepaff,beepb,beepref,beepold
+fast25.beep001 log_n=25 profile=fast rates=1,3,5,7 eta=0.001 beepaff=0.001:12,18,16,15 variants=beep,control,beepaff,beepb,beepref,beepold
+slim24.split log_n=24 profile=slim rates=2,4,6,8 variants=split
+slim24.affine log_n=24 profile=slim rates=2,4,6,8 fold=4,5,5,5 variants=affine
+slim24.affsmall log_n=24 profile=slim rates=2,4,6,8 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,9,7,6 variants=affine-small
+slim24.beep02 log_n=24 profile=slim rates=2,4,6,8 eta=0.02 beepaff=0.02:8,9,10,11 variants=beep,control,beepaff,beepb,beepref,beepold
+slim24.beep001 log_n=24 profile=slim rates=2,4,6,8 eta=0.001 beepaff=0.001:12,18,17,16 variants=beep,control,beepaff,beepb,beepref,beepold
+eighth24.split log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 variants=split
+eighth24.affine log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,5 variants=affine
+eighth24.affsmall log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 variants=affine-small
+eighth24.beep02 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 eta=0.02 beepaff=0.02:8,9,10,11 variants=beep,control,beepaff,beepb,beepref,beepold
+eighth24.beep001 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 eta=0.001 beepaff=0.001:13,19,18,16 variants=beep,control,beepaff,beepb,beepref,beepold
+sixteenth24.split log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 variants=split
+sixteenth24.affine log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 variants=affine
+sixteenth24.affsmall log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 affine_eta=0.001,0.001,0.002,0.005 affine_fold=9,9,8,7 variants=affine-small
+sixteenth24.beep02 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 eta=0.02 beepaff=0.02:9,10,11,12 variants=beep,control,beepaff,beepb,beepref,beepold
+sixteenth24.beep001 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 eta=0.001 beepaff=0.001:13,14,19,17 variants=beep,control,beepaff,beepb,beepref,beepold
+
+fast16-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast rates=1,6 fold=4,5 affine_eta=0.02,0.02 affine_fold=4,5 eta=0.02,0.001 beepaff=0.02:7,10/0.001:12,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast17-nopow FLOCK_NO_GRIND=1 log_n=17 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.02 affine_fold=5,5 eta=0.02,0.001 beepaff=0.02:7,9/0.001:12,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast18-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast rates=1,5 fold=4,5 affine_eta=0.01,0.01 affine_fold=5,6 eta=0.02,0.001 beepaff=0.02:7,9/0.001:13,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast20-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast rates=1,3,6 fold=4,5,5 affine_eta=0.003,0.01,0.02 affine_fold=6,6,5 eta=0.02,0.001 beepaff=0.02:7,8,10/0.001:14,14,14 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 affine_eta=0.001,0.003,0.01,0.02 affine_fold=8,7,6,6 eta=0.02,0.001 beepaff=0.02:7,8,9,10/0.001:12,16,15,15 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+slim22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 affine_eta=0.001,0.003,0.005,0.02 affine_fold=9,8,7,5 eta=0.02,0.001 beepaff=0.02:8,9,10,11/0.001:12,17,16,15 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+eighth22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,6 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,11,7,7 eta=0.02,0.001 beepaff=0.02:8,9,10,11/0.001:13,18,17,16 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+sixteenth22-nopow FLOCK_NO_GRIND=1 log_n=22 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 eta=0.02,0.001 beepaff=0.02:9,10,11,12/0.001:13,19,18,17 variants=split,affine,affine-small,beep,control,beepaff,beepb,beepref,beepold
+fast24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 variants=split
+fast24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 affine_eta=0.001,0.002,0.005,0.02 affine_fold=8,8,7,5 variants=affine-small
+fast24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 eta=0.02 beepaff=0.02:7,8,9,10 variants=beep,control,beepaff,beepb,beepref,beepold
+fast24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 eta=0.001 beepaff=0.001:12,17,16,15 variants=beep,control,beepaff,beepb,beepref,beepold
+fast25.split-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 variants=split
+fast25.affine-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=affine
+fast25.affsmall-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=8,8,7,6 variants=affine-small
+fast25.beep02-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 eta=0.02 beepaff=0.02:7,8,9,10 variants=beep,control,beepaff,beepb,beepref,beepold
+fast25.beep001-nopow FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 eta=0.001 beepaff=0.001:12,18,16,15 variants=beep,control,beepaff,beepb,beepref,beepold
+slim24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim rates=2,4,6,8 variants=split
+slim24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim rates=2,4,6,8 fold=4,5,5,5 variants=affine
+slim24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim rates=2,4,6,8 affine_eta=0.001,0.0015,0.005,0.01 affine_fold=9,9,7,6 variants=affine-small
+slim24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim rates=2,4,6,8 eta=0.02 beepaff=0.02:8,9,10,11 variants=beep,control,beepaff,beepb,beepref,beepold
+slim24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim rates=2,4,6,8 eta=0.001 beepaff=0.001:12,18,17,16 variants=beep,control,beepaff,beepb,beepref,beepold
+eighth24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 variants=split
+eighth24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 fold=5,5,5,5 variants=affine
+eighth24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=9,9,8,6 variants=affine-small
+eighth24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 eta=0.02 beepaff=0.02:8,9,10,11 variants=beep,control,beepaff,beepb,beepref,beepold
+eighth24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=3 rates=3,5,7,9 eta=0.001 beepaff=0.001:13,19,18,16 variants=beep,control,beepaff,beepb,beepref,beepold
+sixteenth24.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 variants=split
+sixteenth24.affine-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 fold=5,5,5,5 variants=affine
+sixteenth24.affsmall-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 affine_eta=0.001,0.001,0.002,0.005 affine_fold=9,9,8,7 variants=affine-small
+sixteenth24.beep02-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 eta=0.02 beepaff=0.02:9,10,11,12 variants=beep,control,beepaff,beepb,beepref,beepold
+sixteenth24.beep001-nopow FLOCK_NO_GRIND=1 log_n=24 profile=slim l0_rate=4 rates=4,6,8,10 eta=0.001 beepaff=0.001:13,14,19,17 variants=beep,control,beepaff,beepb,beepref,beepold

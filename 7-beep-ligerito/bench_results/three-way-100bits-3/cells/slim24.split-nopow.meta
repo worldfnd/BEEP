@@ -1,0 +1,14 @@
+name: slim24.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim100 bits=100 rates=2,4,6,8 variants=split reps=9
+start: 2026-11-15 01:57:31
+power_before: AC Power
+load_before: 2.03 2.03 1.99
+swap_before: total = 4096.00M used = 3416.88M free = 679.12M (encrypted)
+top_before: CPU usage: 2.94% user, 9.26% sys, 87.78% idle  PhysMem: 19G used (2929M wired, 5167M compressor), 4318M unused. 
+end: 2026-11-15 01:57:34
+exit: 0
+power_after: AC Power
+load_after: 2.83 2.19 2.05
+swap_after: total = 4096.00M used = 3416.88M free = 679.12M (encrypted)

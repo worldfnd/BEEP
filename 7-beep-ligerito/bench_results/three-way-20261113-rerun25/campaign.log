@@ -1,0 +1,12 @@
+building the bench binary (target directory /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.09s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+fast25.split (attempt 1): ok
+fast25.affine (attempt 1): ok
+fast25.beep02 (attempt 1): ok
+fast25.beep001 (attempt 1): ok
+fast25.split-nopow (attempt 1): ok
+fast25.affine-nopow (attempt 1): ok
+fast25.beep02-nopow (attempt 1): ok
+fast25.beep001-nopow (attempt 1): ok
+done: 2026-11-13 16:41:24, failures: 0

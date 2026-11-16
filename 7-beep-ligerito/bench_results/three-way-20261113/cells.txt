@@ -1,0 +1,28 @@
+# The cells of the three-way Ligerito comparison (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-13, at the author's request; please review]
+#
+# One cell per line: a name, then environment words (NAME=value, upper case) and the arguments of
+# flock/crates/flock-core/benches/ligerito_three_way.rs (key=value, lower case). `#` starts a comment.
+# `reps=` is appended by the driver (CAMPAIGN_REPS).
+#
+# Every cell opens the same commitment with Flock's split ladder (fold challenges in GF(2^256), its embedded
+# `fast` or `slim` configuration at 128 bits), with the affine ladder and with the BEEP ladder at two slacks,
+# and with the timing control of each BEEP ladder (no points per fold round). The affine and BEEP ladders share
+# their shapes and rates. The affine fold grinding is the output of flock/scripts/affine_fold_params.py on that
+# ladder (affine_certificates/ has the levels files and the outputs): 2^25 fast and 2^22 slim are the ladders
+# that Flock registers; at 2^20 the ladder 1,3,5 has no certificate at its last level, and 1,3,6 has one.
+#
+# A cell with FLOCK_NO_GRIND=1 runs the same provers with no proof of work (their proofs do not verify): it
+# gives the prove times without grinding, to which collect.py adds the proofs of work at their expected cost.
+
+fast20        log_n=20 profile=fast rates=1,3,6   fold=4,5,5   eta=0.02,0.001 variants=split,affine,beep,control
+fast22        log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 eta=0.02,0.001 variants=split,affine,beep,control
+fast24        log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control
+fast25        log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control
+slim22        log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control
+
+fast20-nopow  FLOCK_NO_GRIND=1 log_n=20 profile=fast rates=1,3,6   fold=4,5,5   eta=0.02,0.001 variants=split,affine,beep,control
+fast22-nopow  FLOCK_NO_GRIND=1 log_n=22 profile=fast rates=1,3,5,7 fold=4,5,5,6 eta=0.02,0.001 variants=split,affine,beep,control
+fast24-nopow  FLOCK_NO_GRIND=1 log_n=24 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control
+fast25-nopow  FLOCK_NO_GRIND=1 log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control
+slim22-nopow  FLOCK_NO_GRIND=1 log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control

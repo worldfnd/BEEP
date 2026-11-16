@@ -1,0 +1,14 @@
+name: slim22-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=slim100 bits=100 rates=2,4,6,8 fold=0,0,0,0 affine_eta=0.001,0.003,0.005,0.02 affine_fold=0,0,0,0 eta=0.02,0.001 fold_nf=0,0,0,0 affine_fold_nf=0,0,0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-15 01:45:12
+power_before: AC Power
+load_before: 1.53 2.04 2.06
+swap_before: total = 4096.00M used = 3456.88M free = 639.12M (encrypted)
+top_before: CPU usage: 3.14% user, 9.1% sys, 87.84% idle  PhysMem: 19G used (2928M wired, 5084M compressor), 4754M unused. 
+end: 2026-11-15 01:45:18
+exit: 0
+power_after: AC Power
+load_after: 2.29 2.18 2.11
+swap_after: total = 4096.00M used = 3456.88M free = 639.12M (encrypted)

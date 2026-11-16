@@ -1,0 +1,14 @@
+name: eighth15
+attempt: 1
+env: 
+args: log_n=15 profile=slim100 bits=100 l0_rate=3 rates=3,7 fold=0,0 affine_eta=0.02,0.02 affine_fold=0,0 eta=0.02,0.001 fold_nf=0,0 affine_fold_nf=0,0 variants=split,affine,affine-small,afast,afast-small,anf,anf-small,anfref,anfref-small,beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 09:48:56
+power_before: AC Power
+load_before: 2.44 2.45 2.37
+swap_before: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)
+top_before: CPU usage: 9.98% user, 12.5% sys, 77.96% idle  PhysMem: 23G used (3999M wired, 7118M compressor), 371M unused. 
+end: 2026-11-14 09:48:58
+exit: 0
+power_after: AC Power
+load_after: 2.44 2.45 2.37
+swap_after: total = 4096.00M used = 2371.62M free = 1724.38M (encrypted)

@@ -1,0 +1,14 @@
+name: eighth24.affsmall
+attempt: 1
+env: 
+args: log_n=24 profile=slim100 bits=100 l0_rate=3 rates=3,5,7,9 affine_eta=0.001,0.0015,0.003,0.01 affine_fold=0,0,0,0 affine_fold_nf=0,0,0,0 variants=affine-small,afast-small,anf-small,anfref-small reps=9
+start: 2026-11-14 10:09:02
+power_before: AC Power
+load_before: 3.12 3.53 3.24
+swap_before: total = 4096.00M used = 3468.44M free = 627.56M (encrypted)
+top_before: CPU usage: 6.73% user, 13.47% sys, 79.78% idle  PhysMem: 22G used (3768M wired, 6790M compressor), 1592M unused. 
+end: 2026-11-14 10:09:11
+exit: 0
+power_after: AC Power
+load_after: 4.41 3.79 3.33
+swap_after: total = 4096.00M used = 3468.44M free = 627.56M (encrypted)

@@ -1,0 +1,14 @@
+name: slim22-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=slim rates=2,4,6,8 fold=4,5,5,5 eta=0.02,0.001 variants=split,affine,beep,control reps=9
+start: 2026-11-13 16:22:16
+power_before: AC Power
+load_before: 2.43 2.57 2.85
+swap_before: total = 5120.00M used = 3812.88M free = 1307.12M (encrypted)
+top_before: CPU usage: 3.40% user, 11.36% sys, 85.22% idle  PhysMem: 11G used (3250M wired, 1220M compressor), 12G unused. 
+end: 2026-11-13 16:22:19
+exit: 0
+power_after: AC Power
+load_after: 2.88 2.66 2.88
+swap_after: total = 5120.00M used = 3812.88M free = 1307.12M (encrypted)

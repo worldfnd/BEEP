@@ -1,0 +1,14 @@
+name: sixteenth24.beep001-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=slim100 bits=100 l0_rate=4 rates=4,6,8,10 eta=0.001 variants=beep,control,beepb,beepref,beepold,beepbits reps=9
+start: 2026-11-14 10:48:39
+power_before: AC Power
+load_before: 3.17 3.71 3.53
+swap_before: total = 6144.00M used = 5498.88M free = 645.12M (encrypted)
+top_before: CPU usage: 6.50% user, 12.65% sys, 80.84% idle  PhysMem: 19G used (3902M wired, 5282M compressor), 4624M unused. 
+end: 2026-11-14 10:48:57
+exit: 0
+power_after: AC Power
+load_after: 5.56 4.22 3.71
+swap_after: total = 6144.00M used = 5761.19M free = 382.81M (encrypted)

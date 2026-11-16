@@ -1,0 +1,17 @@
+# affine ladder, log_n=15 k0=6 ks=4 rates=3,7: per level the smallest slack of ['0.001', '0.0015', '0.002', '0.003', '0.005', '0.01', '0.02'] with a certificate
+# for every fold round, in the form of Flock's script (flock/scripts/affine_fold_params.py) with the
+# wider search of scripts/beep_params.py; every (m, D) passes lemma31_feasible of Flock's script
+level round   rho  log n  degree  slack  agreement     m        D      M  list        B  log2 eps_aff  log2 eps_round  grinding
+    0     1  2^-3    12     512   0.02       1531    12      260     35    16     1531       -124.00         -123.83         5
+    0     2  2^-3    12     513   0.02       1531    13      232     38    16     1531       -124.00         -123.83         5
+    0     3  2^-3    12     514   0.02       1531    13      275     38    16     1531       -124.00         -123.83         5
+    0     4  2^-3    12     515   0.02       1531    14      256     41    17     1531       -123.91         -123.75         5
+    0     5  2^-3    12     516   0.02       1531    15      258     44    17     1531       -123.91         -123.75         5
+    0     6  2^-3    12     517   0.02       1531    15      290     43    18     1531       -123.83         -123.68         5
+    1     1  2^-7    12      32   0.02        444     7      195     91    25      444       -123.36         -123.25         5
+    1     2  2^-7    12      33   0.02        444     9      248    113    28      444       -123.19         -123.09         5
+    1     3  2^-7    12      34   0.02        444    12      346    146    29      444       -123.14         -123.05         5
+    1     4  2^-7    12      35   0.02        444    19      515    226    31      444       -123.05         -122.96         6
+affine_eta=0.02,0.02 affine_fold=5,6
+# no sample on the first commitment: the fold rounds of level 0 are charged eps_aff + 2 L/q with L = 70 (floor(1/(2 eta sqrt(rho))) = 70, exact Johnson bound of the last round 64): log2 eps_round = -120.71, -120.71, -120.71, -120.71, -120.71, -120.70, grinding 8
+affine_fold_nf=8,6

@@ -1,0 +1,14 @@
+name: fast25.split
+attempt: 1
+env: 
+args: log_n=25 profile=fast rates=1,3,5,7 fold=4,5,5,5 variants=split reps=9
+start: 2026-11-13 16:35:14
+power_before: AC Power
+load_before: 2.12 2.32 2.52
+swap_before: total = 4096.00M used = 2536.25M free = 1559.75M (encrypted)
+top_before: CPU usage: 6.86% user, 11.76% sys, 81.37% idle  PhysMem: 19G used (3499M wired, 1070M compressor), 3958M unused. 
+end: 2026-11-13 16:35:20
+exit: 0
+power_after: AC Power
+load_after: 2.83 2.47 2.57
+swap_after: total = 4096.00M used = 2536.25M free = 1559.75M (encrypted)
