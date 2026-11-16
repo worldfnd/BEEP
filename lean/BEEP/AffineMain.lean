@@ -9,7 +9,9 @@
 -- Definitions 28, 29, 32 of the comments are now Theorem 5.3, Lemma 5.5 and Definitions 5.1, 5.2,
 -- 5.4, and Lemma 22 is Lemma 3.10; the labels are now `t:affine_main_0` and
 -- `l:few_bad_points_on_line_0`; the two sentences on Theorem 36 (in a Section 5.3 that the paper no
--- longer has) are reworded. No definition, statement or proof changed. Please review]
+-- longer has) are reworded. No definition, statement or proof changed. Later that day
+-- (claude-fable-5-2): the paper's file is now `paper/main.typ` (it was `typst/deep+.typ`), and the
+-- comments say so; `BEEP/MainTheorem.lean` is the new file with Theorem 3.4. Please review]
 
 -- A line starting with `--` is a comment, which Lean ignores. In this file each comment explains
 -- the line, or the few lines, directly below it. The reading guide after the module documentation
@@ -23,12 +25,12 @@ import Mathlib
 /-!
 # BEEP with affine folds: Theorem 5.3 of the BEEP paper
 
-A formalization of Theorem 5.3 of the BEEP paper (`typst/deep+.typ`, Section 5, "BEEP with affine
+A formalization of Theorem 5.3 of the BEEP paper (`paper/main.typ`, Section 5, "BEEP with affine
 folding for Reed-Solomon codes", label `t:affine_main_0`, "For most `z ∈ F^m`, there are few
 DEEP-MCA-bad challenges"), together with the lemma on which its proof rests, Lemma 5.5 (label
 `l:few_bad_points_on_line_0`, "A parameterized line contains few pretenders, for the affine
 fold"). The numbers of theorems, lemmas and definitions are those of the PDF compiled from
-`typst/deep+.typ` on November 16, 2026, which numbers them within sections; the labels do not
+`paper/main.typ` on November 16, 2026, which numbers them within sections; the labels do not
 change when the numbers do.
 
 ## Setting (Section 5.1 of the paper)
@@ -76,7 +78,7 @@ change when the numbers do.
 
 ## Dictionary paper ↔ Lean
 
-| paper (Section 5 of `typst/deep+.typ`) | Lean |
+| paper (Section 5 of `paper/main.typ`) | Lean |
 |---|---|
 | `x_1, ..., x_n`, distinct | `R.x : ι → F`, `R.x_inj` |
 | `RS_e`, `C = RS_ℓ`, `C⁺ = RS_{ℓ+1}` | `degreeLT F e`, `degreeLT F R.ℓ`, `degreeLT F (R.ℓ + 1)` |

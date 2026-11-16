@@ -2,39 +2,65 @@
 # [AI-drafted (claude-opus-5-5), 2026-11-14, at the author's request; please review]
 # [AI-revised (claude-opus-5-5), 2026-11-16: copied into the repository BEEP; the paper's numbers in the comments
 # are those of its current numbering within sections (Theorem 5.3, Lemma 5.5); please review]
-# Checks BEEP/AffineMain.lean (Theorem 5.3 and Lemma 5.5 of the BEEP paper, typst/deep+.typ) with the
-# Mathlib build of ~/math in lean (Mathlib v4.30.0), in about a minute on an idle machine. Every
-# `lean` call passes the options of lakefile.toml, `-DautoImplicit=false -DrelaxedAutoImplicit=false`,
-# so that an undeclared name in a statement is an error instead of an automatically bound implicit
-# variable.
-#   1. the file type-checks (no output from Lean means success);
-#   2. a scratch file made of the file plus a few examples applies the theorems to concrete data,
-#      with every hypothesis proved: a `Setup` over ZMod 5 with the weights (1, α), another with
-#      the weights (1 - α, α) of Section 4, `affine_main` for both, and `affine_main_delta` for
-#      the second (with δ = 1/4), all with the trivial list size. So the hypotheses can be met; with
-#      the trivial list size the bounds are above 1, so the examples show that the theorems apply,
-#      not a useful bound. It also checks a form with an assumed list decodability (the general
-#      case), and prints the axioms of the main theorems (each should depend only on propext,
-#      Classical.choice and Quot.sound).
-# The scratch file goes to $TMPDIR (or /tmp); nothing is written next to this script.
+# [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request ("Let's add a lean formalization of theorem
+# 3.4"): the script also checks BEEP/MainTheorem.lean, with its own examples and axioms. The two files are now
+# compiled once into a scratch folder, and the root file BEEP.lean and the examples import them from there (the
+# examples of BEEP/AffineMain.lean are the same as before; they used to be checked in one scratch file together with
+# a copy of AffineMain.lean); please review]
+# Checks the Lean formalizations of the BEEP paper (paper/main.typ) with the Mathlib build of ~/math in lean
+# (Mathlib v4.30.0), in about a minute on an idle machine. Every `lean` call passes the options of lakefile.toml,
+# `-DautoImplicit=false -DrelaxedAutoImplicit=false`, so that an undeclared name in a statement is an error instead
+# of an automatically bound implicit variable.
+#   1. BEEP/AffineMain.lean (Theorem 5.3 and Lemma 5.5) and BEEP/MainTheorem.lean (Theorem 3.4 and Lemmas 3.7 to
+#      3.10) type-check (no output from Lean means success);
+#   2. the root file BEEP.lean, which imports both, type-checks (so the two files can be used together);
+#   3. examples for BEEP/AffineMain.lean apply its theorems to concrete data, with every hypothesis proved: a `Setup`
+#      over ZMod 5 with the weights (1, α), another with the weights (1 - α, α) of Section 4, `affine_main` for
+#      both, and `affine_main_delta` for the second (with δ = 1/4), all with the trivial list size. So the
+#      hypotheses can be met; with the trivial list size the bounds are above 1, so the examples show that the
+#      theorems apply, not a useful bound. They also check a form with an assumed list decodability (the general
+#      case);
+#   4. examples for BEEP/MainTheorem.lean do the same for Theorem 3.4: a Reed-Solomon code of dimension 2 on four
+#      points of ZMod 5, the univariate zero evader with one sample and its error bound 1/5 (proved), the weights
+#      (1, α) and (1 - α, α), `main_thm` for both, `main_thm_delta` and `main_thm_delta_real` for the second (with
+#      δ = 1/4) and `main_thm_delta_floor` (with δ = 3/10, for which δ n is not an integer), all with the trivial
+#      list size (so, again, the bounds are above 1). They also exhibit a pretender and a DEEP-MCA-bad element in a
+#      concrete case, so the definitions are not vacuous;
+#   5. the axioms of the main theorems are printed (each should depend only on propext, Classical.choice and
+#      Quot.sound).
+# The compiled files and the example files go to the folder $TMPDIR/beep-lean-check (or /tmp/beep-lean-check);
+# nothing is written next to this script.
 # Do not run it while a benchmark campaign holds /tmp/bitz-bench.lock.
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 MIL="$HOME/math in lean"
-SCRATCH="${TMPDIR:-/tmp}/beep-affine-check.lean"
+OUT="${TMPDIR:-/tmp}/beep-lean-check"
 # The options of lakefile.toml.
 OPTS="-DautoImplicit=false -DrelaxedAutoImplicit=false"
 if [ -e /tmp/bitz-bench.lock ]; then
   echo "a benchmark campaign holds /tmp/bitz-bench.lock; not checking now" >&2
   exit 1
 fi
+# Start from an empty scratch folder, so that nothing compiled earlier is used.
+rm -rf "$OUT"
+mkdir -p "$OUT/BEEP"
 cd "$MIL"
-echo "== type-checking BEEP/AffineMain.lean"
-lake env lean $OPTS "$HERE/BEEP/AffineMain.lean"
-echo "== examples and axioms (scratch file $SCRATCH)"
+# `-R` gives the folder from which the module name of a file is computed (BEEP.AffineMain, ...), and `-o` writes
+# the compiled module, which the later steps import.
+for m in AffineMain MainTheorem; do
+  echo "== type-checking BEEP/$m.lean"
+  lake env lean $OPTS -R "$HERE" -o "$OUT/BEEP/$m.olean" "$HERE/BEEP/$m.lean"
+done
+# `lean` with the compiled modules of $OUT on its search path, in front of those of Mathlib.
+lean_with_beep() {
+  lake env sh -c 'LEAN_PATH="$1:$LEAN_PATH" exec lean -DautoImplicit=false -DrelaxedAutoImplicit=false "$2"' sh "$OUT" "$1"
+}
+echo "== the root file BEEP.lean, which imports both"
+lean_with_beep "$HERE/BEEP.lean"
+echo "== examples and axioms of BEEP/AffineMain.lean (file $OUT/ExamplesAffine.lean)"
 {
-  cat "$HERE/BEEP/AffineMain.lean"
   cat <<'EOF'
+import BEEP.AffineMain
 
 namespace BEEP
 open Finset Polynomial Classical
@@ -105,6 +131,189 @@ EOF
       Setup.card_close_rsWords defect_eq_zero_of_onLine pair_count_arith listDecodable_trivial; do
     echo "#print axioms BEEP.$t"
   done
-} > "$SCRATCH"
-lake env lean $OPTS "$SCRATCH"
+} > "$OUT/ExamplesAffine.lean"
+lean_with_beep "$OUT/ExamplesAffine.lean"
+echo "== examples and axioms of BEEP/MainTheorem.lean (file $OUT/ExamplesMain.lean)"
+{
+  cat <<'EOF'
+import BEEP.MainTheorem
+
+namespace BEEP.Main
+open Finset Classical
+
+-- `ZMod 5` is a field, since 5 is prime.
+instance fact_prime_five : Fact (Nat.Prime 5) := ⟨by norm_num⟩
+
+-- The Reed-Solomon code of dimension 2 on the points 0, 1, 2, 3 of `ZMod 5`: the message
+-- `(w₀, w₁)` is encoded as the word with entries `w₀ + w₁ · i`.
+def encRS : (Fin 2 → ZMod 5) →ₗ[ZMod 5] (Fin 4 → ZMod 5) where
+  toFun w := fun i => w 0 + w 1 * ((i : ℕ) : ZMod 5)
+  map_add' := by intro v w; funext i; simp only [Pi.add_apply]; ring
+  map_smul' := by
+    intro a w; funext i; simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]; ring
+
+-- The encoding map is injective: the entries at the points 0 and 1 determine the message.
+theorem encRS_injective : Function.Injective encRS := by
+  intro v w h
+  have h0 := congrFun h 0
+  have h1 := congrFun h 1
+  simp [encRS] at h0 h1
+  funext j
+  fin_cases j
+  · exact h0
+  · simpa [h0] using h1
+
+-- The univariate zero evader with one sample (Definition 2.5 with `m = 1`): `Z = ZMod 5` and
+-- `φ_z(w₀, w₁) = w₀ + w₁ z`.
+def evUni (z : ZMod 5) : (Fin 2 → ZMod 5) →ₗ[ZMod 5] (Fin 1 → ZMod 5) where
+  toFun w := fun _ => w 0 + w 1 * z
+  map_add' := by intro v w; funext _; simp only [Pi.add_apply]; ring
+  map_smul' := by
+    intro a w; funext _; simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]; ring
+
+-- A nonzero `(w₀, w₁)` has `w₀ + w₁ z = 0` for at most one `z` (Lemma 2.6 with `e = 2`, `m = 1`).
+theorem evUni_card_le_one (v : Fin 2 → ZMod 5) (hv : v ≠ 0) :
+    (univ.filter fun z : ZMod 5 => evUni z v = 0).card ≤ 1 := by
+  rw [card_le_one]
+  intro z hz z' hz'
+  simp only [mem_filter, mem_univ, true_and] at hz hz'
+  have e := congrFun hz 0
+  have e' := congrFun hz' 0
+  simp only [evUni, LinearMap.coe_mk, AddHom.coe_mk, Pi.zero_apply] at e e'
+  by_contra hne
+  apply hv
+  have h1 : v 1 * (z - z') = 0 := by linear_combination e - e'
+  have hv1 : v 1 = 0 := (mul_eq_zero.mp h1).resolve_right (sub_ne_zero.mpr hne)
+  have hv0 : v 0 = 0 := by rw [hv1] at e; simpa using e
+  funext j
+  fin_cases j
+  · exact hv0
+  · exact hv1
+
+-- A setup over `F = ZMod 5` with this code, this evader and the given weights.
+def setupRS (a₁ d₁ a₂ d₂ : ZMod 5) (h : a₁ * d₂ ≠ a₂ * d₁) :
+    Setup (ZMod 5) (Fin 4) (ZMod 5) where
+  ℓ := 2
+  m := 1
+  enc := encRS
+  enc_inj := encRS_injective
+  a₁ := a₁
+  d₁ := d₁
+  a₂ := a₂
+  d₂ := d₂
+  det_ne := h
+  φ := evUni
+
+-- The weights `(1, α)` (`a₁ = 1`, `d₁ = 0`, `a₂ = 0`, `d₂ = 1`).
+def setupOneAlpha : Setup (ZMod 5) (Fin 4) (ZMod 5) := setupRS 1 0 0 1 (by decide)
+
+-- The weights `(1 - α, α)` of Section 4 (`a₁ = 1`, `d₁ = -1`, `a₂ = 0`, `d₂ = 1`).
+def setupBEEP : Setup (ZMod 5) (Fin 4) (ZMod 5) := setupRS 1 (-1) 0 1 (by decide)
+
+-- `1/5` is an error bound of the evader of these setups.
+theorem setupRS_errorBound (a₁ d₁ a₂ d₂ : ZMod 5) (h : a₁ * d₂ ≠ a₂ * d₁) :
+    (setupRS a₁ d₁ a₂ d₂ h).IsErrorBound (1 / 5) := by
+  refine ⟨by norm_num, fun v hv => ?_⟩
+  -- `|Z| = 5`, and the goal becomes `#{z | φ_z(v) = 0} / 5 ≤ 1 / 5`.
+  have hZ : (Fintype.card (ZMod 5) : ℝ) = 5 := by simp [ZMod.card]
+  rw [hZ]
+  -- Divide both sides by `5` (`gcongr`) and go back to `ℕ` (`norm_cast`). Over `ZMod 5` the
+  -- filter of `evUni_card_le_one` decides `φ_z(v) = 0` with the equality test of `ZMod 5`, while
+  -- `IsErrorBound`, stated for every field, uses classical logic; `convert` identifies the two.
+  gcongr
+  norm_cast
+  convert evUni_card_le_one v hv
+
+-- The list decodability of Theorem 3.4 always holds with the trivial list size, the number of
+-- messages.
+theorem listDecodable_trivial {F ι Z : Type*} [Field F] [Fintype F] [Fintype ι]
+    (R : Setup F ι Z) (s : ℕ) : R.ListDecodable s (Fintype.card (Fin R.ℓ → F)) :=
+  fun _ => card_le_univ _
+
+-- Theorem 3.4 applies to both setups with every hypothesis proved: the agreement threshold
+-- `s = 3` (so `n - s + 2 = 3`), the trivial list size, the error bound `1/5`, and `t = 3`.
+example (u₁ u₂ : Fin 4 → ZMod 5) :=
+  setupOneAlpha.main_thm u₁ u₂ 3 _ 3 (1 / 5) (listDecodable_trivial setupOneAlpha 3)
+    (setupRS_errorBound _ _ _ _ _) (by simp)
+example (u₁ u₂ : Fin 4 → ZMod 5) :=
+  setupBEEP.main_thm u₁ u₂ 3 _ 3 (1 / 5) (listDecodable_trivial setupBEEP 3)
+    (setupRS_errorBound _ _ _ _ _) (by simp)
+
+-- The form with `δ`, with every hypothesis proved: `δ = 1/4` (so `δ n = 1`), `t = 3 ≥ δ n + 2`,
+-- and the list size `#C`, the number of codewords.
+example (u₁ u₂ : Fin 4 → ZMod 5) :=
+  setupBEEP.main_thm_delta u₁ u₂ (δ := 1 / 4) (by norm_num) _ 3
+    (fun _ => card_filter_le _ _) (setupRS_errorBound _ _ _ _ _) (by norm_num)
+
+-- The same for the real threshold `t = 7/2`.
+example (u₁ u₂ : Fin 4 → ZMod 5) :=
+  setupBEEP.main_thm_delta_real u₁ u₂ (δ := 1 / 4) (by norm_num) _ (7 / 2)
+    (fun _ => card_filter_le _ _) (setupRS_errorBound _ _ _ _ _) (by norm_num)
+
+-- The form with `⌊δ n⌋`, for `δ = 3/10`. Here `δ n = 1.2` is not an integer and `⌊δ n⌋ + 2 = 3`:
+-- the threshold `t = 3` is covered by this form and not by `main_thm_delta`, which asks for
+-- `t ≥ δ n + 2 = 3.2`.
+theorem floor_three_tenths : ⌊(3 / 10 : ℝ) * (Fintype.card (Fin 4) : ℝ)⌋₊ = 1 := by
+  -- `Nat.floor_eq_iff : ⌊a⌋₊ = k ↔ k ≤ a ∧ a < k + 1`, for `a ≥ 0`.
+  rw [Nat.floor_eq_iff (by positivity)]
+  norm_num
+example (u₁ u₂ : Fin 4 → ZMod 5) :=
+  setupBEEP.main_thm_delta_floor u₁ u₂ (δ := 3 / 10) (by norm_num) _ 3
+    (fun _ => card_filter_le _ _) (setupRS_errorBound _ _ _ _ _) (by rw [floor_three_tenths])
+
+-- The definitions are not vacuous. Take the weights `(1, α)`, the words `u₁ = (0, 0, 1, 0)` and
+-- `u₂ = (0, 0, -1, 0)`, and the agreement threshold `s = 3`. The fold at `α = 1` is `u₁ + u₂ = 0`,
+-- a codeword, while `u₁` agrees with no codeword on `S = {0, 1, 2}` (its entries `0, 0, 1` there
+-- are not those of a polynomial of degree at most one). So the zero codeword is a `1`-pretender.
+def w₁ : Fin 4 → ZMod 5 := ![0, 0, 1, 0]
+def w₂ : Fin 4 → ZMod 5 := ![0, 0, -1, 0]
+
+theorem encRS_apply (w : Fin 2 → ZMod 5) (i : Fin 4) :
+    encRS w i = w 0 + w 1 * ((i : ℕ) : ZMod 5) := rfl
+
+theorem zero_isPretender : setupOneAlpha.IsPretender w₁ w₂ 3 1 0 := by
+  refine ⟨{0, 1, 2}, by decide, ?_, ?_⟩
+  · intro i hi
+    rw [map_zero, Pi.zero_apply]
+    fin_cases i <;>
+      simp [setupOneAlpha, setupRS, Setup.fold, Setup.lam₁, Setup.lam₂, w₁, w₂] at hi ⊢
+  · rintro ⟨c₁, c₂, h⟩
+    have h0 := (h 0 (by decide)).1
+    have h1 := (h 1 (by decide)).1
+    have h2 := (h 2 (by decide)).1
+    change w₁ 0 = encRS c₁ 0 at h0
+    change w₁ 1 = encRS c₁ 1 at h1
+    change w₁ 2 = encRS c₁ 2 at h2
+    rw [encRS_apply] at h0 h1 h2
+    simp [w₁] at h0 h1 h2
+    -- Now `h0 : 0 = c₁ 0`, `h1 : 0 = c₁ 0 + c₁ 1` and `h2 : 1 = c₁ 0 + c₁ 1 * 2`, so `1 = 0`.
+    have h10 : (1 : ZMod 5) = 0 := by linear_combination h2 - 2 * h1 + h0
+    exact absurd h10 (by decide)
+
+-- Hence `α = 1` is a DEEP-MCA-bad element at every `z`, for the answers `b₁ = b₂ = 0`:
+-- `φ_z(0) = 0 = λ₁(1) · 0 + λ₂(1) · 0`. In particular `|A_z| ≥ 1` for every `z`.
+theorem one_mem_hits (z : ZMod 5) :
+    (1 : ZMod 5) ∈ setupOneAlpha.hits w₁ w₂ 3 (fun _ => (0, 0)) z := by
+  simp only [Setup.hits, mem_filter, mem_univ, true_and]
+  refine ⟨(setupOneAlpha.mcaBad_iff_exists_pretender w₁ w₂ 3 1).mpr ⟨0, zero_isPretender⟩,
+    0, zero_isPretender, ?_⟩
+  simp [Setup.Consistent]
+
+example (z : ZMod 5) : 1 ≤ setupOneAlpha.maxHits w₁ w₂ 3 z :=
+  (card_pos.mpr ⟨1, one_mem_hits z⟩).trans_le
+    (setupOneAlpha.card_hits_le_maxHits w₁ w₂ 3 (fun _ => (0, 0)) z)
+
+end BEEP.Main
+EOF
+  for t in Setup.mcaBad_iff_exists_pretender Setup.few_pretenders_on_line defect_eq_zero_iff \
+      Setup.evader_defect_eq_zero Setup.third_moment_bound Setup.main_thm_gen_nat \
+      Setup.main_thm_gen Setup.main_thm_nat Setup.main_thm Setup.fold_challenge_le \
+      Setup.card_filter_codewords Setup.satisfiesMCA_ceil_iff Setup.isPretender_ceil_iff \
+      Setup.listDecodable_of_delta Setup.main_thm_delta Setup.main_thm_delta_real \
+      Setup.main_thm_delta_floor setupRS_errorBound listDecodable_trivial zero_isPretender \
+      one_mem_hits; do
+    echo "#print axioms BEEP.Main.$t"
+  done
+} > "$OUT/ExamplesMain.lean"
+lean_with_beep "$OUT/ExamplesMain.lean"
 echo "== done"

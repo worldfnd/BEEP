@@ -1,0 +1,5 @@
+[bench_gate] beep-minimal-20261116: idle 81% (streak 1/2)
+[bench_gate] beep-minimal-20261116: idle 82% (streak 2/2)
+[bench_gate] beep-minimal-20261116: starting (swap baseline 0.83 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+on battery (Battery Power) before m15-100: waiting for AC power (at most 14400 s)
