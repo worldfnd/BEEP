@@ -1,0 +1,77 @@
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.02s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/BEEP/beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-minimal-20261116-ac2-m15-100: idle 86% (streak 1/1)
+m15-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m16-100: idle 84% (streak 1/1)
+m16-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m17-100: idle 86% (streak 1/1)
+m17-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m18-100: idle 85% (streak 1/1)
+m18-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m19-100: idle 88% (streak 1/1)
+m19-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m20-100: idle 84% (streak 1/1)
+m20-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m21-100: idle 89% (streak 1/1)
+m21-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m22-100: idle 89% (streak 1/1)
+m22-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m23-100: idle 83% (streak 1/1)
+m23-100 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m15-100-nopow: idle 82% (streak 1/1)
+m15-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m16-100-nopow: idle 74% (streak 0/1)
+[bench_gate] three-way-minimal-20261116-ac2-m16-100-nopow: idle 91% (streak 1/1)
+m16-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m17-100-nopow: idle 88% (streak 1/1)
+m17-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m18-100-nopow: idle 90% (streak 1/1)
+m18-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m19-100-nopow: idle 94% (streak 1/1)
+m19-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m20-100-nopow: idle 91% (streak 1/1)
+m20-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m21-100-nopow: idle 93% (streak 1/1)
+m21-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m22-100-nopow: idle 86% (streak 1/1)
+m22-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m23-100-nopow: idle 92% (streak 1/1)
+m23-100-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m15-128: idle 94% (streak 1/1)
+m15-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m16-128: idle 94% (streak 1/1)
+m16-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m17-128: idle 86% (streak 1/1)
+m17-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m18-128: idle 89% (streak 1/1)
+m18-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m19-128: idle 84% (streak 1/1)
+m19-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m20-128: idle 88% (streak 1/1)
+m20-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m21-128: idle 85% (streak 1/1)
+m21-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m22-128: idle 88% (streak 1/1)
+m22-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m23-128: idle 89% (streak 1/1)
+m23-128 (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m15-128-nopow: idle 88% (streak 1/1)
+m15-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m16-128-nopow: idle 91% (streak 1/1)
+m16-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m17-128-nopow: idle 90% (streak 1/1)
+m17-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m18-128-nopow: idle 93% (streak 1/1)
+m18-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m19-128-nopow: idle 81% (streak 1/1)
+m19-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m20-128-nopow: idle 82% (streak 1/1)
+m20-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m21-128-nopow: idle 90% (streak 1/1)
+m21-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m22-128-nopow: idle 94% (streak 1/1)
+m22-128-nopow (attempt 1): ok
+[bench_gate] three-way-minimal-20261116-ac2-m23-128-nopow: idle 94% (streak 1/1)
+m23-128-nopow (attempt 1): ok
+done: 2026-11-16 14:09:40, failures: 0

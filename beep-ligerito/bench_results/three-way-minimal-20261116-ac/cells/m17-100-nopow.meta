@@ -1,0 +1,14 @@
+name: m17-100-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=17 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep reps=9
+start: 2026-11-16 13:42:51
+power_before: AC Power
+load_before: 2.30 2.89 3.02
+swap_before: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)
+top_before: CPU usage: 8.71% user, 12.89% sys, 78.39% idle  PhysMem: 19G used (3216M wired, 1719M compressor), 4455M unused. 
+end: 2026-11-16 13:42:52
+exit: 0
+power_after: AC Power
+load_after: 2.30 2.89 3.02
+swap_after: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)

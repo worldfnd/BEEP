@@ -1,0 +1,14 @@
+name: m22-100
+attempt: 1
+env: 
+args: log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 13:58:22
+power_before: AC Power
+load_before: 2.41 2.79 2.90
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 9.35% user, 11.51% sys, 79.13% idle  PhysMem: 20G used (2931M wired, 1515M compressor), 2878M unused. 
+end: 2026-11-16 13:58:25
+exit: 0
+power_after: AC Power
+load_after: 3.26 2.96 2.96
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

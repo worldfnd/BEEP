@@ -1,4 +1,0 @@
-building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
-    Finished `bench` profile [optimized + debuginfo] target(s) in 0.07s
-  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/BEEP/beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
-on battery (Battery Power) before m15-100: waiting for AC power (at most 14400 s)

@@ -1,0 +1,14 @@
+name: m23-128
+attempt: 1
+env: 
+args: log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=9
+start: 2026-11-16 13:48:40
+power_before: AC Power
+load_before: 3.69 2.89 2.92
+swap_before: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)
+top_before: CPU usage: 5.99% user, 10.86% sys, 83.14% idle  PhysMem: 19G used (2805M wired, 1595M compressor), 4054M unused. 
+end: 2026-11-16 13:48:45
+exit: 0
+power_after: AC Power
+load_after: 4.35 3.04 2.98
+swap_after: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)

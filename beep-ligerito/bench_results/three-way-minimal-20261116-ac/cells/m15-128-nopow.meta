@@ -1,0 +1,14 @@
+name: m15-128-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=15 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep reps=9
+start: 2026-11-16 13:49:06
+power_before: AC Power
+load_before: 3.61 2.98 2.95
+swap_before: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)
+top_before: CPU usage: 6.64% user, 11.7% sys, 82.28% idle  PhysMem: 19G used (2716M wired, 1594M compressor), 4106M unused. 
+end: 2026-11-16 13:49:07
+exit: 0
+power_after: AC Power
+load_after: 3.61 2.98 2.95
+swap_after: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)

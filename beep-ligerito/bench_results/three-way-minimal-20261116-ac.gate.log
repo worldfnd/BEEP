@@ -1,0 +1,43 @@
+[bench_gate] beep-minimal-20261116-ac: idle 77% (streak 0/2)
+[bench_gate] beep-minimal-20261116-ac: idle 78% (streak 0/2)
+[bench_gate] beep-minimal-20261116-ac: idle 85% (streak 1/2)
+[bench_gate] beep-minimal-20261116-ac: idle 85% (streak 2/2)
+[bench_gate] beep-minimal-20261116-ac: starting (swap baseline 0.76 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+m15-100 (attempt 1): ok
+m16-100 (attempt 1): ok
+m17-100 (attempt 1): ok
+m18-100 (attempt 1): ok
+m19-100 (attempt 1): ok
+m20-100 (attempt 1): ok
+m21-100 (attempt 1): ok
+m22-100 (attempt 1): ok
+m23-100 (attempt 1): ok
+m15-100-nopow (attempt 1): ok
+m16-100-nopow (attempt 1): ok
+m17-100-nopow (attempt 1): ok
+m18-100-nopow (attempt 1): ok
+m19-100-nopow (attempt 1): ok
+m20-100-nopow (attempt 1): ok
+m21-100-nopow (attempt 1): ok
+m22-100-nopow (attempt 1): ok
+m23-100-nopow (attempt 1): ok
+m15-128 (attempt 1): ok
+m16-128 (attempt 1): ok
+m17-128 (attempt 1): ok
+m18-128 (attempt 1): ok
+m19-128 (attempt 1): ok
+m20-128 (attempt 1): ok
+m21-128 (attempt 1): ok
+m22-128 (attempt 1): ok
+m23-128 (attempt 1): ok
+m15-128-nopow (attempt 1): ok
+m16-128-nopow (attempt 1): ok
+m17-128-nopow (attempt 1): ok
+m18-128-nopow (attempt 1): ok
+m19-128-nopow (attempt 1): ok
+m20-128-nopow (attempt 1): ok
+m21-128-nopow (attempt 1): ok
+m22-128-nopow (attempt 1): ok
+m23-128-nopow (attempt 1): ok
+done: 2026-11-16 13:52:05, failures: 0

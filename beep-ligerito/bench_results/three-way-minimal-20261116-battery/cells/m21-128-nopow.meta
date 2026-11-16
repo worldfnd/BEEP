@@ -1,0 +1,14 @@
+name: m21-128-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=9
+start: 2026-11-16 13:34:41
+power_before: AC Power
+load_before: 1.86 2.61 3.08
+swap_before: total = 2048.00M used = 783.00M free = 1265.00M (encrypted)
+top_before: CPU usage: 7.94% user, 10.83% sys, 81.22% idle  PhysMem: 15G used (2473M wired, 3717M compressor), 8503M unused. 
+end: 2026-11-16 13:34:42
+exit: 0
+power_after: AC Power
+load_after: 1.86 2.61 3.08
+swap_after: total = 2048.00M used = 783.00M free = 1265.00M (encrypted)

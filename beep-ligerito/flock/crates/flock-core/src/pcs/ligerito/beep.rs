@@ -32,6 +32,9 @@
 // correlated agreement over GF(2^128), as the baseline "Ligerito over GF(2^128)" (Flock's Ligerito samples its
 // fold challenges in GF(2^256), also in its profiles at 100 bits); `NO_POINTS_BITS`; one test. Nothing else of
 // this file changed, so the ladders of the earlier runs are built as before]
+// [AI-revised (claude-fable-5-2), 2026-11-16, same request: `mca_ladder_no_first_sample_at`, that baseline with no
+// out-of-domain sample on its first commitment, as the BEEP ladder of the comparison has none, so that the two
+// differ in their fold rounds only (the baseline of the paper's table at 100 bits); one test]
 
 //! BEEP folds for the Ligerito ladder.
 //!
@@ -1077,6 +1080,39 @@ pub fn mca_ladder_at(
     config.prover.fold_grinding_bits = fold.clone();
     config.verifier.fold_grinding_bits = fold;
     config.sync_bit_grinding();
+    if config.min_bits() < target_bits {
+        return Err(format!("the MCA ladder reaches only {:.2} bits", config.min_bits()));
+    }
+    Ok(config)
+}
+
+/// [`mca_ladder_at`] with no out-of-domain sample on the first commitment:
+/// the baseline that differs from the BEEP ladder of the comparison
+/// ([`BeepConfig::without_first_binding`]) in its fold rounds only.
+///
+/// [`mca_ladder_at`] keeps Flock's sample, since under Flock's convention
+/// something has to bind the first commitment to one codeword before its
+/// fold rounds, and this ladder has no points of a first fold round to do
+/// it. Under the convention of the paper (and of WHIR) nothing has to: the
+/// list of the first code is carried through its fold rounds, which is what
+/// the term `2L` of a fold challenge pays for, and [`mca_ladder_at`] already
+/// charges it. So the sample goes and nothing else changes: the fold
+/// challenges keep their numerators `⌈a + 2L⌉`, and level 0 has no binding
+/// term (`ood_bits = `[`NO_POINTS_BITS`]). The later levels keep their
+/// samples, which bind the new commitments before their queries.
+pub fn mca_ladder_no_first_sample_at(
+    split: &ProverConfig,
+    log_n: usize,
+    rates: &[usize],
+    etas: &[f64],
+    target_bits: f64,
+) -> Result<BeepConfig, String> {
+    let mut config = mca_ladder_at(split, log_n, rates, etas, target_bits)?;
+    let l0 = &mut config.levels[0];
+    l0.ood_samples = 0;
+    l0.ood_bits = NO_POINTS_BITS;
+    config.prover.ood_samples[0] = 0;
+    config.verifier.ood_samples[0] = 0;
     if config.min_bits() < target_bits {
         return Err(format!("the MCA ladder reaches only {:.2} bits", config.min_bits()));
     }
@@ -2771,8 +2807,8 @@ mod tests {
     use super::{
         BeepConfig, BeepProof, EqFactors, F128, Ladder, Level, MAX_SAMPLES, TARGET_BITS,
         affine_ladder, affine_ladder_at, affine_ladder_target, beep_ladder, beep_ladder_at,
-        ceil_log2, eq_factors, least_threshold, mca_ladder_at, pow_searches, prove_beep, sample_bits,
-        verify_beep,
+        ceil_log2, eq_factors, least_threshold, mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches,
+        prove_beep, sample_bits, verify_beep,
     };
     use crate::{
         challenger::{Challenger, FsChallenger, RandomChallenger},
@@ -3451,6 +3487,80 @@ mod tests {
         };
         assert!(check(&proof, target));
         assert!(!check(&proof, target + F128::ONE));
+    }
+
+    /// [`mca_ladder_no_first_sample_at`] is [`mca_ladder_at`] without the
+    /// binding sample of level 0 and with nothing else changed: the same
+    /// fold numerators and proofs of work per fold round, one claim-batching
+    /// search fewer, a proof that is one binding value shorter, that
+    /// verifies, and that the ladder with the sample rejects.
+    #[test]
+    fn mca_ladder_no_first_sample() {
+        let (target_bits, log_n, rates) = (100.0, 16usize, [1usize, 3]);
+        let split = prover_config_for(log_n, 6, LigeritoProfile::Fast100).expect("split");
+        let with = mca_ladder_at(&split, log_n, &rates, &[0.02; 2], target_bits).expect("ladder");
+        let nf = mca_ladder_no_first_sample_at(&split, log_n, &rates, &[0.02; 2], target_bits).expect("ladder");
+        assert!(with.prover.ood_samples[0] > 0);
+        assert_eq!(nf.prover.ood_samples[0], 0);
+        assert_eq!(nf.verifier.ood_samples, nf.prover.ood_samples);
+        assert_eq!(nf.prover.ood_samples[1..], with.prover.ood_samples[1..]);
+        assert!(nf.samples.iter().all(|&m| m == 0));
+        assert_eq!(nf.prover.queries, with.prover.queries);
+        assert_eq!(nf.prover.fold_grinding_bits, with.prover.fold_grinding_bits);
+        for (a, b) in nf.levels.iter().zip(&with.levels) {
+            assert_eq!(a.fold_numerator, b.fold_numerator);
+        }
+        assert_eq!(nf.levels[1..], with.levels[1..]);
+        assert!(nf.min_bits() >= target_bits, "{}", nf.min_bits());
+        let (with, nf) = (with.with_exact_grinding(), nf.with_exact_grinding());
+        assert!(nf.min_bits() >= target_bits, "{}", nf.min_bits());
+        let (a, b) = (with.pow_grinds(), nf.pow_grinds());
+        assert_eq!(b.claim.len() + 1, a.claim.len());
+        assert_eq!((&b.fold, &b.consistency, &b.queries), (&a.fold, &a.consistency, &a.queries));
+        let (fast, reference) = prove_both(&nf, log_n);
+        assert_eq!(fast, reference, "MCA ladder with no first sample");
+
+        let mut rng = RandomChallenger::new(0xBEE9_0102);
+        let witness = random_vec(&mut rng, 1 << log_n);
+        let z = random_vec(&mut rng, log_n);
+        let basis = build_eq_table(&z);
+        let target = witness
+            .iter()
+            .zip(&basis)
+            .fold(F128::ZERO, |acc, (&a, &b)| acc + a * b);
+        let k0 = nf.prover.initial_k;
+        let rate = nf.prover.log_inv_rates[0];
+        let ntt = AdditiveNttF128::standard(log_n - k0 + rate);
+        let l0 = ligero_commit(&witness, log_n - k0, k0, rate, &ntt, nf.prover.merkle_hash);
+        let cap = l0.cap(nf.prover.level_zero_cap_depth()).to_vec();
+        let prove = |config: &BeepConfig| {
+            let mut ch = FsChallenger::new(b"mca-nf-100");
+            prove_beep(config, witness.clone(), basis.clone(), target, &l0.mat, &l0.tree, &mut ch)
+        };
+        let check = |config: &BeepConfig, proof: &BeepProof, target: F128| {
+            let mut ch = FsChallenger::new(b"mca-nf-100");
+            verify_beep(
+                config,
+                proof,
+                log_n,
+                target,
+                &cap,
+                |rs, residual_log| {
+                    let out = partial_eval_lsb(&basis, rs);
+                    assert_eq!(out.len(), 1usize << residual_log);
+                    out
+                },
+                &mut ch,
+            )
+        };
+        let (proof_nf, proof_with) = (prove(&nf), prove(&with));
+        assert!(proof_nf.answers.is_empty(), "no points, no answers");
+        assert_eq!(proof_nf.ood_values.len() + with.prover.ood_samples[0], proof_with.ood_values.len());
+        assert!(proof_nf.size_bytes() < proof_with.size_bytes());
+        assert!(check(&nf, &proof_nf, target));
+        assert!(check(&with, &proof_with, target));
+        assert!(!check(&nf, &proof_nf, target + F128::ONE));
+        assert!(!check(&with, &proof_nf, target));
     }
 
     /// [`affine_ladder_target`] at 128 bits is [`affine_ladder_at`]. At 100

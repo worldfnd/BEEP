@@ -1,0 +1,14 @@
+name: m19-128
+attempt: 1
+env: 
+args: log_n=19 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 14:04:33
+power_before: AC Power
+load_before: 3.39 2.93 2.91
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 12.81% user, 10.67% sys, 76.51% idle  PhysMem: 19G used (2832M wired, 1688M compressor), 4507M unused. 
+end: 2026-11-16 14:04:36
+exit: 0
+power_after: AC Power
+load_after: 4.08 3.08 2.97
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

@@ -91,52 +91,67 @@
 
 = Introduction
 
-The soundness of most modern code-based Polynomial Commitment Schemes and IOPPs requires using codes satisfying the #emph[$delta$-Mutual Correlated Agreement (MCA) property], for a proximity parameter $delta$ as large as possible. A code $cal(C)$ with blocklength $blockclength$ and dimension $codedim$ is said to satisfy this property if, for any two words $u_1, u_2 in FF^blockclength$, for almost all $alpha in FF$, if $u_1+ alpha dot u_2$ agree with a codeword $c$ from $cal(C)$ on a large set $S$ (concretely $|S|≥ (1-delta) dot blockclength$), then both $u_1$ and $u_2$ agree with codewords from $cal(C)$ on $S$ as well. 
+The soundness of most modern code-based Polynomial Commitment Schemes (PCSs) and IOPPs requires using codes satisfying the #emph[$delta$-Mutual Correlated Agreement (MCA) property] @whir, for a proximity parameter $delta$ as large as possible. A code $cal(C)$ with blocklength $blockclength$ and dimension $codedim$ is said to satisfy this property if, for any two words $u_1, u_2 in FF^blockclength$, for almost all $alpha in FF$, if $u_1+ alpha dot u_2$ agrees with a codeword $c$ from $cal(C)$ on a large set $S$ (concretely $|S|≥ (1-delta) dot blockclength$), then both $u_1$ and $u_2$ agree as well with codewords from $cal(C)$ on $S$. 
 
-A weaker property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative hamming distance $≤ delta$. If the code has the $delta$-MCA property, then it is $(delta, L)$-list decodable for a polynomially sized $L$. The converse is not true #albert[It is not right? What to cite? This new Ignacio Manzur paper?].
+A weaker property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative hamming distance $≤ delta$ from $u$. If the code has the $delta$-MCA property, then it is $(delta, L)$-list decodable for a polynomially sized $L$ #albert[reference?]. The converse is not true #albert[It is not right? What to cite? This new Ignacio Manzur paper?].
 
-It is often easier to prove that a code $cal(C)$ is list decodable than that it has MCA. Indeed, it is known that all linear codes are $(delta, L)$-list decodable for $delta$ approaching the #emph[Johnson bound]. Concretely, for $delta = 1-sqrt(rho) - eta$ #albert[It's square root of the relative minimum distance], where $rho=codedim/blockclength$ and $eta >0$ is small, any linear code $cal(C)$ is $(delta, L)$-list decodable with $L = 1\/(2dot eta dot sqrt)$ #albert[cite].
+It is often easier to prove that a code $cal(C)$ is list decodable than that it has MCA. Indeed, it is known that all codes are $(delta, L)$-list decodable for $delta$ approaching the #emph[Johnson bound]. Concretely, for $delta = 1-sqrt(rho) - eta$ #albert[It's square root of the relative minimum distance], where $rho=codedim/blockclength$ and $eta >0$ is small, any linear code $cal(C)$ is $(delta, L)$-list decodable with $L = 1\/(2dot eta dot sqrt)$ #albert[cite]. On the other hand,  linear codes in general are only known to have MCA up to the so-called 1.5 Johnson bound #albert[cite zeilberger], and this is known to be a tight bound #albert[cite recent paper right?]. In contrast, Reed-Solomon (RS) codes are known to achieve MCA up to the Johnson bound #albert[cite papers], and, it was shown recently, in some cases (for fields of large characteristic), MCA is attained slightly above such bound #albert[cite]. The problem of whether RS codes achieve MCA (and list decodability) above Johnson bound, potentially all the way up to capacity, has recently received a great amount of attention and has undergone rapid development due to its practical and theoretical relevance #albert[cite, better codes, proximity prize, and the flurry of papers].
 
-On the other hand, generally linear codes are only known to have MCA up to the so-called 1.5 Johnson bound #albert[cite zeilberger], and this is known to be a tight bound #albert[cite recent paper right?].  Reed-Solomon (RS) codes, on the other hand, are known to achieve MCA up to the Johnson bound #albert[cite papers], and in some cases (for fields of large characteristic), MCA is preserved slightly above such bound #albert[cite]. The problem of whether RS codes achieve MCA (and list decodability) above Johnson bound, potentially all the way up to capacity, has recently received a great amount of attention and has undergone rapid development #albert[cite, better codes, proximity prize, and the flurry of papers].
+As we mentioned, modern code-based IOPPs rely on the MCA (or the weaker CA#footnote[The notion of MCA was introduced relatively recently in @whir. Before that, researchers and practitioners used the weaker notion of Correlated Agreement (CA).] property #albert[cite]) of their underlying codes in order to achieve soundness. Prior to that, before good enough MCA or plain CA results were known to hold, @deep proposed a technique called DEEP  (Domain Extending for Eliminating Pretenders), by which FRI #albert[cite] (the seminal code-based IOPP) achieved soundness without needing CA or MCA to hold. Instead, @deep only asked for the underlying code (an RS code), to have good list decodability bounds, which, as we mentioned, all codes satisfy up to the Johnson bound. 
 
-As we mentioned, modern code-based IOPPs rely on the MCA property of their underlying codes in order to achieve soundness. Prior to that, before good enough MCA results were known to hold, @deep proposed a technique called DEEP  (Domain Extending for Eliminating Pretenders), by which FRI #albert[cite] (the seminal code-based IOPP) achieved soundness only through the list decodability of its underlying codes (RS codes in this case). #albert[comment differences between MCA and CA and people using CA before] 
-
-We explain the DEEP technique briefly. We focus on Reed-Solomon codes because they allow concretizing some otherwise slightly abstract concepts (namely that of #emph[zero evader]). For the sake of intuition, we describe DEEP as if it was an interactive protocol between a prover and a verifier, even though the actual relevant results establish a property of the code $cal(C)$, independently of any protocol built around it.
+#paragraph[The DEEP technique.] We explain the DEEP technique briefly. We focus on Reed-Solomon codes because they allow concretizing some otherwise slightly abstract concepts (namely, that of #emph[zero evader]). We note that the original DEEP paper @deep was taylored to RS codes, while our work applies to arbitrary linear codes. For the sake of intuition, we describe the DEEP technique as  an interactive protocol between a prover and a verifier, even though the actual relevant results establish a property of the code $cal(C)$, independently of any protocol built around it.
 
 
 
-Similarly as above, the DEEP technique also analyses the number of elements $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword $c in cal(C)$ on a large set $S$, while $u_1, u_2$ do not. The element $alpha in FF$ is called a #emph[folding challenge], and in practice it is sent by a verifier. We say $alpha$ is MCA-bad if the previous scenario holds ($u_1+ alpha dot u_2$ agrees on a large set $S$ but $u_1, u_2$ not). Additionally, before $alpha$ is sampled, in DEEP the verifier sends a so-called   #emph[DEEP sample point] $z in FF$, to which the prover replies with $b_1, b_2 in FF$, supposedly the evaluations at $z$ of codewords $c_1, c_2$ (which we think of polynomials) that are $delta$-close to $u_1, u_2$, respectively.  
+Similarly as above, the DEEP technique also analyses the number of elements $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword $c in cal(C)$ on a large set $S$, while $u_1, u_2$ do not. The element $alpha in FF$ is called a #emph[folding challenge], and in practice it is sent by a verifier. We say $alpha$ is MCA-bad if the previous scenario holds ($u_1+ alpha dot u_2$ agrees on a large set $S$ but $u_1, u_2$ not), and then we call $c$ an #emph[$alpha$-pretender]. Additionally, before $alpha$ is sampled, in the DEEP technique, the verifier sends a so-called   #emph[DEEP sample point] $z in FF$, to which the prover replies with $b_1, b_2 in FF$, supposedly the evaluations at $z$ of codewords $c_1, c_2$ (which we think of polynomials) that are $delta$-close to $u_1, u_2$, respectively.  
 
-One can show (@deep, Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$ and $alpha in FF$ there's negligibly many $alpha in FF$ such that $u_1 + alpha dot u_2$ agrees with a codeword $c in cal(C)$ on a large set, and $c$ evaluated at $z$ equals $b_1 + alpha dot b_2$.  In @deep and in the present work #albert[what else should we cite], such bounds are obtained by  using only the list decodability of $cal(C)$, and not on its MCA.
+One can show (see @deep, Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$ and $alpha in FF$ there's negligibly many $alpha in FF$  such that 1) $alpha$ is MCA-bad; and 2) there is an $alpha$-pretender $c$ that, evaluated at $z$, equals $b_1 + alpha dot b_2$.  In @deep and in the present work #albert[what else should we cite], such bounds are obtained by  using only the list decodability of $cal(C)$, and not its MCA or CA (which may in any case not hold).
 
-However, the soundness analysis in the pioneering DEEP (Domain Extending for Eliminating Pretenders) paper @deep led to an impractical error bound $epsilon_(sans("DEEP"))$ #albert[Not clear what "the error bound" is of]. Concretely   
+(Domain Extending for Eliminating Pretenders)
+
+To the best of our understanding, the reason DEEP is not used in practice is because the soundness error bound $epsilon_(sans("DEEP"))$  obtained in @deep is too large for practical parameters. Concretely, @deep obtains 
+#albert[Not clear what "the error bound" is of].    
 $
 epsilon_(sans("DEEP"))= max(2 dot L dot lr(( (codedim)/(|FF|) + epsilon  ))^(1/3), (4)/(epsilon^2 dot |FF|))
 $
-where $0<epsilon<1/3$ is a tunable parameter, and $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $k$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be well above $2^800$. Indeed, from $4/epsilon^2 dot |FF| ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130/|L|$, and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so $|FF| ≥ 2^(904)/(L^3)$, and typical list sizes $L$ for $delta$ approaching the Johnson bound rarely exceeds $2^25$ (see @ex:interleaved_list) #albert[check this].  
+where $0<epsilon<1/3$ is a tunable parameter, and $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $codedim$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be well above $2^800$, which for practical purposes is far from the standard $128$-$256$ bit fields. Indeed, from $4/epsilon^2 dot |FF| ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130\/|L|$, and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so $|FF| ≥ 2^(904)/(L^3)$, while typical list sizes $L$ for $delta$ approaching the Johnson bound rarely exceeds $2^25$ (see @ex:interleaved_list) #albert[check this], and in any case the list size is also subject to the bound $codedim\/ |FF| ≤ 2^(-384)/(8 dot L^3)$. Further, in a wider protocol, $L$ appears as a linear factor in other error terms, which further limits the size $L$ one is able to tolerate.  
+
+
+On the other hand, today we have practical MCA results for Reed-Solomon codes up to the Johnson bound #albert[cite], and for any linear code up to the 1.5 Johnson bound #albert[cite]. Concretely, #albert[cite] shows that for any RS code $cal(C)$ and any two words $u_1,u_2$, the fraction of MCA-bad elements $alpha in FF$ is #albert[fill in]
+$
+epsilon_(sans("RS-MCA")) ≤.
+$
 
 == Our contributions
 
-In this work we improve the soundness analysis of the DEEP technique, obtaining a new error bound
-$
-epsilon_(sans("BEEP")) = max((|FF| dot L)^3/(delta dot blockclength +1)^2 dot (codedim/(|FF|))^numsamples , (delta dot blockclength + 1 + 2 dot L_2)/(|FF|) )
-$
-where  $numsamples$ is the number of DEEP samples performed, and $L_2$ is... #albert[mention general zero evaders]
+#albert[mention our error is better than MCA]
 
+In this work we provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Concretely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. We obtain the following improved error bound, for #emph[any linear code] $cal(C)$ of blockclength $blockclength$ and dimension $codedim$
+$
+epsilon_(sans("BEEP")) = max((|FF| dot L)^3/(delta dot blockclength +1)^2 dot (codedim/(|FF|))^numsamples , (delta dot blockclength + 1)/(|FF|) )
+$
+where $delta$ is an arbitrary proximity parameter (below the minimum distance of $cal(C)$) and $L$ is such that $cal(C)$ is $(delta,L)$-list decodable. 
+
+#remark[General linear codes and zero evaders][
+  For a non-RS code, "evaluation of a codeword $c$ at a point $z$" may not be well defined. For that purpose, we use the more general notion of a zero evader, see @s:zero_evaders, and then the factor $(codedim\/|FF|)^numsamples$ is replaced by the error of the evader.
+]
+
+#remark[Round-by-round knowledge soundness][
+  
+]
+
+== Scratch intro notes
 
 Additionally, @deep is taylored to $cal(C)$ a Reed-Solomon code, and the soundness results are not formulated in a way which is amenable to building a round-by-round sound protocol from them.
   
+---
+
+#albert[We also do affine folding like in the new Chiesa, Yogev and Zheng paper to get 1/q error]
 
 
-#albert[Say somewhere that we could use affine folding like in the new Chiesa, Yogev and Zheng paper to get L/q error]
-
-
+  Greatly simplified analysis of affine folding (on a different setting though, i.e. the DEEP setting) 
   ---
-  
-  so as to replace the need of the underlying code $cal(C)$ satisfying the Mutual Correlated Agreement property, with that of list decodability. 
-  
-  The majority of code-based PCS's  rely, for soundness, on the underlying code $cal(C)$ having  (Mutual) Correlated Agreement, for a large proximity parameter. BEEP allows to replace this requirement by that of list decodability of the code, after performing a minor modification of the PCS. Concretely, this modification consists on performing a few out of domain samples every time a word is folded, right before the folding challenge is sampled. 
-  
+
   A consequence is that all typical code-based PCS's can be instantiated with an arbitrary linear code $cal(C)$ with proximity parameter up to the Johnson bound, after undergoing the aforementioned minor modification. 
 
   #albert[More consequences: we can do 128 bits of security with a 128 bit field, with any code]
@@ -147,7 +162,6 @@ Additionally, @deep is taylored to $cal(C)$ a Reed-Solomon code, and the soundne
 
   ---
 
-  Greatly simplified analysis of affine folding (on a different setting though, i.e. the DEEP setting)
 
 
   The fold error is about (δn + 3L)/|𝔽| instead of an MCA error with large polynomial factors or large constant or restrictive parameters #albert[From some conversation with Ulrich I think this may be a big deal (I haven't told him about this work though)]
@@ -168,7 +182,7 @@ The novel results in this work were obtained through a long interactive process 
 
 The second author was  affiliated at Nethermind during part of the preparation of this work. 
 
-We thank Ulrich Haböck for helpful and fruitful discussions. 
+We thank Ulrich Haböck for insightful  discussions that helped improve this work. 
 
 
 = Preliminaries
@@ -936,9 +950,67 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 ]<r:affine_pairs>
 
 = Instantiation and Experiments <s:experiments>
- 
- 
+// [AI-drafted in the author's register (claude-fable-5-2), 2026-11-16, at the author's request ("Let's write the instantiation and experiment section. I want something minimal that fits in two pages": a comparison of runtimes and proof sizes of Ligerito and BEEP-Ligerito for 2^15 to 2^23 field elements at 100 bits over GF(2^128) and at rate 1/2; the same at 128 bits; and a table with the error bounds of the first two rounds of the BEEP IOR and the number of queries, with the fold round of Ligerito next to them, at 128 bits over a field of 2^128 elements): this whole section, up to the include of batch.typ. Every number and every table row is read from tables/minimal.json, which scripts/minimal_tables.py writes from the run beep-ligerito/bench_results/three-way-minimal-20261116-ac2 (its cells: beep-ligerito/scripts/cells_minimal.txt) and from the exact arithmetic of beep-ligerito/scripts/beep_params.py. A number that the script did not write prints as a highlighted "pending". The code is beep-ligerito/flock (Flock's branch affine-fold-f128 with crates/flock-core/src/pcs/ligerito/beep.rs added); the baseline "Ligerito over GF(2^128)" is `mca_ladder_no_first_sample_at` of that file, written for this section (BEEP-Ligerito with no samples in its fold rounds and nothing else changed; its accounting is ours, see beep-ligerito/README.md). Two readings of the request that the author should check: (1) at 128 bits BEEP-Ligerito stays over GF(2^128), with grinding on its fold challenges, and Ligerito is Flock's, with fold challenges in GF(2^256) (the request said "using a larger field for BEEP-Ligerito"; this code has no BEEP prover with challenges in GF(2^256)); (2) "n = 2^15 to 2^23" is read as the number of field elements of the message, and the block length of the first code (the n of the paper) is a column of the first table. Research, unaudited. Please review]
+#aiedit[
+#let expdata = json("tables/minimal.json")
+#let num(key) = if key in expdata.numbers { eval(expdata.numbers.at(key), mode: "markup") } else { highlight[pending] }
+#let exprows(name) = {
+  let rows = expdata.tables.at(name, default: ())
+  if rows.len() == 0 { (table.cell(colspan: 2, highlight[pending]),) } else {
+    rows.map(r => r.map(c => eval(c, mode: "markup"))).flatten()
+  }
+}
+#let exptable(columns, header, name, size: 7.5pt) = text(size: size, table(
+  columns: columns, stroke: none, align: center + horizon, inset: (x: 3.5pt, top: 0.7pt, bottom: 1.5pt),
+  table.hline(stroke: 0.6pt), ..header, table.hline(stroke: 0.4pt), ..exprows(name), table.hline(stroke: 0.6pt),
+))
 
+We instantiate @c:BEEP_codeswitch with Reed-Solomon codes over $"GF"(2^128)$, and we compare the resulting PCS, "BEEP-Ligerito", with Ligerito @ligerito. Our code (research code, not audited), the raw outputs and the scripts that write every number below are in our repository #albert[ref to repo].
+
+#paragraph[BEEP-Ligerito.] We start from the implementation of Ligerito in Flock @flock. A message of $k dot codedim$ elements from $"GF"(2^128)$ is arranged in $k$ rows, each encoded with a Reed-Solomon code $cal(C)$ of rate $rho = 1\/2$. The rows are folded with $log k$ executions of @c:BEEP, and the folded message is committed with a code of smaller rate and queried, as in @c:BEEP_codeswitch. This is repeated until the message is short. As zero evader we take $numsamples$ independent samples of the multilinear evader, with error $epsilon_"evader" = (log_2 e \/ |FF|)^numsamples$ on messages with $e$ entries. We take $delta = 1 - sqrt(rho) - eta$ for a small "slack" $eta > 0$, so that $cal(C)$ and its interleavings are $(delta, L)$-list decodable with $L = floor(1 \/ (2 dot eta dot sqrt(rho)))$ (see @ex:interleaved_list).
+
+#paragraph[The error of a fold.] The proof of @t:beep_soundness goes through with any integer $t >= delta dot blockclength + 2$ in place of $delta dot blockclength + 2$ (this threshold of @t:main_thm only appears in the analysis). The errors of the first two rounds of @c:BEEP are then
+$
+kappa_1(t) = ((|FF| dot L)^3 dot epsilon_"evader") / (t dot (t-1) dot (t - delta dot blockclength - 1)), quad quad kappa_2(t) = (t - 1 + 2 dot L) / (|FF|).
+$
+We count $g$ bits of proof of work ("grinding") on a challenge as $g$ bits of security, as it is usual in practice @whir @flock. For a target of $lambda$ bits we take the least $t$ with $kappa_1(t) <= 2^(-lambda)$, and the $numsamples$ for which $kappa_2(t)$ then needs the least grinding.
+
+@tab:errors shows these errors for $lambda = 128$, next to the error of a fold round of Ligerito with the MCA bound that Flock uses @flock[Appendix C.3], i.e. that of @BCHKS25[Theorem 4.6] times $k\/2$ (a union bound over pairs of rows), plus the term $2 dot L \/ |FF|$ of $kappa_2$.
+
+#figure(
+  exptable(10,
+    (table.cell(colspan: 3)[first code], table.cell(colspan: 3)[Ligerito (fold with MCA)], table.cell(colspan: 4)[BEEP-Ligerito, $eta = #num("eta:beep")$],
+     [size], [$k$], [$blockclength$], [fold, $eta = #num("eta:lig")$], [fold, $eta = #num("eta:beep")$], [queries, $eta = #num("eta:lig")$], [$numsamples$], [round 1], [round 2], [queries]),
+    "errors"),
+  caption: [Bits of security ($-log_2$ of the error) of the first fold round before grinding, over a field with $2^128$ elements. A message of the given size has $k$ rows, encoded at rate $1\/2$ with block length $blockclength$. "Round 1", "round 2": $kappa_1(t)$, $kappa_2(t)$. "Queries": the least $Q$ with $(1-delta)^Q <= 2^(-112)$ (#num("params:qgrind") bits of grinding).],
+) <tab:errors>
+
+The second round of BEEP has #num("err:beep2") bits, so it reaches $128$ bits with #num("err:beep-grind") bits of grinding, and its small $eta$ gives #num("err:q-beep") queries in place of #num("err:q-lig"). With MCA, a fold round has #num("err:lig02") bits at $eta = #num("eta:lig")$ and #num("err:lig001") bits at $eta = #num("eta:beep")$. Reaching $128$ bits at $eta = #num("eta:lig")$ would take #num("err:lig-grind") bits of grinding per fold challenge, or a larger field: Flock's fold challenges are in $"GF"(2^256)$.
+
+#paragraph[Measurements.] We open commitments to messages of #num("sizes:first") to #num("sizes:last") field elements, and we compare three variants. _Ligerito (Flock)_ is Flock's Ligerito as it ships, with $eta = #num("eta:lig")$. At both security levels it samples its fold challenges from $"GF"(2^256)$, and it commits to each folded message as two messages over $"GF"(2^128)$. _BEEP-Ligerito_ has all its challenges in $"GF"(2^128)$, $eta = #num("eta:beep")$, and $numsamples$ and $t$ as above. It has Flock's number of rows per level, and the rates $1\/2$, $1\/8$, $1\/32$, $1\/128$, with which its codewords are as long as Flock's at every level (its folded messages are shorter, since they stay over $"GF"(2^128)$). _Ligerito over $"GF"(2^128)$_ is ours: it is BEEP-Ligerito without the samples, analyzed as Ligerito, i.e. with $eta = #num("eta:lig")$ and with grinding on its fold challenges for the error of @tab:errors. We run it at $100$ bits only.
+
+@tab:measured has the medians of #num("run:reps") runs on an #num("run:cpu") laptop (#num("run:memory-gb") GB, #num("run:threads") threads), with the proofs of work at their expected cost.
+
+#figure(
+  stack(dir: ttb, spacing: 3pt,
+    exptable(11,
+      (table.cell(colspan: 2)[$lambda = 100$], table.cell(colspan: 3)[Ligerito (Flock)], table.cell(colspan: 3)[Ligerito over $"GF"(2^128)$], table.cell(colspan: 3)[BEEP-Ligerito],
+       [size], [commit], [proof], [prove], [verify], [proof], [prove], [verify], [proof], [prove], [verify]),
+      "bits100"),
+    exptable(8,
+      (table.cell(colspan: 2)[$lambda = 128$], table.cell(colspan: 3)[Ligerito (Flock)], table.cell(colspan: 3)[BEEP-Ligerito],
+       [size], [commit], [proof], [prove], [verify], [proof], [prove], [verify]),
+      "bits128"),
+  ),
+  caption: [Proof sizes (KiB) and times (ms) at $100$ (top) and $128$ (bottom) bits of security. "Prove" is the opening, without the commitment ("commit"), which all the variants share.],
+) <tab:measured>
+
+#paragraph[Results.] At $100$ bits BEEP-Ligerito makes $numsamples = #num("params:m-100")$ samples per fold round and needs no grinding on its fold challenges, while Ligerito over $"GF"(2^128)$ needs #num("100:mca-fold-grind") bits at its first level. The proofs of BEEP-Ligerito are #num("100:size-saving-pct")~% smaller, since it makes fewer queries. Its prover takes #num("100:prove-ratio") times as long: the samples cost time (the ratio is #num("100:nopow-ratio") without proofs of work), and they save the grinding of the fold challenges. With the commitment the ratio is #num("100:total-ratio"). Its verifier takes #num("100:verify-ratio") times as long.
+
+At $128$ bits BEEP-Ligerito stays over $"GF"(2^128)$, with $numsamples = #num("params:m-128")$ and the fold grinding of @tab:errors. Its proofs are #num("128:size-saving-pct")~% smaller than those of Ligerito (Flock): it makes fewer queries, since its $eta$ and its rates after the first level are smaller. Its prover takes #num("128:prove-ratio") times as long (#num("128:pow-share-pct")~% of its time is proofs of work), and its verifier #num("128:verify-ratio") times.
+
+We stress that Ligerito (Flock) and BEEP-Ligerito differ in their levels and run different provers, and it is unclear to us whether these are at a comparable level of optimization.
+]
 
 #include "batch.typ"
 

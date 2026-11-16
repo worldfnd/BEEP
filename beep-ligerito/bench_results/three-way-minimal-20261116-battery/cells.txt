@@ -1,0 +1,60 @@
+# The cells of the minimal Experiments section of the BEEP paper (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request ("a comparison of runtimes and proof sizes of
+#  Ligerito and BEEP-Ligerito for n=2^15 to 2^23, at 100 bits of security over a field of size GF(2^128) [...] rate
+#  1/2", and "the same as above, at 128 bits of security"); please review]
+#
+# Format and driver: as scripts/cells.txt (scripts/run_cells.zsh <label> scripts/cells_minimal.txt). A cell
+# `m<log_n>-<bits>` runs with the proofs of work, and `m<log_n>-<bits>-nopow` runs the same provers without them.
+#
+# Instances: messages of 2^15 to 2^23 words of GF(2^128), with a first level of rate 1/2. These are the sizes
+# m = 22 to 30 for which Flock ships the profiles `fast` (128 bits) and `fast100` (100 bits).
+#
+# Variants:
+#   split   Flock's Ligerito as it ships (`fast`, or `fast100` at 100 bits): fold challenges in GF(2^256), on
+#           Flock's own ladder (rates 1/2, 1/4, 1/8, ..., one more level than the ladder below for some sizes);
+#   mca     "Ligerito over GF(2^128)" (100 bits only): the ladder below with no out-of-domain points, Flock's
+#           binding sample on the first commitment, slack 0.02 as Flock, and fold challenges ground for Flock's
+#           MCA bound over GF(2^128) (beep::mca_ladder_at);
+#   beep    BEEP-Ligerito at the slacks of eta= (no binding sample on the first commitment, proofs of work
+#           against a threshold), every challenge in GF(2^128).
+# The ladder of `mca` and `beep`: Flock's rows per level for the size (2^6 rows at the first level, 2^4 for 2^21
+# words and 2^5 for 2^22 words, then 2^4), the rates 1/2, 1/8, 1/32, 1/128 (the folded tables stay over GF(2^128),
+# so a level has half the words of Flock's level and, at these rates, a codeword of the same length), and a new
+# level as long as the folded table has at least 2^7 words.
+
+m15-100 log_n=15 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m16-100 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m17-100 log_n=17 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m18-100 log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m19-100 log_n=19 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m20-100 log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m21-100 log_n=21 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m22-100 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m23-100 log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m15-100-nopow FLOCK_NO_GRIND=1 log_n=15 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m16-100-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m17-100-nopow FLOCK_NO_GRIND=1 log_n=17 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m18-100-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m19-100-nopow FLOCK_NO_GRIND=1 log_n=19 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m20-100-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m21-100-nopow FLOCK_NO_GRIND=1 log_n=21 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m22-100-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m23-100-nopow FLOCK_NO_GRIND=1 log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m15-128 log_n=15 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m16-128 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m17-128 log_n=17 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m18-128 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m19-128 log_n=19 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m20-128 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m21-128 log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m22-128 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m23-128 log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m15-128-nopow FLOCK_NO_GRIND=1 log_n=15 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m16-128-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m17-128-nopow FLOCK_NO_GRIND=1 log_n=17 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m18-128-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m19-128-nopow FLOCK_NO_GRIND=1 log_n=19 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m20-128-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m21-128-nopow FLOCK_NO_GRIND=1 log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m22-128-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m23-128-nopow FLOCK_NO_GRIND=1 log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep

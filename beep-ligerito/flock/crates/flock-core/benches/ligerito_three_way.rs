@@ -31,6 +31,9 @@
 // and BEEP-Ligerito "at 100 bits of security over a field of size GF(2^128)"): the variant `mca-<eta>`
 // (`variants=..,mca`, `mca_eta=`, default 0.02), which is `beep::mca_ladder_at`: the ladder with no points per fold
 // round and with its fold challenges ground for Flock's MCA bound over GF(2^128). The other variants are unchanged]
+// [AI-revised (claude-fable-5-2), 2026-11-16, same request: the variant `mcanf-<eta>` (`variants=..,mcanf`), which
+// is `mca-<eta>` with no sample on the first commitment (`beep::mca_ladder_no_first_sample_at`), so that it
+// differs from `beep-<eta>` in its fold rounds only]
 
 //! Three openings of the same Ligerito commitment, on the plain native path
 //! of `benches/affine_vs_f256.rs` (flock-prover): the same witness, dense eq
@@ -89,6 +92,11 @@
 //!                       per fold round, Flock's binding sample on the first
 //!                       commitment, and fold challenges ground for Flock's MCA
 //!                       bound over `F128` (`beep::mca_ladder_at`)
+//!   `variants=..,mcanf`  the same with no sample on the first commitment
+//!                       (`mcanf-<eta>`, `beep::mca_ladder_no_first_sample_at`):
+//!                       `beep-<eta>` without its points, and with the fold
+//!                       grinding of `mca-<eta>`. The baseline of the paper's
+//!                       table at 100 bits
 //!   `variants=..,beepb`  each BEEP ladder with the binding sample that
 //!                       Flock's ladders draw on the first commitment
 //!                       (`beepb-<eta>`): what `beep-<eta>` was before
@@ -136,7 +144,8 @@ use flock_core::{
         beep::{
             BeepConfig, Grind, Ladder, LevelBytes, PowGrinds, ProveTimings, SizeBreakdown,
             TARGET_BITS, affine_ladder_target, affine_level_bytes, affine_size_breakdown, beep_ladder_at,
-            mca_ladder_at, pow_searches, prove_beep_reference_timed, prove_beep_timed, split_level_bytes,
+            mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches, prove_beep_reference_timed,
+            prove_beep_timed, split_level_bytes,
             split_size_breakdown, verify_beep, verify_split_eq_point,
         },
         embedded_initial_k, ligero_commit, prover_config_for, recursive_prover_with_basis,
@@ -470,6 +479,22 @@ fn main() {
     } else {
         Vec::new()
     };
+    // `mcanf-<eta>`: the same with no sample on the first commitment
+    // (`beep::mca_ladder_no_first_sample_at`), as `beep-<eta>` has none: the
+    // two differ in their fold rounds only.
+    let mcanfs: Vec<(f64, BeepConfig)> = if want("mcanf") {
+        mca_etas
+            .iter()
+            .map(|&eta| {
+                let cfg =
+                    mca_ladder_no_first_sample_at(&split, log_n, &rates, &vec![eta; rates.len()], target_bits)
+                        .unwrap_or_else(|e| panic!("MCA ladder with no first sample at eta = {eta}: {e}"));
+                (eta, cfg.with_exact_grinding())
+            })
+            .collect()
+    } else {
+        Vec::new()
+    };
 
     // Each BEEP ladder with the fold grinding of `beepaff=` (module docs).
     let beepaff_bits: Vec<(f64, Vec<usize>)> = arg("beepaff=")
@@ -546,6 +571,9 @@ fn main() {
     }
     for (eta, b) in &mcas {
         configs[format!("mca-{eta}")] = beep_json(b);
+    }
+    for (eta, b) in &mcanfs {
+        configs[format!("mcanf-{eta}")] = beep_json(b);
     }
     if keep_binding {
         for (eta, b) in &bound {
@@ -790,6 +818,9 @@ fn main() {
     for (eta, _) in &mcas {
         names.push(format!("mca-{eta}"));
     }
+    for (eta, _) in &mcanfs {
+        names.push(format!("mcanf-{eta}"));
+    }
     if keep_binding {
         for (eta, _) in &bound {
             names.push(format!("beepb-{eta}"));
@@ -817,6 +848,7 @@ fn main() {
             .chain(controls.iter().map(|(eta, cfg)| (format!("control-{eta}"), cfg)))
             .chain(hybrids.iter().map(|(eta, cfg)| (format!("beepaff-{eta}"), cfg)))
             .chain(mcas.iter().map(|(eta, cfg)| (format!("mca-{eta}"), cfg)))
+            .chain(mcanfs.iter().map(|(eta, cfg)| (format!("mcanf-{eta}"), cfg)))
             .chain(bound.iter().map(|(eta, cfg)| (format!("beepb-{eta}"), cfg)))
             .chain(in_bits.iter().map(|(eta, cfg)| (format!("beepbits-{eta}"), cfg)))
             .chain(beeps.iter().map(|(eta, cfg)| (format!("beepref-{eta}"), cfg)))

@@ -1,0 +1,14 @@
+name: m19-100
+attempt: 1
+env: 
+args: log_n=19 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 13:57:11
+power_before: AC Power
+load_before: 2.17 2.81 2.92
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 10.39% user, 11.46% sys, 78.13% idle  PhysMem: 20G used (2807M wired, 1518M compressor), 2818M unused. 
+end: 2026-11-16 13:57:13
+exit: 0
+power_after: AC Power
+load_after: 2.80 2.93 2.96
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

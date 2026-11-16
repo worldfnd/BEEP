@@ -1,0 +1,37 @@
+name	status	start	end	power	power_after	load_before	cell
+m15-100	ok	13:37:57	13:37:58	AC Power	AC Power	3.10 2.71 3.00	 log_n=15 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m16-100	ok	13:38:20	13:38:20	AC Power	AC Power	3.08 2.74 3.00	 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m17-100	ok	13:38:42	13:38:43	AC Power	AC Power	3.55 2.90 3.05	 log_n=17 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m18-100	ok	13:39:04	13:39:05	AC Power	AC Power	3.04 2.82 3.02	 log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m19-100	ok	13:39:27	13:39:28	AC Power	AC Power	2.96 2.82 3.01	 log_n=19 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m20-100	ok	13:39:50	13:39:51	AC Power	AC Power	2.90 2.81 3.01	 log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m21-100	ok	13:40:12	13:40:14	AC Power	AC Power	2.95 2.84 3.01	 log_n=21 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m22-100	ok	13:41:19	13:41:21	AC Power	AC Power	3.14 2.99 3.05	 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m23-100	ok	13:41:43	13:41:46	AC Power	AC Power	3.17 3.03 3.07	 log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m15-100-nopow	ok	13:42:08	13:42:08	AC Power	AC Power	3.62 3.17 3.12	FLOCK_NO_GRIND=1 log_n=15 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m16-100-nopow	ok	13:42:29	13:42:30	AC Power	AC Power	2.93 3.04 3.07	FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m17-100-nopow	ok	13:42:51	13:42:52	AC Power	AC Power	2.30 2.89 3.02	FLOCK_NO_GRIND=1 log_n=17 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m18-100-nopow	ok	13:43:13	13:43:14	AC Power	AC Power	2.33 2.86 3.00	FLOCK_NO_GRIND=1 log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m19-100-nopow	ok	13:43:35	13:43:36	AC Power	AC Power	2.17 2.79 2.97	FLOCK_NO_GRIND=1 log_n=19 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m20-100-nopow	ok	13:43:57	13:43:58	AC Power	AC Power	2.05 2.71 2.94	FLOCK_NO_GRIND=1 log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m21-100-nopow	ok	13:44:19	13:44:20	AC Power	AC Power	2.23 2.71 2.93	FLOCK_NO_GRIND=1 log_n=21 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m22-100-nopow	ok	13:44:42	13:44:43	AC Power	AC Power	2.23 2.67 2.91	FLOCK_NO_GRIND=1 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m23-100-nopow	ok	13:45:05	13:45:07	AC Power	AC Power	2.12 2.61 2.88	FLOCK_NO_GRIND=1 log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep
+m15-128	ok	13:45:28	13:45:30	AC Power	AC Power	2.58 2.70 2.91	 log_n=15 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m16-128	ok	13:45:52	13:45:53	AC Power	AC Power	2.62 2.70 2.90	 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m17-128	ok	13:46:14	13:46:17	AC Power	AC Power	2.59 2.69 2.89	 log_n=17 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m18-128	ok	13:46:38	13:46:41	AC Power	AC Power	2.17 2.58 2.85	 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m19-128	ok	13:47:02	13:47:05	AC Power	AC Power	1.95 2.50 2.81	 log_n=19 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m20-128	ok	13:47:26	13:47:29	AC Power	AC Power	2.01 2.48 2.79	 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m21-128	ok	13:47:50	13:47:54	AC Power	AC Power	2.78 2.61 2.83	 log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m22-128	ok	13:48:15	13:48:19	AC Power	AC Power	3.10 2.71 2.86	 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m23-128	ok	13:48:40	13:48:45	AC Power	AC Power	3.69 2.89 2.92	 log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m15-128-nopow	ok	13:49:06	13:49:07	AC Power	AC Power	3.61 2.98 2.95	FLOCK_NO_GRIND=1 log_n=15 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m16-128-nopow	ok	13:49:28	13:49:28	AC Power	AC Power	3.57 2.99 2.96	FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=split,beep
+m17-128-nopow	ok	13:49:50	13:49:50	AC Power	AC Power	3.48 3.01 2.96	FLOCK_NO_GRIND=1 log_n=17 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m18-128-nopow	ok	13:50:12	13:50:12	AC Power	AC Power	3.29 3.01 2.96	FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m19-128-nopow	ok	13:50:34	13:50:34	AC Power	AC Power	3.12 2.99 2.96	FLOCK_NO_GRIND=1 log_n=19 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m20-128-nopow	ok	13:50:56	13:50:56	AC Power	AC Power	2.94 2.96 2.95	FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep
+m21-128-nopow	ok	13:51:18	13:51:19	AC Power	AC Power	2.65 2.88 2.92	FLOCK_NO_GRIND=1 log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m22-128-nopow	ok	13:51:40	13:51:41	AC Power	AC Power	2.90 2.92 2.93	FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep
+m23-128-nopow	ok	13:52:03	13:52:05	AC Power	AC Power	2.94 2.93 2.93	FLOCK_NO_GRIND=1 log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep

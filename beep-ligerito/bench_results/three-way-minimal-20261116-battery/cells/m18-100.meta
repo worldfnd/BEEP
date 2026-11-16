@@ -1,0 +1,14 @@
+name: m18-100
+attempt: 1
+env: 
+args: log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,beep reps=9
+start: 2026-11-16 12:30:31
+power_before: Battery Power
+load_before: 2.08 2.32 2.55
+swap_before: total = 2048.00M used = 807.00M free = 1241.00M (encrypted)
+top_before: CPU usage: 6.3% user, 10.89% sys, 83.7% idle  PhysMem: 23G used (3191M wired, 6591M compressor), 226M unused. 
+end: 2026-11-16 12:30:32
+exit: 0
+power_after: Battery Power
+load_after: 2.08 2.32 2.55
+swap_after: total = 2048.00M used = 807.00M free = 1241.00M (encrypted)

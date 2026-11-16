@@ -1,0 +1,14 @@
+name: m22-100-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 14:02:10
+power_before: AC Power
+load_before: 2.28 2.70 2.85
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 18.81% user, 8.91% sys, 72.27% idle  PhysMem: 19G used (2961M wired, 1643M compressor), 4242M unused. 
+end: 2026-11-16 14:02:12
+exit: 0
+power_after: AC Power
+load_after: 2.28 2.70 2.85
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

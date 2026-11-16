@@ -1,0 +1,14 @@
+name: m21-128
+attempt: 1
+env: 
+args: log_n=21 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 14:05:21
+power_before: AC Power
+load_before: 2.74 2.87 2.89
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 16.5% user, 11.3% sys, 72.90% idle  PhysMem: 19G used (3000M wired, 1687M compressor), 4456M unused. 
+end: 2026-11-16 14:05:26
+exit: 0
+power_after: AC Power
+load_after: 2.68 2.85 2.89
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

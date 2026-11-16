@@ -1,0 +1,14 @@
+name: m23-100-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 14:02:34
+power_before: AC Power
+load_before: 2.34 2.67 2.84
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 6.83% user, 10.79% sys, 82.37% idle  PhysMem: 19G used (2906M wired, 1643M compressor), 4358M unused. 
+end: 2026-11-16 14:02:37
+exit: 0
+power_after: AC Power
+load_after: 2.34 2.67 2.84
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

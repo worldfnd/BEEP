@@ -1,0 +1,14 @@
+name: m22-128
+attempt: 1
+env: 
+args: log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 14:05:47
+power_before: AC Power
+load_before: 2.98 2.91 2.91
+swap_before: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)
+top_before: CPU usage: 10.39% user, 10.39% sys, 79.21% idle  PhysMem: 19G used (3032M wired, 1687M compressor), 4407M unused. 
+end: 2026-11-16 14:05:51
+exit: 0
+power_after: AC Power
+load_after: 3.63 3.04 2.95
+swap_after: total = 2048.00M used = 767.00M free = 1281.00M (encrypted)

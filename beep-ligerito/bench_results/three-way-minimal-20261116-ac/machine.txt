@@ -1,0 +1,17 @@
+label: minimal-20261116-ac
+date: 2026-11-16 13:37:36 CET
+cells: scripts/cells_minimal.txt
+cooldown: 20 s, reps: 9
+os: 27.2.1 arm64
+machdep.cpu.brand_string: Apple M5
+hw.ncpu: 10
+hw.perflevel0.physicalcpu: 4
+hw.perflevel1.physicalcpu: 6
+hw.memsize: 25769803776
+power: AC Power
+load: 3.28 2.71 3.01
+swap: total = 2048.00M used = 775.00M free = 1273.00M (encrypted)
+top: CPU usage: 11.87% user, 12.23% sys, 75.89% idle  PhysMem: 15G used (2569M wired, 3533M compressor), 7973M unused. 
+rustc: rustc 1.96.0 (ac68faa20 2026-05-25)
+flock: succinctlabs/flock 14b78c09b182fdbf0c88fbbf999adbc0ea394fe0 (branch affine-fold-f128) + the local changes of VENDORED.md
+repository: 206c462490360c76d83cef99fc7af9d214b65d7a 12 changed or untracked paths
