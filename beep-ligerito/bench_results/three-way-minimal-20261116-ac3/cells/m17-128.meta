@@ -1,0 +1,14 @@
+name: m17-128
+attempt: 1
+env: 
+args: log_n=17 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 15:14:18
+power_before: AC Power
+load_before: 2.52 2.58 2.78
+swap_before: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)
+top_before: CPU usage: 17.13% user, 12.67% sys, 70.18% idle  PhysMem: 19G used (2123M wired, 6640M compressor), 4000M unused. 
+end: 2026-11-16 15:14:20
+exit: 0
+power_after: AC Power
+load_after: 2.52 2.58 2.78
+swap_after: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)

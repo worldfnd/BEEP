@@ -1,0 +1,13 @@
+[when_memory_is_free] 2026-11-16 14:54:50 unused 1052 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 14:55:51 unused 776 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 14:56:51 unused 547 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 14:57:52 unused 402 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 14:58:52 unused 243 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 14:59:53 unused 231 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 15:00:53 unused 296 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 15:01:54 unused 193 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 15:02:54 unused 392 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 15:03:55 unused 367 MB (need 3072), streak 0/3
+[when_memory_is_free] 2026-11-16 15:04:55 unused 276 MB (need 3072), streak 0/3
+[when_memory_is_free] no 3 GB of unused memory after 600 s
+memory wait exit: 3

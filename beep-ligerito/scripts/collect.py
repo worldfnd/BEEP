@@ -12,6 +12,9 @@ that same search]
 [AI-revised (claude-fable-5-2), 2026-11-14: every row keeps what its prover used in both processes (`counters`:
 CPU time, instructions, cycles, the part on performance cores, context switches; medians, from
 benches/support/run_counters.rs) and the idle share of the machine when each process started]
+[AI-revised (claude-fable-5-2), 2026-11-16, for the minimal run: `pow_expected_ms_by_kind`, the expected cost of
+the proofs of work of a row by kind of search (fold challenges, claim batching, consistency batching, queries);
+the four add up to `pow_expected_ms`]
 
     python3 scripts/collect.py bench_results/three-way-<label>
 
@@ -230,6 +233,16 @@ def main():
             exp_hashes, exp_ms, exp_ms_rate, missing = pow_expected(grinds, ctx)
             if missing:
                 warnings.append(f"{name}/{variant}: no calibration for the searches {sorted(missing)}")
+            # the same model per kind of search (the cost of a search does not depend on the others)
+            by_kind = None
+            if "pow_grinds" in res and exp_ms is not None:
+                by_kind = {
+                    kind: pow_expected([(grind_key(e), float(e["work"])) for e in res["pow_grinds"][kind]
+                                        if e["work"] > 0], ctx)[1]
+                    for kind in ("fold", "claim", "consistency", "queries")
+                }
+                if abs(sum(by_kind.values()) - exp_ms) > 1e-9 * max(exp_ms, 1.0):
+                    warnings.append(f"{name}/{variant}: the proofs of work by kind do not add up")
             residual = None
             if nopow is not None and exp_ms is not None and rate_par:
                 residual = median([
@@ -263,6 +276,7 @@ def main():
                 "prove_nopow_ms_reps": nopow["prove_ms_reps"] if nopow else None,
                 "pow_expected_hashes": exp_hashes,
                 "pow_expected_ms": exp_ms,
+                "pow_expected_ms_by_kind": by_kind,
                 "pow_rate_only_ms": exp_ms_rate,
                 "pow_model_residual_ms": residual,
                 "pow_hashes_mean": sum(res["pow_hashes_reps"]) / len(res["pow_hashes_reps"]),

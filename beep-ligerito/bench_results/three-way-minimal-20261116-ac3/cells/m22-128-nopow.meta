@@ -1,0 +1,14 @@
+name: m22-128-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 15:23:26
+power_before: AC Power
+load_before: 3.23 2.78 2.75
+swap_before: total = 2048.00M used = 735.00M free = 1313.00M (encrypted)
+top_before: CPU usage: 9.52% user, 12.38% sys, 78.9% idle  PhysMem: 22G used (2421M wired, 5416M compressor), 1665M unused. 
+end: 2026-11-16 15:23:28
+exit: 0
+power_after: AC Power
+load_after: 3.23 2.78 2.75
+swap_after: total = 2048.00M used = 735.00M free = 1313.00M (encrypted)

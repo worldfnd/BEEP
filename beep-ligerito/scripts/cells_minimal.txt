@@ -13,15 +13,18 @@
 #   split   Flock's Ligerito as it ships (`fast`, or `fast100` at 100 bits): fold challenges in GF(2^256), on
 #           Flock's own ladder (rates 1/2, 1/4, 1/8, ..., one more level than the ladder below for some sizes);
 #   mcanf   "Ligerito over GF(2^128)" (100 bits only), the baseline of the paper's table: the ladder below with no
-#           out-of-domain points in its fold rounds, slack 0.02 as Flock, and fold challenges ground for Flock's
-#           MCA bound over GF(2^128) (beep::mca_ladder_no_first_sample_at). Like `beep`, it has no binding sample
-#           on the first commitment, so the two differ in their fold rounds only;
+#           out-of-domain points in its fold rounds, slack 0.02 as Flock, and every fold challenge ground for
+#           Flock's MCA bound of its round over GF(2^128) (beep::mca_ladder_no_first_sample_at; the row union
+#           halves from one round of a level to the next). Like `beep`, it has no binding sample on the first
+#           commitment, so the two differ in their fold rounds only;
 #   mca     the same with the binding sample that Flock's ladders draw on the first commitment
 #           (beep::mca_ladder_at): what that sample costs;
 #   beep    BEEP-Ligerito at the slacks of eta= (no binding sample on the first commitment, proofs of work
 #           against a threshold), every challenge in GF(2^128).
 # [AI-revised (claude-fable-5-2), 2026-11-16: `mcanf` added to the cells at 100 bits (the runs `-battery` and `-ac`
-#  of that day were measured before, with `mca` as the baseline)]
+#  of that day were measured before, with `mca` as the baseline). The cells did not change after that: in the run
+#  `-ac2` the two baselines ground every fold round of a level for its first round, and in the run `-ac3`, the run
+#  of record, for its own round (a change of the library, not of the cells)]
 # The ladder of `mca`, `mcanf` and `beep`: Flock's rows per level for the size (2^6 rows at the first level, 2^4 for 2^21
 # words and 2^5 for 2^22 words, then 2^4), the rates 1/2, 1/8, 1/32, 1/128 (the folded tables stay over GF(2^128),
 # so a level has fewer words than Flock's level and, at these rates, a codeword of the same length), and a new

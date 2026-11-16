@@ -35,6 +35,11 @@
 // [AI-revised (claude-fable-5-2), 2026-11-16, same request: `mca_ladder_no_first_sample_at`, that baseline with no
 // out-of-domain sample on its first commitment, as the BEEP ladder of the comparison has none, so that the two
 // differ in their fold rounds only (the baseline of the paper's table at 100 bits); one test]
+// [AI-revised (claude-fable-5-2), 2026-11-16, after an independent check of the section: the two MCA ladders grind
+// the fold challenge of every round for the error of that round (`BeepConfig::fold_round_numerators`,
+// `fold_rounds`, `fold_grind`), where they ground every round of a level for its first, worst round, as Flock's
+// convention does: three times the hashes that a level with 2^6 rows needs. The BEEP ladders are unchanged (one
+// numerator per level, `fold_rounds = None`), and so are their proofs]
 
 //! BEEP folds for the Ligerito ladder.
 //!
@@ -385,6 +390,17 @@ pub struct BeepConfig {
     pub fold: Vec<Grind>,
     pub claim: Vec<Grind>,
     pub consistency: Vec<Grind>,
+    /// The numerators of the fold squeezes per level and per ROUND, for a
+    /// ladder whose fold challenges do not have the same error in every
+    /// round of a level ([`mca_ladder_at`]: under mutual correlated
+    /// agreement the row union halves from one round to the next). `None`
+    /// for the BEEP ladder, whose rounds all have the numerator
+    /// [`BeepLevel::fold_numerator`].
+    pub fold_round_numerators: Option<Vec<Vec<u64>>>,
+    /// The grinds of those squeezes, per level and per round. `None`: every
+    /// round of level `li` grinds [`Self::fold`]`[li]`. Read through
+    /// [`Self::fold_grind`].
+    pub fold_rounds: Option<Vec<Vec<Grind>>>,
     /// The round-by-round target of the ladder ([`TARGET_BITS`], or the one
     /// that [`beep_ladder_at`] was given).
     pub target_bits: f64,
@@ -401,7 +417,7 @@ impl BeepConfig {
             .map(|(li, lv)| {
                 [
                     lv.sample_bits,
-                    lv.fold_bits + self.fold[li].bits(),
+                    self.fold_bits_after_grinding(li),
                     lv.query_bits + lv.query_grinding_bits as f64,
                     lv.claim_batch_bits + self.claim[li].bits(),
                     lv.consistency_batch_bits + self.consistency[li].bits(),
@@ -411,6 +427,24 @@ impl BeepConfig {
                 .fold(f64::INFINITY, f64::min)
             })
             .fold(f64::INFINITY, f64::min)
+    }
+
+    /// The grind of the fold squeeze of round `round` (from 0) of level `li`.
+    pub fn fold_grind(&self, li: usize, round: usize) -> Grind {
+        self.fold_rounds.as_ref().map_or(self.fold[li], |rounds| rounds[li][round])
+    }
+
+    /// The least bits, after its proof of work, over the fold squeezes of
+    /// level `li`.
+    fn fold_bits_after_grinding(&self, li: usize) -> f64 {
+        match (&self.fold_round_numerators, &self.fold_rounds) {
+            (Some(numerators), Some(grinds)) => numerators[li]
+                .iter()
+                .zip(&grinds[li])
+                .map(|(&numerator, grind)| LOG_Q - (numerator.max(1) as f64).log2() + grind.bits())
+                .fold(f64::INFINITY, f64::min),
+            _ => self.levels[li].fold_bits + self.fold[li].bits(),
+        }
     }
 
     /// Expected proof-of-work hashes of one proof.
@@ -425,6 +459,20 @@ impl BeepConfig {
         self.fold = bits(&self.prover.fold_grinding_bits);
         self.claim = bits(&self.prover.claim_batch_grinding_bits);
         self.consistency = bits(&self.prover.consistency_batch_grinding_bits);
+        // A ladder with a numerator per round: the least whole number of
+        // bits for each of them.
+        let slack = LOG_Q - self.target_bits;
+        self.fold_rounds = self.fold_round_numerators.as_ref().map(|levels| {
+            levels
+                .iter()
+                .map(|rounds| {
+                    rounds
+                        .iter()
+                        .map(|&n| Grind::Bits(strict_grinding_bits((n.max(1) as f64).log2() - slack) as u32))
+                        .collect()
+                })
+                .collect()
+        });
     }
 
     /// The same ladder with every fold, claim-batching and
@@ -445,6 +493,12 @@ impl BeepConfig {
                 Grind::Bits(0)
             };
         }
+        out.fold_rounds = self.fold_round_numerators.as_ref().map(|levels| {
+            levels
+                .iter()
+                .map(|rounds| rounds.iter().map(|&n| Grind::exact_at(n, self.target_bits)).collect())
+                .collect()
+        });
         out
     }
 
@@ -462,7 +516,7 @@ impl BeepConfig {
         };
         let mut out = PowGrinds::default();
         for li in 0..levels {
-            out.fold.extend(std::iter::repeat_n(self.fold[li], folds(li)));
+            out.fold.extend((0..folds(li)).map(|round| self.fold_grind(li, round)));
             if config.ood_samples[li] > 0 {
                 out.claim.push(self.claim[li]);
             }
@@ -498,6 +552,8 @@ impl BeepConfig {
         out.prover.fold_grinding_bits = bits.to_vec();
         out.verifier.fold_grinding_bits = bits.to_vec();
         out.fold = bits.iter().map(|&b| Grind::Bits(b as u32)).collect();
+        out.fold_rounds = None;
+        out.fold_round_numerators = None;
         Ok(out)
     }
 
@@ -1005,6 +1061,8 @@ pub fn beep_ladder_at(
         fold: Vec::new(),
         claim: Vec::new(),
         consistency: Vec::new(),
+        fold_round_numerators: None,
+        fold_rounds: None,
         target_bits,
     };
     config.sync_bit_grinding();
@@ -1026,24 +1084,33 @@ pub const NO_POINTS_BITS: f64 = 1e9;
 /// queries' rule, the binding samples, the batching and the prover are those
 /// of the BEEP ladder; only the fold rounds differ).
 ///
-/// A fold challenge of a level is charged `(a + 2L) / |F|`:
+/// The fold challenge of round `j` (from 0) of a level with `2^k` rows is
+/// charged `(a_j + 2L) / |F|`:
 ///
-/// * `a / |F|` is Flock's bound for a fold under MCA at the agreement `√ρ +
-///   η` (its Appendix C.3: BCHKS25, Theorem 4.6, times the row union
-///   `2^(k−1)` of the worst round of a level with `2^k` rows;
-///   `paper_johnson_log_a` of flock-core, which Flock evaluates over a field
-///   of `2^256` elements and we evaluate over `F128`);
+/// * `a_j / |F|` is Flock's bound for a fold under MCA at the agreement `√ρ
+///   + η` (its Appendix C.3: BCHKS25, Theorem 4.6, for a fold of two words,
+///   times the row union of the round, `2^(k−1−j)`: the round folds that
+///   many pairs of rows). `paper_johnson_log_a` of flock-core is `log2 a_0`,
+///   the worst round, which Flock evaluates over a field of `2^256` elements
+///   and we evaluate over `F128`;
 /// * `2L / |F|` is the sumcheck round under the list, as in the BEEP ladder.
 ///
-/// The fold grinding of the level brings this below `2^-target_bits`. Over
-/// `F128` this is only practical below 128 bits: at 128 bits it would take
-/// `log2 a`, i.e. 37 to 45 bits per fold round on Flock's shapes. The ladder
-/// keeps the binding sample that Flock's ladders draw on the first
-/// commitment (there are no points of a first fold round to bind it).
+/// Each fold challenge is ground for the error of ITS round. Flock binds the
+/// grinding of a whole level to the worst round, which costs it nothing
+/// (over a field of `2^256` elements there is no fold grinding). Here the
+/// grinding is real, and with the worst round in every round a level with
+/// `2^6` rows would try three times the hashes that it needs. Over `F128`
+/// this is only practical below 128 bits: at 128 bits the first round would
+/// take `log2 a_0`, i.e. 37 to 45 bits on Flock's shapes. The ladder keeps
+/// the binding sample that Flock's ladders draw on the first commitment
+/// (there are no points of a first fold round to bind it).
 ///
-/// The analysis fields of the returned levels describe this ladder:
-/// `samples = 0`, `threshold = 0`, `sample_bits = `[`NO_POINTS_BITS`],
-/// `fold_bits = −log2((a + 2L) / |F|)` and `fold_numerator = ⌈a + 2L⌉`.
+/// The analysis fields of the returned levels describe the worst round of
+/// this ladder: `samples = 0`, `threshold = 0`, `sample_bits =
+/// `[`NO_POINTS_BITS`], `fold_bits = −log2((a_0 + 2L) / |F|)` and
+/// `fold_numerator = ⌈a_0 + 2L⌉`. The numerators of all the rounds are in
+/// [`BeepConfig::fold_round_numerators`], and their grinds in
+/// [`BeepConfig::fold_rounds`].
 pub fn mca_ladder_at(
     split: &ProverConfig,
     log_n: usize,
@@ -1053,11 +1120,19 @@ pub fn mca_ladder_at(
 ) -> Result<BeepConfig, String> {
     let mut config = beep_ladder_at(split, log_n, rates, etas, target_bits)?;
     let slack = LOG_Q - target_bits;
+    let mut round_numerators: Vec<Vec<u64>> = Vec::with_capacity(config.levels.len());
     for (li, lv) in config.levels.iter_mut().enumerate() {
         let rho = (-(lv.log_inv_rate as f64)).exp2();
         let list_real = 1.0 / (2.0 * lv.eta * rho.sqrt());
+        // `log2 a_0`: the bound of a fold of two words, with the row union
+        // `2^(folds − 1)` of the first round. Round `j` folds `2^(folds − 1 − j)`
+        // pairs of rows, so `a_j = a_0 / 2^j`.
+        assert!(lv.folds >= 1, "a level folds at least two rows");
         let log_a = super::paper_johnson_log_a(lv.log_inv_rate, lv.eta, lv.log_msg_cols, lv.folds);
-        let numerator = (log_a.exp2() + 2.0 * list_real).ceil();
+        let numerators: Vec<f64> = (0..lv.folds)
+            .map(|j| ((log_a - j as f64).exp2() + 2.0 * list_real).ceil())
+            .collect();
+        let numerator = numerators[0];
         if !(numerator.is_finite() && numerator < 2f64.powi(63)) {
             return Err(format!("level {li}: the MCA numerator 2^{log_a:.1} is too large"));
         }
@@ -1074,11 +1149,13 @@ pub fn mca_ladder_at(
         lv.fold_bits = LOG_Q - numerator.log2();
         lv.fold_grinding_bits = grind;
         lv.fold_numerator = numerator as u64;
+        round_numerators.push(numerators.iter().map(|&n| n as u64).collect());
     }
     config.samples = vec![0; config.levels.len()];
     let fold: Vec<usize> = config.levels.iter().map(|l| l.fold_grinding_bits).collect();
     config.prover.fold_grinding_bits = fold.clone();
     config.verifier.fold_grinding_bits = fold;
+    config.fold_round_numerators = Some(round_numerators);
     config.sync_bit_grinding();
     if config.min_bits() < target_bits {
         return Err(format!("the MCA ladder reaches only {:.2} bits", config.min_bits()));
@@ -2038,7 +2115,7 @@ fn rounds_fast<Ch: Challenger>(
     level: &mut Level,
     (k, c): (usize, usize),
     m: usize,
-    fold: Grind,
+    fold: &[Grind],
     proof: &mut BeepProof,
     challenger: &mut Ch,
     t: &mut [Duration; 8],
@@ -2089,7 +2166,7 @@ fn rounds_fast<Ch: Challenger>(
         t[T_FOLDS] += ti.elapsed();
 
         let ti = Instant::now();
-        let (nonce, ch) = grind_vec(challenger, fold, 1 + m);
+        let (nonce, ch) = grind_vec(challenger, fold[j], 1 + m);
         proof.fold_grinding_nonces.push(nonce);
         t[T_FOLD_POW] += ti.elapsed();
         let (rr, zetas) = (ch[0], &ch[1..]);
@@ -2150,7 +2227,7 @@ fn rounds_reference<Ch: Challenger>(
     level: &mut Level,
     (k, c): (usize, usize),
     m: usize,
-    fold: Grind,
+    fold: &[Grind],
     proof: &mut BeepProof,
     challenger: &mut Ch,
     t: &mut [Duration; 8],
@@ -2178,7 +2255,7 @@ fn rounds_reference<Ch: Challenger>(
         t[T_FOLDS] += ti.elapsed();
 
         let ti = Instant::now();
-        let (nonce, ch) = grind_vec(challenger, fold, 1 + m);
+        let (nonce, ch) = grind_vec(challenger, fold[j], 1 + m);
         proof.fold_grinding_nonces.push(nonce);
         t[T_FOLD_POW] += ti.elapsed();
         let (rr, zetas) = (ch[0], &ch[1..]);
@@ -2364,11 +2441,12 @@ fn prove_beep_impl<Ch: Challenger>(
         let (k, c) = shapes[li];
         assert_eq!(level.f.len(), 1usize << (k + c));
         let m = beep.samples[li];
-        let fold = beep.fold[li];
+        // One grind per fold round (the same one in every round of a BEEP level).
+        let fold: Vec<Grind> = (0..k).map(|j| beep.fold_grind(li, j)).collect();
         let level_rs = if fast {
-            rounds_fast(&mut level, (k, c), m, fold, &mut proof, challenger, &mut t)
+            rounds_fast(&mut level, (k, c), m, &fold, &mut proof, challenger, &mut t)
         } else {
-            rounds_reference(&mut level, (k, c), m, fold, &mut proof, challenger, &mut t)
+            rounds_reference(&mut level, (k, c), m, &fold, &mut proof, challenger, &mut t)
         };
         let prev: Commitment<'_> = if li == 0 {
             Commitment {
@@ -2614,7 +2692,7 @@ where
             let msg = *next!(proof.rounds, round_i);
             challenger.observe_f128_slice(&msg);
             let &nonce = proof.fold_grinding_nonces.get(round_i - 1)?;
-            let ch = verify_vec(challenger, beep.fold[li], nonce, 1 + m)?;
+            let ch = verify_vec(challenger, beep.fold_grind(li, j), nonce, 1 + m)?;
             let rr = ch[0];
             claim = round_value(claim, msg, rr);
             all_rs.push(rr);
@@ -3413,9 +3491,10 @@ mod tests {
     }
 
     /// [`mca_ladder_at`] at 100 bits: the ladder of [`beep_ladder_at`] with no
-    /// points, the same queries, a fold grinding that covers Flock's MCA
-    /// numerator over `F128` (and no more than one bit above it), both
-    /// provers write the same proof, and a proof verifies.
+    /// points, the same queries, a fold grinding per round that covers
+    /// Flock's MCA numerator of that round over `F128` (and, in bits, no more
+    /// than one bit above that of the first round), both provers write the
+    /// same proof, and a proof verifies.
     #[test]
     fn mca_ladder_at_100_bits() {
         let target_bits = 100.0;
@@ -3444,6 +3523,36 @@ mod tests {
             assert!(mca.levels[0].fold_grinding_bits > 0);
             let exact = mca.with_exact_grinding();
             assert!(exact.min_bits() >= target_bits, "{}", exact.min_bits());
+            // One numerator and one grind per fold round: round j folds
+            // 2^(folds − 1 − j) pairs of rows, so its numerator is that of
+            // round 0 with a_0 halved j times.
+            let numerators = mca.fold_round_numerators.as_ref().expect("numerators per round");
+            let rounds = exact.fold_rounds.as_ref().expect("grinds per round");
+            let in_bits = mca.fold_rounds.as_ref().expect("bits per round");
+            for (li, lv) in mca.levels.iter().enumerate() {
+                assert_eq!(numerators[li].len(), lv.folds);
+                assert_eq!(numerators[li][0], lv.fold_numerator);
+                assert_eq!(in_bits[li][0], super::Grind::Bits(lv.fold_grinding_bits as u32));
+                let log_a =
+                    crate::pcs::ligerito::paper_johnson_log_a(lv.log_inv_rate, lv.eta, lv.log_msg_cols, lv.folds);
+                for (j, (&num, &grind)) in numerators[li].iter().zip(&rounds[li]).enumerate() {
+                    assert!(num as f64 >= (log_a - j as f64).exp2(), "level {li}, round {j}");
+                    assert!(j == 0 || num < numerators[li][j - 1], "level {li}, round {j}");
+                    assert_eq!(grind, super::Grind::exact_at(num, target_bits));
+                    assert_eq!(exact.fold_grind(li, j), grind);
+                    assert_eq!(mca.fold_grind(li, j), in_bits[li][j]);
+                    // A search tries about numerator / 2^28 hashes, and the bits cover the numerator.
+                    assert!(grind.work() <= num as f64 / 28f64.exp2() * 1.000001 + 1.0, "level {li}, round {j}");
+                    assert!(in_bits[li][j].bits() > (num as f64).log2() - 28.0, "level {li}, round {j}");
+                }
+            }
+            let grinds = exact.pow_grinds();
+            assert_eq!(grinds.fold.len(), mca.levels.iter().map(|l| l.folds).sum::<usize>());
+            assert_eq!(grinds.fold[..mca.levels[0].folds], rounds[0][..]);
+            // The first level has 2^6 rows: its six searches try less than half
+            // the hashes of six searches of its first round.
+            let first: f64 = rounds[0].iter().map(|g| g.work()).sum();
+            assert!(first < 0.5 * 6.0 * rounds[0][0].work(), "{first}");
             let (fast, reference) = prove_both(&exact, log_n);
             assert_eq!(fast, reference, "2^{log_n} words, MCA ladder");
         }
@@ -3510,6 +3619,9 @@ mod tests {
         for (a, b) in nf.levels.iter().zip(&with.levels) {
             assert_eq!(a.fold_numerator, b.fold_numerator);
         }
+        assert!(nf.fold_round_numerators.is_some());
+        assert_eq!(nf.fold_round_numerators, with.fold_round_numerators);
+        assert_eq!(nf.fold_rounds, with.fold_rounds);
         assert_eq!(nf.levels[1..], with.levels[1..]);
         assert!(nf.min_bits() >= target_bits, "{}", nf.min_bits());
         let (with, nf) = (with.with_exact_grinding(), nf.with_exact_grinding());

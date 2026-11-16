@@ -34,6 +34,9 @@
 // [AI-revised (claude-fable-5-2), 2026-11-16, same request: the variant `mcanf-<eta>` (`variants=..,mcanf`), which
 // is `mca-<eta>` with no sample on the first commitment (`beep::mca_ladder_no_first_sample_at`), so that it
 // differs from `beep-<eta>` in its fold rounds only]
+// [AI-revised (claude-fable-5-2), 2026-11-16, after an independent check: `mca-<eta>` and `mcanf-<eta>` grind every
+// fold round for the error of that round (the library change); their configuration prints the numerators and the
+// grinds per round (`fold_round_numerators`, `grinds.fold_rounds`)]
 
 //! Three openings of the same Ligerito commitment, on the plain native path
 //! of `benches/affine_vs_f256.rs` (flock-prover): the same witness, dense eq
@@ -257,7 +260,14 @@ fn grinds_json(g: &PowGrinds) -> Value {
 /// The grinds of a BEEP ladder per level, for its configuration.
 fn beep_grinds_json(b: &BeepConfig) -> Value {
     let list = |v: &[Grind]| v.iter().map(|&x| grind_json(x)).collect::<Vec<_>>();
-    json!({ "fold": list(&b.fold), "claim": list(&b.claim), "consistency": list(&b.consistency) })
+    let mut out = json!({ "fold": list(&b.fold), "claim": list(&b.claim), "consistency": list(&b.consistency) });
+    // A ladder that grinds every fold round for the error of that round
+    // (`mca`, `mcanf`): the grinds per level and per round. `fold` then has
+    // the first, worst round of each level.
+    if let Some(rounds) = &b.fold_rounds {
+        out["fold_rounds"] = json!(rounds.iter().map(|r| list(r)).collect::<Vec<_>>());
+    }
+    out
 }
 
 fn config_json(c: &ProverConfig) -> Value {
@@ -554,6 +564,9 @@ fn main() {
         c["levels"] = serde_json::to_value(&b.levels).expect("levels");
         c["min_bits"] = json!(b.min_bits());
         c["grinds"] = beep_grinds_json(b);
+        if let Some(numerators) = &b.fold_round_numerators {
+            c["fold_round_numerators"] = json!(numerators);
+        }
         c
     };
     for (eta, b) in &beeps {

@@ -1,0 +1,14 @@
+name: m21-100
+attempt: 1
+env: 
+args: log_n=21 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 15:08:22
+power_before: AC Power
+load_before: 1.81 2.40 2.84
+swap_before: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)
+top_before: CPU usage: 15.76% user, 12.6% sys, 72.16% idle  PhysMem: 22G used (2107M wired, 5309M compressor), 975M unused. 
+end: 2026-11-16 15:08:26
+exit: 0
+power_after: AC Power
+load_after: 1.74 2.38 2.83
+swap_after: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)

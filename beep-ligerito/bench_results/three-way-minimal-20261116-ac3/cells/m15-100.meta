@@ -1,0 +1,14 @@
+name: m15-100
+attempt: 1
+env: 
+args: log_n=15 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 15:05:41
+power_before: AC Power
+load_before: 2.16 2.78 3.05
+swap_before: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)
+top_before: CPU usage: 13.65% user, 9.26% sys, 77.7% idle  PhysMem: 23G used (2106M wired, 5243M compressor), 504M unused. 
+end: 2026-11-16 15:05:42
+exit: 0
+power_after: AC Power
+load_after: 2.16 2.78 3.05
+swap_after: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)

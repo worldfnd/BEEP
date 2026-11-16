@@ -4,7 +4,7 @@
 <!-- [AI-revised (claude-fable-5-2), 2026-11-14: the fourth version (run 20261114g): nine files, with our prover for the affine ladder (affine_fast.rs) and the affine configuration with no sample on its first commitment; the patch is regenerated] -->
 <!-- [AI-revised (claude-fable-5-2), 2026-11-14: the fifth version (run 20261114h, at 100 bits): the round-by-round target of the BEEP and affine ladders is a parameter, and the bench takes `bits=100` with Flock's profiles `fast100` and `slim100`; the same nine files; the patch is regenerated] -->
 <!-- [AI-revised (claude-fable-5-2), 2026-11-15: the run at 100 bits is now 100bits-3; the patch was checked against the source of that run (identical), and the sentence on which run it belongs to says so] -->
-<!-- [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request (a minimal Experiments section): the sixth version (run minimal-20261116-ac2): `mca_ladder_at` and `mca_ladder_no_first_sample_at` in beep.rs, the variants `mca` and `mcanf` of the bench; the same nine files; the two sections of the patch for these files are regenerated; please review] -->
+<!-- [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request (a minimal Experiments section): the sixth version (run minimal-20261116-ac3): `mca_ladder_at` and `mca_ladder_no_first_sample_at` in beep.rs, with a fold grind per round for these two ladders (`BeepConfig::fold_round_numerators`, `fold_rounds`, `fold_grind`), and the variants `mca` and `mcanf` of the bench; the same nine files; the two sections of the patch for these files are regenerated; please review] -->
 
 # The Flock copy in `flock/`
 
@@ -25,7 +25,7 @@ What is copied: `Cargo.toml`, `Cargo.lock`, `.cargo/config.toml`, the crates `fl
 November 14, 2026 for the code of the runs at 100 bits (for 128 bits it builds the same ladders and writes the
 same proofs as the code of the run 20261114g). On November 16, 2026 its sections for `beep.rs` and for the bench
 (two files that the patch adds whole) were written again from the tree, for the code of the run
-minimal-20261116-ac2; the other seven sections are those of November 14. We had no copy of the pinned commit at
+minimal-20261116-ac3; the other seven sections are those of November 14. We had no copy of the pinned commit at
 hand that day, so the check was this one: the patch, applied in reverse to the nine files of the tree and then
 forward again, gives the files of the tree. Up to those two files it is the source of the run 100bits-3, whose
 `binaries.txt` has the hashes of `beep.rs`, of the bench and of `affine_fast.rs`. The first run at 100 bits, 20261114h, was built
@@ -35,7 +35,7 @@ files:
 
 | file | change |
 |---|---|
-| `crates/flock-core/src/pcs/ligerito/beep.rs` | new: the BEEP ladder (parameters, prover, verifier, 15 tests), for a round-by-round target of 128 bits (`beep_ladder`) or another one (`beep_ladder_at`: 100 bits on Flock's profiles `fast100` and `slim100`); since November 16, 2026, `mca_ladder_at` and `mca_ladder_no_first_sample_at`, the same ladder with no out of domain points in its fold rounds and with its fold challenges ground for Flock's MCA bound over GF(2^128), with and without the sample on the first commitment (the baseline "Ligerito over GF(2^128)" of the minimal run, 2 of the 15 tests); its proofs of work in whole bits or with a threshold (`Grind`), through the searches that Flock's transcript already has; `PowGrinds`, the proof-of-work searches of a proof of each of the three ladders; the prover with one pass per fold round and its NEON kernels, and the direct prover that it is tested against; `affine_ladder_at`, which builds the configuration of Flock's affine ladder at a slack per level (Flock's `affine_ladder` with its constant slack 0.02 replaced), and `affine_ladder_target`, the same for another target than 128 bits; the byte counts of a proof per part and per level |
+| `crates/flock-core/src/pcs/ligerito/beep.rs` | new: the BEEP ladder (parameters, prover, verifier, 15 tests), for a round-by-round target of 128 bits (`beep_ladder`) or another one (`beep_ladder_at`: 100 bits on Flock's profiles `fast100` and `slim100`); since November 16, 2026, `mca_ladder_at` and `mca_ladder_no_first_sample_at`, the same ladder with no out of domain points in its fold rounds and with its fold challenges ground for Flock's MCA bound over GF(2^128), with and without the sample on the first commitment (the baseline "Ligerito over GF(2^128)" of the minimal run, 2 of the 15 tests), each fold round of these two ladders being ground for the error of that round (`BeepConfig::fold_round_numerators`, `fold_rounds`, `fold_grind`; the BEEP ladders keep one grind per level and write the same proofs as before); its proofs of work in whole bits or with a threshold (`Grind`), through the searches that Flock's transcript already has; `PowGrinds`, the proof-of-work searches of a proof of each of the three ladders; the prover with one pass per fold round and its NEON kernels, and the direct prover that it is tested against; `affine_ladder_at`, which builds the configuration of Flock's affine ladder at a slack per level (Flock's `affine_ladder` with its constant slack 0.02 replaced), and `affine_ladder_target`, the same for another target than 128 bits; the byte counts of a proof per part and per level |
 | `crates/flock-core/src/pcs/ligerito/affine_fast.rs` | new: `prove_affine_fast`, a prover for Flock's affine ladder on a dense table with one pass per fold round (NEON kernels, buffers from Flock's pool), which writes the same proof as Flock's `prove_affine`, byte for byte; `without_first_sample`, which turns an affine configuration into the one with no out of domain sample on its first commitment and a given fold grinding at its first level; `will_overwrite`, a cache hint that `beep.rs` also uses; 3 tests |
 | `crates/flock-core/benches/ligerito_three_way.rs` | new: the bench of the comparison (with the variants `mca` and `mcanf` since November 16, 2026) |
 | `crates/flock-core/benches/support/run_counters.rs` | new: what a prover run used besides its wall time (`proc_pid_rusage` and `getrusage`; macOS only, zeros elsewhere) |
@@ -80,7 +80,8 @@ The baseline "Ligerito over GF(2^128)" of the minimal run of November 16, 2026 (
 `mca_ladder_no_first_sample_at`) is ours as well. Flock's Ligerito samples its fold challenges in GF(2^256) in
 every profile, and Flock evaluates its bound for a fold under mutual correlated agreement (`paper_johnson_log_a`)
 over a field of 2^256 elements. The baseline keeps the scalar fold and every challenge in GF(2^128), evaluates that
-bound over GF(2^128), and grinds its fold challenges for it. See "The minimal run" in `README.md`.
+bound over GF(2^128), and grinds each fold challenge for the bound of its round (Flock binds the grinding of a
+level to its first round, which over a field of 2^256 elements costs nothing). See "The minimal run" in `README.md`.
 
 The affine ladders at a smaller slack are ours as well (`affine_certificates/*_least_slack.txt`). Flock's script
 stops its search at multiplicity 40 and degree 20000, which is too early for a small slack. `scripts/beep_params.py`

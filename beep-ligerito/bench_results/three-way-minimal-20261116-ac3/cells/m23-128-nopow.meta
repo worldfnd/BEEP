@@ -1,0 +1,14 @@
+name: m23-128-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=23 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=split,beep reps=15
+start: 2026-11-16 15:24:11
+power_before: AC Power
+load_before: 2.88 2.76 2.74
+swap_before: total = 2048.00M used = 735.00M free = 1313.00M (encrypted)
+top_before: CPU usage: 12.98% user, 13.66% sys, 73.34% idle  PhysMem: 23G used (2942M wired, 5342M compressor), 677M unused. 
+end: 2026-11-16 15:24:15
+exit: 0
+power_after: AC Power
+load_after: 3.93 2.98 2.82
+swap_after: total = 2048.00M used = 735.00M free = 1313.00M (encrypted)

@@ -52,8 +52,9 @@ Experiments" (`../paper/main.typ`, label `s:experiments`), and asked for three t
 BEEP-Ligerito "for n=2^15 to 2^23, at 100 bits of security over a field of size GF(2^128)" at rate 1/2, "the same
 as above, at 128 bits of security", and a table with the error bounds of the first two rounds of the BEEP IOR and
 the number of queries, next to the fold round of Ligerito. That section reads `../paper/tables/minimal.json`,
-which `../paper/scripts/minimal_tables.py` writes from the run `bench_results/three-way-minimal-20261116-ac2` (its
-cells: `scripts/cells_minimal.txt`). The paper quotes nothing else of this file any more: the runs of November 13
+which `../paper/scripts/minimal_tables.py` writes from two runs of the cells of `scripts/cells_minimal.txt`:
+`bench_results/three-way-minimal-20261116-ac3` for the table at 100 bits and
+`bench_results/three-way-minimal-20261116-ac2` for the table at 128 bits (see "Which run" below). The paper quotes nothing else of this file any more: the runs of November 13
 to 15, the affine variant and the other rates belonged to the earlier section.
 
 **The instances.** Messages of 2^15 to 2^23 elements from GF(2^128) (we read the `n` of the request as this
@@ -72,18 +73,20 @@ number of rows per level: 2^6 at the first level (2^4 for 2^21 elements, 2^5 for
   their codewords have the same length (`minimal_tables.py` checks it). `beep-0.02` is the same at Flock's
   slack; it is in the run and not in the paper's tables.
 - `mcanf-0.02`, "Ligerito over GF(2^128)" (new: `beep::mca_ladder_no_first_sample_at`, bench variant `mcanf`,
-  slack `mca_eta=`): the ladder of `beep-0.02` with **no points in its fold rounds**, and with each fold
-  challenge charged `(a + 2L)/|F|` and ground for it with a threshold. Here `a` is Flock's numerator for a fold
-  under mutual correlated agreement (`paper_johnson_log_a` of flock-core: the bound of BCHKS25, Theorem 4.6,
-  times the union over the pairs of rows, which Flock evaluates over a field of 2^256 elements and we evaluate
-  over GF(2^128)), and `2L/|F|` is the sumcheck round under the list, as in `kappa_2` of the paper. It runs
-  the prover and the verifier of `beep.rs` with zero points per round. So it differs from BEEP-Ligerito in its
-  fold rounds only: `minimal_tables.py` checks that it has the ladder, the queries and the samples on the
-  commitments of `beep-0.02`.
+  slack `mca_eta=`): the ladder of `beep-0.02` with **no points in its fold rounds**, and with the fold
+  challenge of round `j` (from 0) of a level charged `(a_j + 2L)/|F|` and ground for it with a threshold. Here
+  `a_0` is Flock's numerator for a fold under mutual correlated agreement (`paper_johnson_log_a` of flock-core:
+  the bound of BCHKS25, Theorem 4.6, times the union over the pairs of rows that the first round folds, which
+  Flock evaluates over a field of 2^256 elements and we evaluate over GF(2^128)), `a_j = a_0 / 2^j` since round
+  `j` folds half the pairs of round `j - 1`, and `2L/|F|` is the sumcheck round under the list, as in `kappa_2`
+  of the paper. It runs the prover and the verifier of `beep.rs` with zero points per round. So it differs from
+  BEEP-Ligerito in its fold rounds only: `minimal_tables.py` checks that it has the ladder, the queries and the
+  samples on the commitments of `beep-0.02`.
 - `mca-0.02` (`beep::mca_ladder_at`): the same with the out of domain sample that Flock's ladders draw on the
-  first commitment. It was the baseline of the first two runs of the day. We replaced it in the paper's table
-  because BEEP-Ligerito has no such sample, so that comparison mixed two changes (the sample costs the prover an
-  evaluation of the whole message). It stays in the run, and the list below says what the sample costs.
+  first commitment (and the same grinding per round). It was the baseline of the first two runs of the day. We
+  replaced it in the paper's table because BEEP-Ligerito has no such sample, so that comparison mixed two
+  changes (the sample costs the prover an evaluation of the whole message). It stays in the run, and the list
+  below says what the sample costs.
 
 **The baseline and its accounting are ours.** Flock ships no Ligerito with every challenge in GF(2^128) other
 than its affine variant. With no sample on the first commitment, the list of the first code is carried through
@@ -92,22 +95,42 @@ the paper's `t:beep_soundness` follows, i.e. its `kappa_2` with the MCA numerato
 `delta n + 1`, and with no round of samples. We did not write this proof out. Flock's own accounting binds the
 first commitment with a sample instead (`mca-0.02`). The slack of the baseline is Flock's 0.02.
 
+**Its grinding is per round, which is not Flock's convention.** Flock binds the fold grinding of a whole level to
+its first round, the one with the largest row union (`paper_johnson_log_a`: "We bind the per-level grinding to
+that worst round"). This costs Flock nothing: over a field of 2^256 elements its Ligerito has no fold grinding.
+Over GF(2^128) the grinding is real, and Flock's own lemma charges round `i` of a level with `2^l` rows only
+`2^(l-i)` times the bound of one fold. The run `-ac2` used Flock's convention for the two baselines, which
+made them try about three times the hashes that their accounting needs, in favour of BEEP-Ligerito. An
+independent check of the paper's section found it, and the run `-ac3` grinds each round for its own error
+(`BeepConfig::fold_round_numerators`, `fold_rounds`). BEEP-Ligerito has one numerator per level (`t + 3L`, no
+row union), so nothing changed for it.
+
 **How it was measured.** As the other runs: one process per instance runs every variant on the same commitment,
 a second one runs them with `FLOCK_NO_GRIND=1`, and "prove" is the time without proofs of work plus the proofs
 of work at their expected cost. The machine was in use, so the driver waited for the idle condition of the gate
 before every cell (`CAMPAIGN_IDLE_EACH=1 CAMPAIGN_IDLE_HOLD=20 CAMPAIGN_COOLDOWN=20`), and every variant has
 15 timed repetitions (`CAMPAIGN_REPS=15`; the earlier runs of this folder have 9).
 
-<!-- minimal-run:begin (written by paper/scripts/minimal_tables.py --write-readme from the run three-way-minimal-20261116-ac2; do not edit by hand) -->
+<!-- minimal-run:begin (written by paper/scripts/minimal_tables.py --write-readme from the runs three-way-minimal-20261116-ac3 and three-way-minimal-20261116-ac2; do not edit by hand) -->
 
-**Machine and state.** Apple M5 (4 performance and 6 efficiency cores), 24 GB, 10 threads, on AC power. 36 processes, 13:55 to 14:09 on 2026-11-16, through the gate, with the idle check before every cell; 15 timed repetitions per variant after a warm-up, medians. Right before a process: idle CPU at least 69 %, 2.6 to 5.1 GB of unused memory, load average 1.8 to 4.0. Processes with part of their memory compressed: 0. Rows of the two measured tables that the script reports as disturbed: 4 (over the proofs of 2 ms or more, the slowest of the 15 repetitions without proofs of work takes at most 1.53 times their median, and the time measured with proofs of work is within 19 % of "prove").
+**Which run.** The table at 100 bits is read from the run `three-way-minimal-20261116-ac3` (15:05 to 15:13), and the table at 128 bits from the run `three-way-minimal-20261116-ac2` (14:02 to 14:09), both on 2026-11-16. The cells at 128 bits do not involve the baseline, whose grinding is the one thing that changed between the two runs, and their rows have the same configurations and proof sizes in both (the script checks it). They are read from the earlier run because the machine ran out of memory while the later one measured them: for 2^23 elements the commitment took 53.7 ms (`m23-128-nopow`) against 41.0 to 42.6 ms in the three other processes of that size (45.8 ms (`m23-100-nopow`) against 42.4 to 43.6 ms in the run `-ac2`).
+
+**Machine and state.** Apple M5 (4 performance and 6 efficiency cores), 24 GB, 10 threads, on AC power, through the gate, with the idle check before every cell; 15 timed repetitions per variant after a warm-up, medians. Right before a process of the cells that the tables use: idle CPU at least 59 % and 0.2 to 4.3 GB of unused memory (100 bits), 72 % and 4.1 to 5.1 GB (128 bits); load average 1.6 to 4.0. Processes with part of their memory compressed: 2. Rows of the two measured tables that the script reports as disturbed: 4 (over the proofs of 2 ms or more, the slowest of the 15 repetitions without proofs of work takes at most 3.89 times their median, and the time measured with proofs of work is within 19 % of "prove"). The warnings of the script:
+
+- processes with part of their memory compressed or swapped: ['m23-100', 'm23-100-nopow']
+- disturbed row: m21-128 split (slowest repetition 1.15 times the median; measured with proofs of work 18 % from "prove")
+- disturbed row: m21-128 beep-0.001 (slowest repetition 1.23 times the median; measured with proofs of work 10 % from "prove")
+- disturbed row: m22-100 mcanf-0.02 (slowest repetition 1.63 times the median; measured with proofs of work 2 % from "prove")
+- disturbed row: m23-100 split (slowest repetition 3.89 times the median; measured with proofs of work 0 % from "prove")
 
 **Exact recheck.** 88 distinct levels of BEEP-Ligerito and 31 of the two baselines, in integer arithmetic: no failure.
 
-**The two earlier runs of the day** have the same cells without `mcanf`, on the binary before that variant, and are not used. The rows of the tables that they share with this run have the same proof sizes and configurations.
+**Second measurements.** The four runs of the day have the rows of Ligerito (Flock) and of BEEP-Ligerito with the same proof sizes and configurations. "prove" of a row of the tables is within 10 % of the same row in the other runs on AC power (proofs of 2 ms or more; the commitment moves more: the two tables print it from different processes). The baselines differ between the runs (see "The variants"), so their rows have no second measurement with proofs of work.
 
-- `bench_results/three-way-minimal-20261116-ac` (13:37 to 13:52, 36 processes, 0 of them on battery power; 3.0 to 7.7 GB over all its processes). The slowest repetition of a row is at most 2.4 times the median of the row (`m22-128`, `split`). "prove" in the run of record is 0.96 to 1.06 times (100 bits) and 0.93 to 1.06 times (128 bits) that of this run, over the 31 shared rows with proofs of 2 ms or more.
-- `bench_results/three-way-minimal-20261116-battery` (12:29 to 13:35, 36 processes, 10 of them on battery power, with 0.1 to 2.5 GB of unused memory before them; 0.1 to 8.5 GB over all its processes). The slowest repetition of a row is at most 5.6 times the median of the row (`m23-100`, `split`). "prove" in the run of record is 0.78 to 1.02 times (100 bits) and 0.79 to 1.07 times (128 bits) that of this run, over the 31 shared rows with proofs of 2 ms or more.
+- `bench_results/three-way-minimal-20261116-ac3` (15:05 to 15:24, 36 processes, 0 of them on battery power; 0.2 to 4.4 GB over all its processes): the run of the table at 100 bits. The slowest repetition of a row is at most 3.9 times the median of the row (`m23-100`, `split`). "prove" in the tables is 0.92 to 1.06 times (128 bits) that of this run, over 18 rows with proofs of 2 ms or more.
+- `bench_results/three-way-minimal-20261116-ac2` (13:55 to 14:09, 36 processes, 0 of them on battery power; 2.6 to 5.1 GB over all its processes): the run of the table at 128 bits; its baselines `mca` and `mcanf` ground every fold round of a level for its first round. The slowest repetition of a row is at most 1.6 times the median of the row (`m21-100`, `mcanf-0.02`). "prove" in the tables is 0.94 to 1.05 times (100 bits) that of this run, over 13 rows with proofs of 2 ms or more.
+- `bench_results/three-way-minimal-20261116-ac` (13:37 to 13:52, 36 processes, 0 of them on battery power; 3.0 to 7.7 GB over all its processes): no `mcanf`; `mca` ground every fold round of a level for its first round. The slowest repetition of a row is at most 2.4 times the median of the row (`m22-128`, `split`). "prove" in the tables is 0.90 to 1.05 times (100 bits) and 0.93 to 1.06 times (128 bits) that of this run, over 31 rows with proofs of 2 ms or more.
+- `bench_results/three-way-minimal-20261116-battery` (12:29 to 13:35, 36 processes, 10 of them on battery power, with 0.1 to 2.5 GB of unused memory before them; 0.1 to 8.5 GB over all its processes): no `mcanf`; `mca` as in the run `-ac`. The slowest repetition of a row is at most 5.6 times the median of the row (`m23-100`, `split`). "prove" in the tables is 0.78 to 1.03 times (100 bits) and 0.79 to 1.07 times (128 bits) that of this run, over 31 rows with proofs of 2 ms or more.
 
 Bits of security of the first fold round before grinding, over a field of 2^128 elements, for a target of 128 bits (the paper's first table). "Round 1" and "round 2" are the errors of the samples and of the fold challenge of the BEEP IOR; the queries have 16 bits of grinding.
 
@@ -127,15 +150,15 @@ Bits of security of the first fold round before grinding, over a field of 2^128 
 
 | size | commit (ms) | Flock proof (KiB) | Flock prove (ms) | Flock verify (ms) | GF(2^128) proof (KiB) | GF(2^128) prove (ms) | GF(2^128) verify (ms) | BEEP proof (KiB) | BEEP prove (ms) | BEEP verify (ms) |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2^15 | 0.45 | 296.9 | 1.45 | 0.58 | 267.6 | 0.57 | 0.40 | 249.0 | 0.67 | 0.39 |
-| 2^16 | 0.95 | 311.7 | 1.76 | 0.66 | 277.1 | 0.77 | 0.45 | 257.9 | 0.91 | 0.44 |
-| 2^17 | 1.00 | 324.5 | 2.45 | 0.82 | 301.3 | 1.36 | 0.49 | 281.2 | 1.52 | 0.49 |
-| 2^18 | 1.64 | 354.2 | 4.02 | 0.82 | 311.8 | 2.53 | 0.56 | 291.0 | 2.65 | 0.53 |
-| 2^19 | 2.50 | 368.4 | 5.39 | 0.91 | 322.4 | 3.58 | 0.60 | 300.9 | 3.31 | 0.61 |
-| 2^20 | 5.53 | 382.9 | 8.76 | 1.10 | 333.3 | 5.16 | 0.67 | 311.0 | 5.63 | 0.66 |
-| 2^21 | 12.5 | 280.3 | 20.0 | 1.19 | 216.5 | 12.1 | 0.63 | 204.1 | 13.2 | 0.64 |
-| 2^22 | 24.3 | 334.8 | 26.2 | 1.21 | 271.1 | 15.1 | 0.68 | 254.5 | 16.1 | 0.68 |
-| 2^23 | 44.6 | 443.9 | 39.9 | 1.35 | 380.1 | 22.8 | 0.78 | 355.2 | 24.3 | 0.78 |
+| 2^15 | 0.46 | 296.9 | 1.40 | 0.57 | 267.6 | 0.48 | 0.40 | 249.0 | 0.63 | 0.39 |
+| 2^16 | 0.95 | 311.7 | 1.82 | 0.67 | 277.1 | 0.69 | 0.44 | 257.9 | 0.94 | 0.43 |
+| 2^17 | 0.90 | 324.5 | 2.56 | 0.85 | 301.3 | 1.19 | 0.51 | 281.2 | 1.55 | 0.49 |
+| 2^18 | 1.51 | 354.2 | 4.13 | 0.79 | 311.8 | 2.19 | 0.54 | 291.0 | 2.67 | 0.53 |
+| 2^19 | 2.45 | 368.4 | 5.55 | 0.93 | 322.4 | 2.99 | 0.62 | 300.9 | 3.35 | 0.61 |
+| 2^20 | 4.97 | 382.9 | 9.02 | 1.12 | 333.3 | 4.95 | 0.68 | 311.0 | 5.54 | 0.68 |
+| 2^21 | 12.7 | 280.3 | 18.8 | 1.24 | 216.5 | 11.3 | 0.67 | 204.1 | 13.0 | 0.66 |
+| 2^22 | 22.8 | 334.8 | 25.3 | 1.21 | 271.1 | 14.0 | 0.67 | 254.5 | 16.2 | 0.67 |
+| 2^23 | 41.8 | 443.9 | 39.9 | 1.33 | 380.1 | 20.2 | 0.77 | 355.2 | 24.1 | 0.77 |
 
 128 bits (bottom). "BEEP" is `beep-0.001`, "Flock" is `split` on the profile `fast`.
 
@@ -153,11 +176,11 @@ Bits of security of the first fold round before grinding, over a field of 2^128 
 
 In short (every range is over the nine sizes):
 
-- **100 bits, BEEP-Ligerito against Ligerito over GF(2^128).** Proofs 5 to 7 % smaller. Prover 0.92 to 1.19 times as long (1.19 to 1.46 times without proofs of work, and 0.95 to 1.10 times when the commitment is counted). Verifier 0.95 to 1.02 times as long. BEEP-Ligerito has 4 samples per fold round and no proof of work on a fold challenge; the baseline needs 9 to 17 bits per fold challenge of its first level (0.07 to 4.49 ms of proofs of work per proof). At 128 bits it would need 37 to 45 bits per fold challenge of the first level, and at the slack 0.001 its fold has 61.7 to 69.7 bits before grinding (the first table), which is why it runs at 100 bits and at the slack 0.02 only.
-- **The same slack on both sides** (`beep-0.02` against the baseline): the proofs of BEEP-Ligerito are 1.2 to 2.3 KiB larger (the answers to the samples), and its prover takes 0.95 to 1.20 times as long (1.23 to 1.48 times without proofs of work: the samples cost 0.17 to 5.44 ms).
-- **Flock's sample on the first commitment** (`mca-0.02` against `mcanf-0.02`): with it the baseline takes 1.06 to 1.25 times as long and its proof is 24 bytes longer. Against that baseline BEEP-Ligerito takes 0.85 to 1.10 times as long.
-- **100 bits, against Ligerito (Flock).** Proofs 13 to 28 % smaller, prover 0.45 to 0.66 times as long, verifier 0.54 to 0.69 times. Not like for like: other levels, another prover, fold challenges in GF(2^256).
-- **128 bits, BEEP-Ligerito against Ligerito (Flock).** Proofs 13 to 28 % smaller. Prover 0.78 to 1.26 times as long (0.54 to 0.73 times without proofs of work), with 24 to 68 % of its time in proofs of work (about 12 to 17 bits per fold challenge, 4 or 5 samples per fold round). Verifier 0.57 to 0.71 times as long. Not like for like either.
+- **100 bits, BEEP-Ligerito against Ligerito over GF(2^128).** Proofs 5 to 7 % smaller. Prover 1.11 to 1.36 times as long (1.22 to 1.47 times without proofs of work, and 1.05 to 1.18 times when the commitment is counted). Verifier 0.97 to 1.00 times as long. With the proofs of work as they happened (the medians of the processes that did them) the prover ratio is 1.04 to 1.34. BEEP-Ligerito is slower at 9 of the 9 sizes. It has 4 samples per fold round and no proof of work on a fold challenge; the baseline needs 9 to 17 bits in the first round of its first level and one bit less in each later round (0.03 to 1.79 ms of proofs of work per proof, 6 to 12 % of its time for the fold challenges). This schedule per round tries 32 to 47 % of the hashes of Flock's convention, which grinds every round of a level for its first round (the run `-ac2`). At 128 bits the baseline would need 37 to 45 bits in the first round of the first level, and at the slack 0.001 its fold has 61.7 to 69.7 bits before grinding (the first table), which is why it runs at 100 bits and at the slack 0.02 only.
+- **The same slack on both sides** (`beep-0.02` against the baseline): the proofs of BEEP-Ligerito are 1.2 to 2.3 KiB larger (the answers to the samples), and its prover takes 1.14 to 1.33 times as long (1.23 to 1.42 times without proofs of work: the samples cost 0.18 to 6.36 ms).
+- **Flock's sample on the first commitment** (`mca-0.02` against `mcanf-0.02`): with it the baseline takes 1.09 to 1.23 times as long and its proof is 24 bytes longer. Against that baseline BEEP-Ligerito takes 0.96 to 1.23 times as long.
+- **100 bits, against Ligerito (Flock).** Proofs 13 to 28 % smaller, prover 0.44 to 0.70 times as long, verifier 0.53 to 0.68 times. Not like for like: other levels, another prover, fold challenges in GF(2^256).
+- **128 bits, BEEP-Ligerito against Ligerito (Flock).** Proofs 13 to 28 % smaller. Prover 0.78 to 1.26 times as long (0.54 to 0.73 times without proofs of work), with 24 to 68 % of its time in proofs of work: 16 to 31 % for the fold challenges (searches of 2^x expected hashes with x from 11.2 to 16.5, 4 or 5 samples per fold round) and 4 to 30 % for the 16 bits of the queries, which Flock grinds as well (proofs of work are 4 to 45 % of its time). Flock's ladder has one more level at 8 of the 9 sizes. With the proofs of work as they happened the prover ratio is 0.75 to 1.45: the model of the proofs of work understates BEEP-Ligerito at 2^17 elements, where the measured ratio is the largest. Verifier 0.57 to 0.71 times as long. Not like for like either.
 
 <!-- minimal-run:end -->
 
@@ -198,8 +221,9 @@ starts short of memory gives disturbed rows for the largest instances (the first
 | `scripts/readme_tables.py` | the tables of this README, from the tables that the paper reads |
 | `affine_certificates/` | the affine ladders that we run: at the slack 0.02 as inputs and outputs of Flock's `affine_fold_params.py` (`*.toml`, `*.txt`), at their least slack as outputs of `beep_params.py --affine-ladder` (`*_least_slack.txt`), the fold grinding of the accounting experiment (`*_beep_affine_charge.txt`), and the cache of the searches (`search_cache.json`) |
 | `scripts/cells_minimal.txt` | the 36 cells of the minimal run: 2^15 to 2^23 elements at 100 and at 128 bits, with and without proofs of work |
-| `bench_results/three-way-minimal-20261116-ac2/` | **the run that the paper quotes now** (November 16, 2026): see "The minimal run" |
-| `bench_results/three-way-minimal-20261116-ac/`, `three-way-minimal-20261116-battery/` | two earlier runs of the same cells on that day, without the variant `mcanf`: not used, see "The minimal run" |
+| `bench_results/three-way-minimal-20261116-ac3/`, `three-way-minimal-20261116-ac2/` | **the runs that the paper quotes now** (November 16, 2026): the first for its table at 100 bits, the second for its table at 128 bits; see "The minimal run" |
+| `bench_results/three-way-minimal-20261116-ac/`, `three-way-minimal-20261116-battery/` | two earlier runs of the same cells on that day: second measurements, see "The minimal run" |
+| `bench_results/ab-original-binary-20261116/` | the bench binary of the original folder (`random-domain-ligerito/7-beep-ligerito`, November 14) against today's, side by side: the same proofs and the same times (`INDEX.md`) |
 | `../paper/scripts/minimal_tables.py`, `../paper/tables/minimal.json` | the tables and the numbers of the paper's section, with their checks; `--write-readme` writes the generated block of "The minimal run" |
 | `bench_results/three-way-20261114g/` | **the run that the paper quoted until November 16** (November 14, 2026, 03:07 to 04:06): `machine.txt`, `binaries.txt`, `cells.tsv`, `cells/*.{out,err,meta}`, `results.json`; the `*.gate.log` files are the gate's logs |
 | `bench_results/three-way-20261114g-add2/`, `three-way-20261114g-add1/`, `three-way-check-20261114g-add1/` | one more instance for that run, 2^15 words at rate 1/8, measured on its own with the same binary (November 14, 09:09 to 09:20). The tables use `-add2`, which waits for an idle machine before each cell; the other two are earlier measurements of the same cells |

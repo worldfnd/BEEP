@@ -1,0 +1,14 @@
+name: m20-100-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 15:11:54
+power_before: AC Power
+load_before: 2.68 2.53 2.80
+swap_before: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)
+top_before: CPU usage: 6.86% user, 11.76% sys, 81.37% idle  PhysMem: 20G used (2100M wired, 6395M compressor), 3702M unused. 
+end: 2026-11-16 15:11:56
+exit: 0
+power_after: AC Power
+load_after: 2.68 2.53 2.80
+swap_after: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)

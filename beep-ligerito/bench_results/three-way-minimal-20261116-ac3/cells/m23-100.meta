@@ -1,0 +1,14 @@
+name: m23-100
+attempt: 1
+env: 
+args: log_n=23 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 variants=split,mca,mcanf,beep reps=15
+start: 2026-11-16 15:09:14
+power_before: AC Power
+load_before: 2.28 2.42 2.82
+swap_before: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)
+top_before: CPU usage: 10.29% user, 10.78% sys, 78.92% idle  PhysMem: 21G used (2104M wired, 5696M compressor), 2390M unused. 
+end: 2026-11-16 15:09:20
+exit: 0
+power_after: AC Power
+load_after: 3.22 2.61 2.89
+swap_after: total = 2048.00M used = 743.00M free = 1305.00M (encrypted)

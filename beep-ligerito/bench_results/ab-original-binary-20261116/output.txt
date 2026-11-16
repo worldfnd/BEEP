@@ -1,0 +1,36 @@
+2026-11-16 16:09:20
+Now drawing from 'Battery Power'
+CPU usage: 11.95% user, 11.95% sys, 76.9% idle 
+PhysMem: 19G used (3067M wired, 5836M compressor), 4474M unused.
+80c4da9a5f673136  /Users/albertgarretafontelles/random-domain-ligerito/7-beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987
+3f285843e5fcbb34  target/release/deps/ligerito_three_way-e93fe6fa1d98f987
+2^20, 128 bits
+  beep-0.001   proof  355288 /  355288 bytes   old    6.22 ms   new    5.82 ms   new/old 0.936   (min old 5.71, new 5.44; 27 runs each)
+  beep-0.02    proof  382424 /  382424 bytes   old    5.76 ms   new    5.44 ms   new/old 0.944   (min old 5.38, new 5.13; 27 runs each)
+  control-0.001 proof  353048 /  353048 bytes   old    4.52 ms   new    4.33 ms   new/old 0.960   (min old 4.22, new 4.04; 27 runs each)
+  control-0.02 proof  380632 /  380632 bytes   old    4.62 ms   new    4.25 ms   new/old 0.919   (min old 4.24, new 3.98; 27 runs each)
+  split        proof  437640 /  437640 bytes   old    9.72 ms   new    8.87 ms   new/old 0.913   (min old 7.94, new 7.78; 27 runs each)
+2^22, 128 bits
+  beep-0.001   proof  290064 /  290064 bytes   old   17.35 ms   new   17.24 ms   new/old 0.994   (min old 15.87, new 15.43; 27 runs each)
+  beep-0.02    proof  310992 /  310992 bytes   old   17.39 ms   new   17.24 ms   new/old 0.991   (min old 16.09, new 15.79; 27 runs each)
+  control-0.001 proof  287504 /  287504 bytes   old   14.08 ms   new   14.04 ms   new/old 0.997   (min old 12.77, new 12.87; 27 runs each)
+  control-0.02 proof  308816 /  308816 bytes   old   14.15 ms   new   13.91 ms   new/old 0.983   (min old 12.58, new 12.52; 27 runs each)
+  split        proof  382352 /  382352 bytes   old   28.04 ms   new   28.82 ms   new/old 1.028   (min old 24.90, new 24.98; 27 runs each)
+2^23, 128 bits
+  beep-0.001   proof  405432 /  405432 bytes   old   24.73 ms   new   24.17 ms   new/old 0.977   (min old 22.60, new 22.38; 27 runs each)
+  beep-0.02    proof  436088 /  436088 bytes   old   24.58 ms   new   24.63 ms   new/old 1.002   (min old 22.51, new 22.64; 27 runs each)
+  control-0.001 proof  402744 /  402744 bytes   old   18.87 ms   new   19.00 ms   new/old 1.007   (min old 17.46, new 17.74; 27 runs each)
+  control-0.02 proof  433784 /  433784 bytes   old   19.02 ms   new   18.75 ms   new/old 0.986   (min old 17.80, new 17.51; 27 runs each)
+  split        proof  507344 /  507344 bytes   old   41.49 ms   new   42.33 ms   new/old 1.020   (min old 37.45, new 37.32; 27 runs each)
+2^22, 100 bits
+  beep-0.001   proof  260656 /  260656 bytes   old   17.33 ms   new   17.17 ms   new/old 0.991   (min old 15.87, new 15.78; 27 runs each)
+  beep-0.02    proof  279760 /  279760 bytes   old   17.49 ms   new   17.14 ms   new/old 0.980   (min old 16.11, new 15.85; 27 runs each)
+  control-0.001 proof  258480 /  258480 bytes   old   14.08 ms   new   13.93 ms   new/old 0.990   (min old 13.10, new 12.96; 27 runs each)
+  control-0.02 proof  277584 /  277584 bytes   old   14.15 ms   new   13.83 ms   new/old 0.977   (min old 12.76, new 12.96; 27 runs each)
+  split        proof  342864 /  342864 bytes   old   27.91 ms   new   27.84 ms   new/old 0.997   (min old 24.98, new 24.70; 27 runs each)
+2^23, 100 bits
+  beep-0.001   proof  363736 /  363736 bytes   old   25.65 ms   new   25.19 ms   new/old 0.982   (min old 24.07, new 23.80; 27 runs each)
+  beep-0.02    proof  391544 /  391544 bytes   old   25.83 ms   new   25.17 ms   new/old 0.974   (min old 24.24, new 23.49; 27 runs each)
+  control-0.001 proof  361432 /  361432 bytes   old   19.38 ms   new   19.04 ms   new/old 0.983   (min old 18.18, new 17.74; 27 runs each)
+  control-0.02 proof  389240 /  389240 bytes   old   19.75 ms   new   19.35 ms   new/old 0.979   (min old 18.71, new 18.06; 27 runs each)
+  split        proof  454544 /  454544 bytes   old   44.15 ms   new   41.05 ms   new/old 0.930   (min old 40.07, new 39.58; 27 runs each)

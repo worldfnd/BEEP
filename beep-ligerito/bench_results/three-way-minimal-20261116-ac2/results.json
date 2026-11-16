@@ -4353,6 +4353,12 @@
    },
    "pow_expected_hashes": 2816.0,
    "pow_expected_ms": 0.07241152889971329,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.024601536554683875,
+    "consistency": 0.04780999234502941,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -4751,6 +4757,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -5162,6 +5174,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -5573,6 +5591,12 @@
    },
    "pow_expected_hashes": 3028.3995894044633,
    "pow_expected_ms": 0.07637838979990866,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.07637838979990866,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -5999,6 +6023,12 @@
    },
    "pow_expected_hashes": 3028.3995894044633,
    "pow_expected_ms": 0.07637838979990866,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.07637838979990866,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -6343,6 +6373,12 @@
    },
    "pow_expected_hashes": 2304.0,
    "pow_expected_ms": 0.061527933983375055,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.02465715932318147,
+    "consistency": 0.03687077466019358,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -6741,6 +6777,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -7152,6 +7194,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -7563,6 +7611,12 @@
    },
    "pow_expected_hashes": 6056.799153171479,
    "pow_expected_ms": 0.14383047977255456,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.14383047977255456,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -7989,6 +8043,12 @@
    },
    "pow_expected_hashes": 6056.799153171479,
    "pow_expected_ms": 0.14383047977255456,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.14383047977255456,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -8333,6 +8393,12 @@
    },
    "pow_expected_hashes": 2304.0,
    "pow_expected_ms": 0.061393744324552274,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.024639218911627892,
+    "consistency": 0.03675452541292438,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -8786,6 +8852,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -9284,6 +9356,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -9782,6 +9860,12 @@
    },
    "pow_expected_hashes": 12132.134248927236,
    "pow_expected_ms": 0.28435818530242346,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.28435818530242346,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -10299,6 +10383,12 @@
    },
    "pow_expected_hashes": 12132.134248927236,
    "pow_expected_ms": 0.28435818530242346,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.28435818530242346,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -10694,6 +10784,12 @@
    },
    "pow_expected_hashes": 3712.0,
    "pow_expected_ms": 0.10564358623492508,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.03626756834993306,
+    "consistency": 0.06937601788499201,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -11171,6 +11267,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -11669,6 +11771,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -12167,6 +12275,12 @@
    },
    "pow_expected_hashes": 24264.26846431196,
    "pow_expected_ms": 0.5661552801879379,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.5661552801879379,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -12684,6 +12798,12 @@
    },
    "pow_expected_hashes": 24264.26846431196,
    "pow_expected_ms": 0.5661552801879379,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.5661552801879379,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -13079,6 +13199,12 @@
    },
    "pow_expected_hashes": 3712.0,
    "pow_expected_ms": 0.09885749544152543,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.03830106755254785,
+    "consistency": 0.06055642788897758,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -13556,6 +13682,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -14054,6 +14186,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -14552,6 +14690,12 @@
    },
    "pow_expected_hashes": 48528.53689505906,
    "pow_expected_ms": 1.0815597140430806,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 1.0815597140430806,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -15069,6 +15213,12 @@
    },
    "pow_expected_hashes": 48528.53689505906,
    "pow_expected_ms": 1.0815597140430806,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 1.0815597140430806,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -15464,6 +15614,12 @@
    },
    "pow_expected_hashes": 3712.0,
    "pow_expected_ms": 0.10250247822336701,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.03829657000119284,
+    "consistency": 0.06420590822217417,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -15941,6 +16097,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -16439,6 +16601,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -16937,6 +17105,12 @@
    },
    "pow_expected_hashes": 97057.07375656071,
    "pow_expected_ms": 0.8533140183853175,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.8533140183853175,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -17454,6 +17628,12 @@
    },
    "pow_expected_hashes": 97057.07375656071,
    "pow_expected_ms": 0.8533140183853175,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.8533140183853175,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -17864,6 +18044,12 @@
    },
    "pow_expected_hashes": 5632.0,
    "pow_expected_ms": 0.15167835557755288,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06267230618323939,
+    "consistency": 0.08900604939431347,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -18420,6 +18606,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -18997,6 +19189,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -19574,6 +19772,12 @@
    },
    "pow_expected_hashes": 138244.98003007472,
    "pow_expected_ms": 1.1425183301751667,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 1.1425183301751667,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -20172,6 +20376,12 @@
    },
    "pow_expected_hashes": 138244.98003007472,
    "pow_expected_ms": 1.1425183301751667,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 1.1425183301751667,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -20608,6 +20818,12 @@
    },
    "pow_expected_hashes": 5632.0,
    "pow_expected_ms": 0.15398977195699182,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06448091163787478,
+    "consistency": 0.08950886031911708,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -21164,6 +21380,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -21745,6 +21967,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -22326,6 +22554,12 @@
    },
    "pow_expected_hashes": 329782.74529015337,
    "pow_expected_ms": 2.008781284605803,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 2.008781284605803,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -22929,6 +23163,12 @@
    },
    "pow_expected_hashes": 329782.74529015337,
    "pow_expected_ms": 2.008781284605803,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 2.008781284605803,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -23370,6 +23610,12 @@
    },
    "pow_expected_hashes": 5632.0,
    "pow_expected_ms": 0.1553424488640248,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06444200875905345,
+    "consistency": 0.09090044010497131,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -23926,6 +24172,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -24511,6 +24763,12 @@
    },
    "pow_expected_hashes": 0.0,
    "pow_expected_ms": 0.0,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 0.0,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -25096,6 +25354,12 @@
    },
    "pow_expected_hashes": 776704.1975632798,
    "pow_expected_ms": 4.482176953628329,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 4.482176953628329,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -25704,6 +25968,12 @@
    },
    "pow_expected_hashes": 776704.1975632798,
    "pow_expected_ms": 4.482176953628329,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0,
+    "consistency": 0.0,
+    "fold": 4.482176953628329,
+    "queries": 0.0
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -26120,6 +26390,12 @@
    },
    "pow_expected_hashes": 199424.0,
    "pow_expected_ms": 1.1195826952121188,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.02449353568806439,
+    "consistency": 0.049302326511275,
+    "fold": 0.0,
+    "queries": 1.0457868330127793
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -26521,6 +26797,12 @@
    },
    "pow_expected_hashes": 135580.0,
    "pow_expected_ms": 0.8089258969139463,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.005064551487223265,
+    "consistency": 0.013344556226883755,
+    "fold": 0.09332556719131967,
+    "queries": 0.6971912220085196
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -26948,6 +27230,12 @@
    },
    "pow_expected_hashes": 177378.0,
    "pow_expected_ms": 1.5959146253506786,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06454446358109908,
+    "consistency": 0.11388986663903615,
+    "fold": 0.720289073122024,
+    "queries": 0.6971912220085196
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -27297,6 +27585,12 @@
    },
    "pow_expected_hashes": 198912.0,
    "pow_expected_ms": 1.0876175942132449,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.024361327656097182,
+    "consistency": 0.03649013348965398,
+    "fold": 0.0,
+    "queries": 1.0267661330674938
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -27698,6 +27992,12 @@
    },
    "pow_expected_hashes": 137894.0,
    "pow_expected_ms": 0.8447569412378184,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.005026897244557929,
+    "consistency": 0.013179054064289103,
+    "fold": 0.14204023455064227,
+    "queries": 0.6845107553783292
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -28125,6 +28425,12 @@
    },
    "pow_expected_hashes": 179832.0,
    "pow_expected_ms": 1.6204391599445294,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06359698587004269,
+    "consistency": 0.11135213911761743,
+    "fold": 0.7609792795785402,
+    "queries": 0.6845107553783292
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -28474,6 +28780,12 @@
    },
    "pow_expected_hashes": 198912.0,
    "pow_expected_ms": 1.1862937087431942,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.024161234737220608,
+    "consistency": 0.03652883087631309,
+    "fold": 0.0,
+    "queries": 1.1256036431296603
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -28930,6 +29242,12 @@
    },
    "pow_expected_hashes": 216541.0,
    "pow_expected_ms": 1.5804646815718664,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.013049602696237415,
+    "consistency": 0.03560042700449326,
+    "fold": 0.40621100874147525,
+    "queries": 1.1256036431296603
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -29452,6 +29770,12 @@
    },
    "pow_expected_hashes": 310516.0,
    "pow_expected_ms": 2.8751392049418327,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.18966233903121082,
+    "consistency": 0.27404093687165304,
+    "fold": 1.2858322859093083,
+    "queries": 1.1256036431296603
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -29856,6 +30180,12 @@
    },
    "pow_expected_hashes": 265856.0,
    "pow_expected_ms": 1.4832472662745142,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.035372356206599176,
+    "consistency": 0.05995372484522596,
+    "fold": 0.0,
+    "queries": 1.387921185222689
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -30337,6 +30667,12 @@
    },
    "pow_expected_hashes": 224861.0,
    "pow_expected_ms": 1.6777853934204185,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.013019347287732184,
+    "consistency": 0.03563779390151731,
+    "fold": 0.5881873633141521,
+    "queries": 1.0409408889170166
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -30859,6 +31195,12 @@
    },
    "pow_expected_hashes": 321176.0,
    "pow_expected_ms": 3.008890091640656,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.18886578953590752,
+    "consistency": 0.2779552960460856,
+    "fold": 1.5011281171416466,
+    "queries": 1.0409408889170166
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -31263,6 +31605,12 @@
    },
    "pow_expected_hashes": 265856.0,
    "pow_expected_ms": 1.5046125563233064,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.038265555265910314,
+    "consistency": 0.06158413131685521,
+    "fold": 0.0,
+    "queries": 1.404762869740541
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -31744,6 +32092,12 @@
    },
    "pow_expected_hashes": 246083.0,
    "pow_expected_ms": 2.1540026593256987,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.014162429178164473,
+    "consistency": 0.03606135364160014,
+    "fold": 1.0502067242005282,
+    "queries": 1.0535721523054058
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -32266,6 +32620,12 @@
    },
    "pow_expected_hashes": 342494.0,
    "pow_expected_ms": 3.4690639790229656,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.19003964203004636,
+    "consistency": 0.2831237447042162,
+    "fold": 1.9423284399832972,
+    "queries": 1.0535721523054058
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -32670,6 +33030,12 @@
    },
    "pow_expected_hashes": 265856.0,
    "pow_expected_ms": 1.788637515762817,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.039509443492251606,
+    "consistency": 0.06362040341513962,
+    "fold": 0.0,
+    "queries": 1.6855076688554258
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -33151,6 +33517,12 @@
    },
    "pow_expected_hashes": 290935.0,
    "pow_expected_ms": 2.7679995133557203,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.014630506136213316,
+    "consistency": 0.038509596077518846,
+    "fold": 1.4507286595004185,
+    "queries": 1.2641307516415694
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -33673,6 +34045,12 @@
    },
    "pow_expected_hashes": 385130.0,
    "pow_expected_ms": 3.430295163012129,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.1890923933478183,
+    "consistency": 0.31507251575221323,
+    "fold": 1.6619995022705278,
+    "queries": 1.2641307516415694
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -34092,6 +34470,12 @@
    },
    "pow_expected_hashes": 333312.0,
    "pow_expected_ms": 1.9832756902194526,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.0636935370274013,
+    "consistency": 0.08619937271883091,
+    "fold": 0.0,
+    "queries": 1.8333827804732201
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -34653,6 +35037,12 @@
    },
    "pow_expected_hashes": 801529.0000000007,
    "pow_expected_ms": 5.705008013241212,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.029952252393348498,
+    "consistency": 0.07584398199313086,
+    "fold": 4.1325055544761575,
+    "queries": 1.466706224378576
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -35260,6 +35650,12 @@
    },
    "pow_expected_hashes": 1050068.0000000019,
    "pow_expected_ms": 7.183887666412347,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.4368295415135505,
+    "consistency": 0.5101372244343675,
+    "fold": 4.770214676085853,
+    "queries": 1.466706224378576
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -35709,6 +36105,12 @@
    },
    "pow_expected_hashes": 333312.0,
    "pow_expected_ms": 1.991179360169487,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06449466154139051,
+    "consistency": 0.08654103962724713,
+    "fold": 0.0,
+    "queries": 1.8401436590008493
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -36270,6 +36672,12 @@
    },
    "pow_expected_hashes": 873174.0000000008,
    "pow_expected_ms": 5.9554299043172305,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.030495266789184964,
+    "consistency": 0.07653648192901132,
+    "fold": 4.376283228398354,
+    "queries": 1.4721149272006795
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -36882,6 +37290,12 @@
    },
    "pow_expected_hashes": 1143627.0000000014,
    "pow_expected_ms": 7.582557512316422,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.44344554424939286,
+    "consistency": 0.5078897920794455,
+    "fold": 5.1591072487869045,
+    "queries": 1.4721149272006795
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -37336,6 +37750,12 @@
    },
    "pow_expected_hashes": 333312.0,
    "pow_expected_ms": 1.9754508414394127,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.06461484027638535,
+    "consistency": 0.09001370020461608,
+    "fold": 0.0,
+    "queries": 1.8208223009584112
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -37897,6 +38317,12 @@
    },
    "pow_expected_hashes": 944819.0000000009,
    "pow_expected_ms": 6.5264753264093756,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.030510929259827183,
+    "consistency": 0.07664710309305055,
+    "fold": 4.962659453289766,
+    "queries": 1.456657840766729
+   },
    "pow_grinds": {
     "claim": [
      {
@@ -38514,6 +38940,12 @@
    },
    "pow_expected_hashes": 1240714.0000000007,
    "pow_expected_ms": 7.949014856509859,
+   "pow_expected_ms_by_kind": {
+    "claim": 0.44504781526838877,
+    "consistency": 0.5210774974387798,
+    "fold": 5.52623170303596,
+    "queries": 1.456657840766729
+   },
    "pow_grinds": {
     "claim": [
      {
