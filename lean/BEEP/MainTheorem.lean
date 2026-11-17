@@ -1,5 +1,4 @@
--- [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request ("Let's add a lean
--- formalization of theorem 3.4"): this whole file. It formalizes Theorem 3.4 (`t:main_thm`) of
+-- [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request: this whole file. It formalizes Theorem 3.4 (`t:main_thm`) of
 -- `paper/main.typ`, together with Lemmas 3.7 to 3.10, on which its proof rests, and it is
 -- commented in the style of `BEEP/AffineMain.lean`. Please review the statements against the
 -- paper; the dictionary is at the end of the module documentation.]
@@ -334,7 +333,7 @@ positions on which the fold `λ₁(α) u₁ + λ₂(α) u₂` agrees with `C` (t
 `C`), the pair `(u₁, u₂)` has Correlated Agreement with `C` over `S`. -/
 def SatisfiesMCA (α : F) : Prop :=
   ∀ S : Finset ι, s ≤ S.card →
-    (∃ c : Fin R.ℓ → F, ∀ i ∈ S, R.enc c i = R.fold u₁ u₂ α i) → R.CA u₁ u₂ S
+    ((∃ c : Fin R.ℓ → F, ∀ i ∈ S, R.enc c i = R.fold u₁ u₂ α i) → R.CA u₁ u₂ S)
 
 /-- **Definition 3.1.** `α` is MCA-bad: it does not satisfy the MCA property. -/
 def MCABad (α : F) : Prop := ¬ R.SatisfiesMCA u₁ u₂ s α

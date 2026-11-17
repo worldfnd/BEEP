@@ -207,11 +207,9 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 
 
-
-We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:main_thm_informal where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:main_thm_informal.
-
-
 In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors. We also include the affine version of our result (@t:affine_main_0), which we discuss later.
+
+
 
 #show figure.caption: set align(left)
 #figure(
@@ -239,7 +237,7 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
     rule,
     res[BEEP, affine fold][This work, @t:affine_main_0[Thm]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3\/3 dot ((codedim + 1)\/|FF|)^numsamples$\ $epsilon_(sans("BEEP"),2)$: $quad 2\/|FF|$],
     rule,
-    res[Khatam#footnote[#aiedit[The result of @Zei26 has an agreement loss of $gamma dot blockclength$ positions, instead of at most one position as in the other rows. Concretely, its error bounds the fraction of $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword on a set $S$ of at least $(1 - delta) dot blockclength$ positions, while there is no subset of $S$ of at least $(1 - delta - gamma) dot blockclength$ positions where both $u_1$ and $u_2$ agree with codewords. Since agreement sets have integer size, one can remove the loss by taking $gamma$ slightly smaller than $1\/blockclength$. In that case the condition becomes $delta <= 1 - root(3, 1 - hamming(cal(C)) + eta) - 1\/blockclength$, and the error is roughly $3 dot blockclength\/(eta dot |FF|)$.]]][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
+    res[Khatam#footnote[#aiedit[@Zei26 loses $gamma dot blockclength$ positions of agreement. Without the loss ($gamma approx 1\/blockclength$), the error is about $3 dot blockclength\/(eta dot |FF|)$.]]][@Zei26[Thm 3]], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
     table.hline(stroke: 0.6pt),
     table.cell(colspan: 4, inset: (x: 3.5pt, top: 5pt, bottom: 0pt), text(size: 8pt)[
     ]),
@@ -254,6 +252,10 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
 ) <tab:mca_comparison>
 
 
+#remark[High arity BEEP][We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:main_thm_informal where we fold more than two words at the same time, with several other generalizations.  We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:main_thm_informal. 
+
+However, we emphasize that this variant with higher arity is not used in our constructions, as it ultimately requires making more DEEP samples than repeatedly applying @t:main_thm_informal (as done in Section @s:BEEP_fold). 
+]
 
 #paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, where $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and where for a code $cal(C)'$ of dimension $codedim$ and blocklength $blockclength$ we define
   $ cal(R)_(cal(C)') := lr({
@@ -316,7 +318,7 @@ We do not describe an IOPP using the affine-BEEP technique, and leave that for f
 *Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling in an IOPP (@c:BEEP), the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. This error is smaller than known plain MCA errors, as discussed in @s:contributions. When using affine folding, our folding error is $2\/|FF|$ which again is smaller than the affine-MCA error from @CWYZ26.
 
 == Use of AI and Lean formalization
-Most of this document was written without the use of AI, except for making small refactorings, and light edits. Sections @s:BEEP_WHIR and @s:affine were initially drafted with AI and heavily edited by us afterward.
+This document was initially written without the use of AI, except for sections @s:BEEP_WHIR and @s:affine, which were initially drafted with AI and were substantially edited by us afterward. In the final stages, we used AI to edit and polish the text.  We chose this approach with the intention of creating a text which is as amenable to human readers as reasonably possible.
 
 The novel results in this work were obtained through a long interactive process with an AI. We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
 
@@ -1088,7 +1090,11 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 = High arity BEEP via linear algebra<s:high_arity>
 
+<<<<<<< HEAD
 In this section we present the BEEP proof in an alternative way where folding is an arbitrary random linear map, structured as a zero-evader.
+=======
+We emphasize that the result obtained in this Section is not used in the IOR and IOPP  constructions from Section @s:BEEP_fold. This is because, as it stands, applying the BEEP IOR (@c:BEEP) at every sumcheck round requires less DEEP samples than having one big DEEP sampling step before every full sumcheck. 
+>>>>>>> ad45590 (paper and lean)
 
 == Zero-evaders
 
@@ -1181,7 +1187,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 ]
-== Main Theorem (high arity version)
+== The high arity version of @t:main_thm
 
 We start by fixing notation. Let $𝔽$ be a finite field of size $q = abs(𝔽)$. We denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$. We let $ℓ$ be the message length, $n$ the code length, $b$ the folding size and $m$ the check size. Let $𝒞 ⊆ 𝔽^n$ be a code of dimension $ℓ$ that is $(δ, L)$-list decodable and has MCA bound $E$.
 
