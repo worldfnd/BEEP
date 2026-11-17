@@ -47,7 +47,7 @@
     <category citation-format="label"/>
     <category field="engineering"/>
     <category field="generic-base"/>
-    <summary>The IEEE style (CSL repository, ieee.csl) with alphabetic labels such as [BCHKS25] in place of numbers, and the bibliography sorted by label. The label of an entry is its "abstract" field, which scripts/bib_labels.py fills in; entries without one fall back to the built-in label.</summary>
+    <summary>The IEEE style (CSL repository, ieee.csl) with alphabetic labels such as [DKTZ26] or [BCHK+25] in place of numbers, and the bibliography sorted by label. The label of an entry is its "abstract" field, which scripts/bib_labels.py fills in; entries without one fall back to the built-in label.</summary>
     <updated>2024-03-27T11:41:27+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>

@@ -103,7 +103,7 @@
   
   Further, since it does not rely on MCA for its soundness, this improved DEEP technique allows to use #emph[arbitrary linear codes] in code-based IOPPs with $delta$ up to the Johnson bound. Additionally, this opens the door to using  codes (e.g. perhaps Reed-Solomon codes) with $delta$ beyond the Johnson bound, assuming the code is $delta$-list decodable, even if it does not have the $delta$-MCA property.
 
-  Finally, we also provide an #emph[affine] version of our improved DEEP analysis, where the folding challenges are affine polynomials instead of field elements, following @polygero@CWYZ26. We provide a simple proof showing that, after the DEEP samples are done, the folding error with affine folding challenges is $2\/|FF|$,  which is smaller than the affine-MCA  errors from @polygero@CWYZ26. 
+  Finally, we also provide an #emph[affine] version of our improved DEEP analysis, where the folding challenges are affine polynomials instead of field elements, following @polygero@CWYZ26. We provide a simple proof showing that, after the DEEP samples are done, the folding error with affine folding challenges is $2\/|FF|$,  #aiedit[which is smaller than the affine-MCA error from @CWYZ26]. 
 ]
 
 // Table of contents
@@ -113,7 +113,7 @@
 // Rest of paper
 
 
-#albert[Todos: Review lean,  overall pass,  glue text, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
+#albert[Todos: Review lean,  overall pass, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
 ]
 
 = Introduction
@@ -152,17 +152,17 @@ where $0<epsilon<1/3$ is a tunable parameter, and $L$ is the list size of the un
 
 
 
-On the other hand, today we have practical MCA results for Reed-Solomon codes up to the Johnson bound #aiedit[@BCIKS20 @Hab25 @BCHKS25], and for any linear code up to the 1.5 Johnson bound #aiedit[@GKL24 @Zei26 @BCGM25]. Concretely, #aiedit[@BCHKS25[Theorem 4.6]] shows that for any RS code $cal(C)$ #aiedit[of rate $rho$, any $eta > 0$ and $delta < 1 - sqrt(rho_+) - eta$, where $rho_+ := rho + 1\/blockclength$,] and any two words $u_1,u_2$, the fraction of MCA-bad elements $alpha in FF$ is #aiedit[at most]
-#aiedit[$
-epsilon_(sans("RS-MCA")) := 1/(|FF|) dot lr(( (2 dot (r + 1\/2)^5 + 3 dot (r + 1\/2) dot delta dot rho_+)/(3 dot rho_+^(3\/2)) dot blockclength + (r + 1\/2)/(sqrt(rho_+)) )),
-$<e:mca_error>]
-#aiedit[where $r := max(ceil(sqrt(rho_+)\/(2 dot eta)), 3)$. For a fixed rate this is $O(blockclength\/(eta^5 dot |FF|))$, and it is roughly $codedim\/(48 dot eta^5 dot |FF|)$ when $eta$ is small.]
-#aiedit[This bound was recently improved in @DKT26[Theorem 4.4]. In the same setting, and for $delta <= 1 - sqrt(rho_-) - eta$, where $rho_- := rho - 1\/blockclength$, the authors show that the fraction of MCA-bad elements $alpha in FF$ is less than]
+On the other hand, today we have practical MCA results for Reed-Solomon codes up to the Johnson bound #aiedit[@BCIKS20 @Hab25 @BCHKS25], and for any linear code up to the 1.5 Johnson bound #aiedit[@GKL24 @Zei26 @BCGM25]. //Concretely, #aiedit[@BCHKS25[Theorem 4.6]] shows that for any RS code $cal(C)$ #aiedit[of rate $rho$, any $eta > 0$ and $delta < 1 - sqrt(rho_+) - eta$, where $rho_+ := rho + 1\/blockclength$,] and any two words $u_1,u_2$, the fraction of MCA-bad elements $alpha in FF$ is #aiedit[at most]
+//#aiedit[$
+//epsilon_(sans("RS-MCA")) := 1/(|FF|) dot lr(( (2 dot (r + 1\/2)^5 + 3 dot (r + 1\/2) dot delta dot rho_+)/(3 dot rho_+^(3\/2)) dot blockclength + (r + 1\/2)/(sqrt(rho_+)) )),
+//$<e:mca_error>]
+//#aiedit[where $r := max(ceil(sqrt(rho_+)\/(2 dot eta)), 3)$. For a fixed rate this is $O(blockclength\/(eta^5 dot |FF|))$, and it is roughly $codedim\/(48 dot eta^5 dot |FF|)$ when $eta$ is small.]
+#aiedit[Recently this bound was  improved in @DKT26[Theorem 4.4]. In @DKT26 it is shown that, for $delta <= 1 - sqrt(rho_-) - eta$, where $rho_- := rho - 1\/blockclength$, the fraction of MCA-bad elements $alpha in FF$ is less than]
 #aiedit[$
 epsilon'_(sans("RS-MCA")) := 1/(|FF|) dot (8 dot (r_- + 1\/2)^3)/(3 dot rho_-) dot blockclength,
-$<e:mca_error_dkt>]
-#aiedit[where $r_- := max(ceil(sqrt(rho_-)\/(2 dot eta)), 3)$. For a fixed rate this is $O(blockclength\/(eta^3 dot |FF|))$, and it is roughly $codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$ when $eta$ is small. ] 
-#albert[Check]
+$<e:mca_error>]
+#aiedit[where $r_- := max(ceil(sqrt(rho_-)\/(2 dot eta)), 3)$. For practical rates (rangine from, say $1\/2$ to $1\/64$) and a small $eta$ (say $eta$ between $0.01$ and $0.001$) this is roughly $codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$ when $eta$ is small. ] 
+
 
 == Our contributions
 
@@ -228,9 +228,9 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
     table.hline(stroke: 0.6pt),
     [Result], [Code], [$delta$], [Error],
     table.hline(stroke: 0.4pt),
-    res[MCA][@DKT26[Thm 4.4]], [RS], [$delta <= 1 - sqrt(rho_-) - eta$], [$approx codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$, see @e:mca_error_dkt],
+    res[MCA][@DKT26[Thm 4.4]], [RS], [$delta <= 1 - sqrt(rho_-) - eta$], [$approx codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$, see @e:mca_error],
     rule,
-    res[MCA, affine fold#super[†]][@CWYZ26[Thm 1.1]], [RS], [$delta <= 1 - sqrt(rho) - eta$, \ $text("    ")$ with $blockclength dot eta^2 >= 4\/rho$], [$4\/(eta dot |FF|)+ thick 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$],
+    res[MCA, affine fold][@CWYZ26[Thm 1.1]], [RS], [$delta <= 1 - sqrt(rho) - eta$, \ $text("    ")$ with $blockclength dot eta^2 >= 4\/rho$], [$4\/(eta dot |FF|)+ thick 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$],
     rule,
     res[BEEP][This work, @t:main_thm_informal[Thm]], [any linear code], [$delta <= 1 - sqrt(1 - hamming(cal(C))) - eta$], [$epsilon_(sans("BEEP"),1)$: $quad(M dot L)^3 dot epsilon_(sans("evader"))\/(delta dot blockclength + 1)^2$\ $epsilon_(sans("BEEP"),2)$: $quad (delta dot blockclength + 1)\/|FF|$ ],
     rule,
@@ -310,7 +310,8 @@ In contrast to @CWYZ26, our analysis in the affine setting is elementary, amount
 \
 *Code-agnostic IOPPs up to the Johnson bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
 \
-*Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a smaller error than in all prior results we are aware of, as shown in @tab:mca_comparison.
+
+*Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. #aiedit[For scalar folds that keep all the agreement, $epsilon_(sans("BEEP"),2)$ is as small as an MCA error can be: for Reed-Solomon codes, there are words for which the MCA error of such folds is at least $(delta dot blockclength + 1)\/|FF|$ @CWYZ26[Proposition 6.1]. MCA errors that do not grow with $blockclength$ are obtained by giving up some agreement: a constant fraction of it for scalar folds (see @Zei26 and @CWYZ26[Proposition 6.1]), or one position for affine folds @CWYZ26[Theorem 1.1]. With affine folds, which also give up one position, our error $epsilon_(sans("affine-BEEP"),2)$ $= 2\/|FF|$ is smaller than that of @CWYZ26[Theorem 1.1]. The price, in both cases, is the DEEP sampling error $epsilon_(sans("BEEP"),1)$, which can be made negligible with a few DEEP samples (see @tab:mca_comparison).] #albert[Review]
 
 
 == Use of AI and Lean formalization
@@ -471,9 +472,11 @@ We proceed to define round-by-round knowledge soundness of an IOR, following @BC
 
 = Better Elimination of Pretenders <s:better_pretenders>
 
+In this section we prove @t:main_thm_informal. In Section @s:affine we prove an analogous version when folding challenges are affine polynomials.
+
 == Pretender codewords and consistency
 
-Let $FF$ be a finite field and let $cal(C) subset FF^blockclength$ be a linear code of blocklength $blockclength$ and dimension $codedim$, with $blockclength$ a power of two. Let $delta in (0,1)$ be a proximity parameter.
+We start by establishing some concepts and terminology. Let $FF$ be a finite field and let $cal(C) subset FF^blockclength$ be a linear code of blocklength $blockclength$ and dimension $codedim$, with $blockclength$ a power of two. Let $delta in (0,1)$ be a proximity parameter.
 
 
 #aiedit[We fix two linear maps $theta_1, theta_2: FF arrow FF$, so that $theta_i (alpha) = a_i + alpha dot d_i$ for some $a_i, d_i in FF$, and we assume that $a_1 dot d_2 != a_2 dot d_1$. We use $theta_1(alpha)$ and $theta_2(alpha)$ as the weights when folding two words with a challenge $alpha in FF$. For example, $(theta_1(alpha), theta_2(alpha))$ can be $(1, alpha)$, or $(1-alpha, alpha)$ as in Section @s:BEEP_fold. The assumption $a_1 dot d_2 != a_2 dot d_1$ guarantees that the vectors $(theta_1(alpha), theta_2(alpha))$ and $(theta_1(alpha'), theta_2(alpha'))$ are linearly independent for all distinct $alpha, alpha' in FF$.]
@@ -512,8 +515,7 @@ Let $𝐛_(1), 𝐛_(2) ∈ 𝔽^numsamples$. For intuition, for an honest prove
 
 == Most out of domain samples admit few DEEP-MCA-bad challenges<s:main_thm>
 
-In this section we state and prove the main result of this work.
-
+We are now ready to state and prove the rigorous version of @t:main_thm_informal.
 
 
 #theorem[For most $z ∈ 𝒵$, there are few DEEP-MCA-bad elements $alpha in FF$][
@@ -690,8 +692,10 @@ $<e:proof_thm_2> where $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$,
 
 = Folding of constrained interleaved  codes with BEEP <s:BEEP_fold>
 
-== The BEEP IOR
-// [AI-edited (claude-fable-5-2), 2026-11-12, at the author's request: this section uses theta_1(alpha) = 1-alpha, theta_2(alpha) = alpha throughout. Edited: the second sentence below; the weights (1, alpha) became (1-alpha, alpha) in c:BEEP (Rounds 2, 3 and Output) and in Round 2 of the proof of t:beep_soundness. Please review]
+We now discuss how to use the soundness analysis from @t:main_thm so as to modify usual code-based IOPPs. In Section @s:BEEP_IOR we discuss the DEEP sampling and folding step, and then in Section @s:BEEP_WHIR we provide a full description of BEEP-based IOPP.
+
+== The BEEP IOR<s:BEEP_IOR>
+
 We assume the notation from Section @s:better_pretenders. Throughout this section, we fix the linear maps $theta_1, theta_2$ as $theta_1(alpha) = 1-alpha$ and $theta_2(alpha) = alpha$, so that  two words $u_1, u_2$ are folded as $(1-alpha) dot u_1 + alpha dot u_2$. These maps satisfy the assumption $a_1 dot d_2 != a_2 dot d_1$ made in Section @s:better_pretenders (where $theta_i(X)=a_i + d_i dot X$). 
 
 Define the following relation:
@@ -1085,6 +1089,8 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 = High arity BEEP<s:high_arity>
 
+
+
 == Zero-evaders
 
 We use the notion of a zero evader from @BCFW25, expressed as an indexed family of linear maps with vector-valued outputs.
@@ -1120,7 +1126,8 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 #proof[
  #albert-postponable[it was not clear to me what $psi in H$ means] The condition $ψ_s ∈ H$ is equivalent to $H^⟂ ⊆ ker ψ_s$ and $dim H^⟂ = n - j$. The result follows from the definition of $ε_(n - j)$.
 ]
-#corollary[
+#secretsection[
+  #corollary[
   Given $S ⊆ 𝒵$ such that $abs(S) > abs(𝒵) ε_1$, the family $(ψ_z)_(z ∈ S)$ contains a basis for $𝔽^n$.
 ] <thm:ze-basis>
 #proof[
@@ -1174,8 +1181,8 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
     ψ_𝐬 &= ψ^(k)_(s_k) ⊗ ⋯ ⊗ ψ^(1)_(s_1).
   $
 ]
-
-== Main Theorem (batch version)
+]
+== Main Theorem (high arity version)
 
 We start by fixing notation. Let $𝔽$ be a finite field of size $q = abs(𝔽)$. We denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$. We let $ℓ$ be the message length, $n$ the code length, $b$ the folding size and $m$ the check size. Let $𝒞 ⊆ 𝔽^n$ be a code of dimension $ℓ$ that is $(δ, L)$-list decodable and has MCA bound $E$.
 
