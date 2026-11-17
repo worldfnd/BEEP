@@ -2,32 +2,40 @@
 # [AI-drafted (claude-opus-5-5), 2026-11-14, at the author's request; please review]
 # [AI-revised (claude-opus-5-5), 2026-11-16: copied into the repository BEEP; the paper's numbers in the comments
 # are those of its current numbering within sections (Theorem 5.3, Lemma 5.5); please review]
-# [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request ("Let's add a lean formalization of theorem
-# 3.4"): the script also checks BEEP/MainTheorem.lean, with its own examples and axioms. The two files are now
-# compiled once into a scratch folder, and the root file BEEP.lean and the examples import them from there (the
-# examples of BEEP/AffineMain.lean are the same as before; they used to be checked in one scratch file together with
-# a copy of AffineMain.lean); please review]
+# [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request: the script also checks the formalization of
+# Theorem 3.4, with its own examples and axioms; the files are compiled once into a scratch folder, and the root
+# file BEEP.lean and the examples import them from there; please review]
+# [AI-revised (claude-fable-5-2), 2026-11-17, at the author's request: the two Lean files are now six, BEEP/Scalar
+# (Theorem 3.4) and BEEP/Affine (Theorem 5.3), each with Defs.lean, Proof.lean and Theorem.lean. The script
+# compiles them in the order of their imports. The examples are the same, in the namespaces BEEP.Scalar and
+# BEEP.Affine. New: steps 1 and 5, and the script now stops with an error if a theorem depends on an axiom other
+# than the three standard ones; please review]
 # Checks the Lean formalizations of the BEEP paper (paper/main.typ) with the Mathlib build of ~/math in lean
-# (Mathlib v4.30.0), in about a minute on an idle machine. Every `lean` call passes the options of lakefile.toml,
-# `-DautoImplicit=false -DrelaxedAutoImplicit=false`, so that an undeclared name in a statement is an error instead
-# of an automatically bound implicit variable.
-#   1. BEEP/AffineMain.lean (Theorem 5.3 and Lemma 5.5) and BEEP/MainTheorem.lean (Theorem 3.4 and Lemmas 3.7 to
-#      3.10) type-check (no output from Lean means success);
-#   2. the root file BEEP.lean, which imports both, type-checks (so the two files can be used together);
-#   3. examples for BEEP/AffineMain.lean apply its theorems to concrete data, with every hypothesis proved: a `Setup`
-#      over ZMod 5 with the weights (1, α), another with the weights (1 - α, α) of Section 4, `affine_main` for
-#      both, and `affine_main_delta` for the second (with δ = 1/4), all with the trivial list size. So the
-#      hypotheses can be met; with the trivial list size the bounds are above 1, so the examples show that the
-#      theorems apply, not a useful bound. They also check a form with an assumed list decodability (the general
-#      case);
-#   4. examples for BEEP/MainTheorem.lean do the same for Theorem 3.4: a Reed-Solomon code of dimension 2 on four
-#      points of ZMod 5, the univariate zero evader with one sample and its error bound 1/5 (proved), the weights
-#      (1, α) and (1 - α, α), `main_thm` for both, `main_thm_delta` and `main_thm_delta_real` for the second (with
+# (Mathlib v4.30.0), in about a minute on an idle machine. Every `lean` call passes the options of
+# lakefile.toml, `-DautoImplicit=false -DrelaxedAutoImplicit=false`, so that an undeclared name in a statement is
+# an error instead of an automatically bound implicit variable.
+#   1. BEEP/Scalar/Defs.lean and BEEP/Affine/Defs.lean, the files of definitions, import Mathlib only, and
+#      BEEP/Scalar/Proof.lean and BEEP/Affine/Proof.lean contain definitions and theorems only (no notation, no
+#      instance, no attribute, no axiom), so they cannot change how a statement of Theorem.lean is read;
+#   2. the six files type-check, in the order Defs.lean, Proof.lean, Theorem.lean (no output from Lean means
+#      success), and so does the root file BEEP.lean, which imports both Theorem.lean (so the two formalizations
+#      can be used together);
+#   3. examples for BEEP/Affine apply its theorems to concrete data, with every hypothesis proved: a `Setup` over
+#      ZMod 5 with the weights (1, α), another with the weights (1 - α, α) of Section 4, `affine_main` for both,
+#      and `affine_main_delta` for the second (with δ = 1/4), all with the trivial list size. So the hypotheses
+#      can be met; with the trivial list size the bounds are above 1, so the examples show that the theorems
+#      apply, not a useful bound. They also check a form with an assumed list decodability (the general case);
+#   4. examples for BEEP/Scalar do the same for Theorem 3.4: a Reed-Solomon code of dimension 2 on four points of
+#      ZMod 5, the univariate zero evader with one sample and its error bound 1/5 (proved), the weights (1, α)
+#      and (1 - α, α), `main_thm` for both, `main_thm_delta` and `main_thm_delta_real` for the second (with
 #      δ = 1/4) and `main_thm_delta_floor` (with δ = 3/10, for which δ n is not an integer), all with the trivial
-#      list size (so, again, the bounds are above 1). They also exhibit a pretender and a DEEP-MCA-bad element in a
-#      concrete case, so the definitions are not vacuous;
-#   5. the axioms of the main theorems are printed (each should depend only on propext, Classical.choice and
-#      Quot.sound).
+#      list size (so, again, the bounds are above 1). They also exhibit a pretender and a DEEP-MCA-bad element in
+#      a concrete case, so the definitions are not vacuous;
+#   5. the statement of every theorem of the two Theorem.lean mentions only declarations of the Defs.lean of
+#      its folder and of Mathlib: to know what these theorems say, it is enough to read Defs.lean and
+#      Theorem.lean;
+#   6. the axioms of the theorems are printed, and each must depend only on propext, Classical.choice and
+#      Quot.sound.
 # The compiled files and the example files go to the folder $TMPDIR/beep-lean-check (or /tmp/beep-lean-check);
 # nothing is written next to this script.
 # Do not run it while a benchmark campaign holds /tmp/bitz-bench.lock.
@@ -35,34 +43,60 @@ set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 MIL="$HOME/math in lean"
 OUT="${TMPDIR:-/tmp}/beep-lean-check"
-# The options of lakefile.toml.
-OPTS="-DautoImplicit=false -DrelaxedAutoImplicit=false"
 if [ -e /tmp/bitz-bench.lock ]; then
   echo "a benchmark campaign holds /tmp/bitz-bench.lock; not checking now" >&2
   exit 1
 fi
+echo "== the files of definitions import Mathlib only; the files of proofs have definitions and theorems only"
+for d in Scalar Affine; do
+  if [ "$(grep '^import' "$HERE/BEEP/$d/Defs.lean")" != "import Mathlib" ]; then
+    echo "BEEP/$d/Defs.lean must import Mathlib and nothing else" >&2
+    exit 1
+  fi
+  if [ "$(grep '^import' "$HERE/BEEP/$d/Proof.lean")" != "import BEEP.$d.Defs" ]; then
+    echo "BEEP/$d/Proof.lean must import BEEP.$d.Defs and nothing else" >&2
+    exit 1
+  fi
+  # A command of Proof.lean that could change the meaning of a later file: none is allowed.
+  if grep -n -E '^[[:space:]]*(@\[|((local|scoped|private|protected|unsafe|partial)[[:space:]]+)*(notation|infix|infixl|infixr|prefix|postfix|macro|macro_rules|syntax|elab|elab_rules|instance|attribute|axiom|opaque|export|initialize|declare_syntax_cat|binder_predicate|unif_hint|deriving|abbrev|alias)([[:space:]]|$))' \
+      "$HERE/BEEP/$d/Proof.lean"; then
+    echo "BEEP/$d/Proof.lean must contain definitions and theorems only" >&2
+    exit 1
+  fi
+done
 # Start from an empty scratch folder, so that nothing compiled earlier is used.
 rm -rf "$OUT"
-mkdir -p "$OUT/BEEP"
+mkdir -p "$OUT/BEEP/Scalar" "$OUT/BEEP/Affine"
 cd "$MIL"
-# `-R` gives the folder from which the module name of a file is computed (BEEP.AffineMain, ...), and `-o` writes
-# the compiled module, which the later steps import.
-for m in AffineMain MainTheorem; do
-  echo "== type-checking BEEP/$m.lean"
-  lake env lean $OPTS -R "$HERE" -o "$OUT/BEEP/$m.olean" "$HERE/BEEP/$m.lean"
-done
-# `lean` with the compiled modules of $OUT on its search path, in front of those of Mathlib.
+# `lean` with the options of lakefile.toml and with the compiled modules of $OUT on its search path, in front of
+# those of Mathlib.
 lean_with_beep() {
-  lake env sh -c 'LEAN_PATH="$1:$LEAN_PATH" exec lean -DautoImplicit=false -DrelaxedAutoImplicit=false "$2"' sh "$OUT" "$1"
+  lake env sh -c 'out="$1"; shift; LEAN_PATH="$out:$LEAN_PATH" exec lean -DautoImplicit=false -DrelaxedAutoImplicit=false "$@"' sh "$OUT" "$@"
 }
+# `-R` gives the folder from which the module name of a file is computed (BEEP.Scalar.Defs, ...), and `-o` writes
+# the compiled module, which the later steps import.
+for m in Scalar/Defs Scalar/Proof Scalar/Theorem Affine/Defs Affine/Proof Affine/Theorem; do
+  echo "== type-checking BEEP/$m.lean"
+  lean_with_beep -R "$HERE" -o "$OUT/BEEP/$m.olean" "$HERE/BEEP/$m.lean"
+done
 echo "== the root file BEEP.lean, which imports both"
 lean_with_beep "$HERE/BEEP.lean"
-echo "== examples and axioms of BEEP/AffineMain.lean (file $OUT/ExamplesAffine.lean)"
+# Runs a file of examples that ends with `#print axioms` commands, shows its output, and stops if a line of the
+# output is not "... depends on axioms: [propext, Classical.choice, Quot.sound]".
+run_examples() {
+  lean_with_beep "$1" > "$1.out" 2>&1 || { cat "$1.out"; exit 1; }
+  cat "$1.out"
+  if grep -v -F -e "depends on axioms: [propext, Classical.choice, Quot.sound]" "$1.out" | grep -q .; then
+    echo "unexpected output above: an error, a warning, or an axiom other than the three standard ones" >&2
+    exit 1
+  fi
+}
+echo "== examples and axioms of BEEP/Affine (file $OUT/ExamplesAffine.lean)"
 {
   cat <<'EOF'
-import BEEP.AffineMain
+import BEEP.Affine.Theorem
 
-namespace BEEP
+namespace BEEP.Affine
 open Finset Polynomial Classical
 
 -- `ZMod 5` is a field, since 5 is prime.
@@ -123,22 +157,22 @@ example (u₁ u₂ : Fin 4 → ZMod 5) (δ : ℝ) (hδ : 0 ≤ δ) (L t : ℕ)
   setupOneAlpha.affine_main_delta u₁ u₂ (m := 3) hδ L t (by simp [setupOneAlpha]) (by convert hL)
     ht
 
-end BEEP
+end BEEP.Affine
 EOF
   for t in Setup.affine_line_pairs Setup.affine_line Setup.affine_main_gen_nat \
       Setup.affine_main_gen Setup.affine_main_nat Setup.affine_main Setup.fold_challenge_le \
       Setup.affine_main_delta Setup.isPretender_ceil_iff Setup.listDecodable_of_delta \
       Setup.card_close_rsWords defect_eq_zero_of_onLine pair_count_arith listDecodable_trivial; do
-    echo "#print axioms BEEP.$t"
+    echo "#print axioms BEEP.Affine.$t"
   done
 } > "$OUT/ExamplesAffine.lean"
-lean_with_beep "$OUT/ExamplesAffine.lean"
-echo "== examples and axioms of BEEP/MainTheorem.lean (file $OUT/ExamplesMain.lean)"
+run_examples "$OUT/ExamplesAffine.lean"
+echo "== examples and axioms of BEEP/Scalar (file $OUT/ExamplesScalar.lean)"
 {
   cat <<'EOF'
-import BEEP.MainTheorem
+import BEEP.Scalar.Theorem
 
-namespace BEEP.Main
+namespace BEEP.Scalar
 open Finset Classical
 
 -- `ZMod 5` is a field, since 5 is prime.
@@ -163,7 +197,7 @@ theorem encRS_injective : Function.Injective encRS := by
   · exact h0
   · simpa [h0] using h1
 
--- The univariate zero evader with one sample (Definition 2.5 with `m = 1`): `Z = ZMod 5` and
+-- The univariate zero evader with one sample (Definition 2.4 with `m = 1`): `Z = ZMod 5` and
 -- `φ_z(w₀, w₁) = w₀ + w₁ z`.
 def evUni (z : ZMod 5) : (Fin 2 → ZMod 5) →ₗ[ZMod 5] (Fin 1 → ZMod 5) where
   toFun w := fun _ => w 0 + w 1 * z
@@ -171,7 +205,7 @@ def evUni (z : ZMod 5) : (Fin 2 → ZMod 5) →ₗ[ZMod 5] (Fin 1 → ZMod 5) wh
   map_smul' := by
     intro a w; funext _; simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]; ring
 
--- A nonzero `(w₀, w₁)` has `w₀ + w₁ z = 0` for at most one `z` (Lemma 2.6 with `e = 2`, `m = 1`).
+-- A nonzero `(w₀, w₁)` has `w₀ + w₁ z = 0` for at most one `z` (Lemma 2.5 with `e = 2`, `m = 1`).
 theorem evUni_card_le_one (v : Fin 2 → ZMod 5) (hv : v ≠ 0) :
     (univ.filter fun z : ZMod 5 => evUni z v = 0).card ≤ 1 := by
   rw [card_le_one]
@@ -303,7 +337,7 @@ example (z : ZMod 5) : 1 ≤ setupOneAlpha.maxHits w₁ w₂ 3 z :=
   (card_pos.mpr ⟨1, one_mem_hits z⟩).trans_le
     (setupOneAlpha.card_hits_le_maxHits w₁ w₂ 3 (fun _ => (0, 0)) z)
 
-end BEEP.Main
+end BEEP.Scalar
 EOF
   for t in Setup.mcaBad_iff_exists_pretender Setup.few_pretenders_on_line defect_eq_zero_iff \
       Setup.evader_defect_eq_zero Setup.third_moment_bound Setup.main_thm_gen_nat \
@@ -312,8 +346,38 @@ EOF
       Setup.listDecodable_of_delta Setup.main_thm_delta Setup.main_thm_delta_real \
       Setup.main_thm_delta_floor setupRS_errorBound listDecodable_trivial zero_isPretender \
       one_mem_hits; do
-    echo "#print axioms BEEP.Main.$t"
+    echo "#print axioms BEEP.Scalar.$t"
   done
-} > "$OUT/ExamplesMain.lean"
-lean_with_beep "$OUT/ExamplesMain.lean"
+} > "$OUT/ExamplesScalar.lean"
+run_examples "$OUT/ExamplesScalar.lean"
+echo "== the statements of Theorem.lean mention only Defs.lean and Mathlib (file $OUT/Statements.lean)"
+cat > "$OUT/Statements.lean" <<'EOF'
+import BEEP.Scalar.Theorem
+import BEEP.Affine.Theorem
+open Lean
+
+-- For every declaration of the module `thms`: it is a theorem, and each constant in its statement
+-- is declared by the module `defs` or by a module outside `BEEP` (Mathlib, Lean). It is an error
+-- otherwise.
+def checkStatements (defs thms : Name) : CoreM Unit := do
+  let env ← getEnv
+  let some idx := env.getModuleIdx? thms | throwError "the module {thms} is not imported"
+  let names := env.header.moduleData[idx.toNat]!.constNames
+  if names.isEmpty then throwError "{thms} declares nothing"
+  for n in names do
+    let some ci := env.find? n | throwError "unknown declaration {n}"
+    unless ci matches .thmInfo _ do
+      throwError "{thms} declares {n}, which is not a theorem"
+    for c in ci.type.getUsedConstants do
+      if let some i := env.getModuleIdxFor? c then
+        let m := env.header.moduleNames[i.toNat]!
+        if (`BEEP).isPrefixOf m && m != defs then
+          throwError "the statement of {n} mentions {c}, which {m} declares"
+  let sorted := names.qsort fun a b => a.toString < b.toString
+  IO.println s!"{thms}: the statements of its {names.size} theorems mention only {defs} and Mathlib: {sorted.toList}"
+
+#eval checkStatements `BEEP.Scalar.Defs `BEEP.Scalar.Theorem
+#eval checkStatements `BEEP.Affine.Defs `BEEP.Affine.Theorem
+EOF
+lean_with_beep "$OUT/Statements.lean"
 echo "== done"

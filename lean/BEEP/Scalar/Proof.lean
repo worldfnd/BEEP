@@ -1,133 +1,80 @@
--- [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request: this whole file. It formalizes Theorem 3.4 (`t:main_thm`) of
--- `paper/main.typ`, together with Lemmas 3.7 to 3.10, on which its proof rests, and it is
--- commented in the style of `BEEP/AffineMain.lean`. Please review the statements against the
--- paper; the dictionary is at the end of the module documentation.]
+-- [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request, as part of
+-- `BEEP/MainTheorem.lean`, the formalization of Theorem 3.4 (`t:main_thm`) of `paper/main.typ`.
+-- AI-revised (claude-fable-5-2), 2026-11-17, at the author's request: that file is now the three
+-- files `BEEP/Scalar/Defs.lean` (the definitions that the statement of the theorem uses),
+-- `BEEP/Scalar/Theorem.lean` (the statements) and `BEEP/Scalar/Proof.lean` (this one: the lemmas,
+-- the other definitions and the proofs). The lemmas, definitions and proofs are moved here
+-- without change, except that the six theorems that `BEEP/Scalar/Theorem.lean` states are called
+-- `x_proof` here (`main_thm_proof` for `main_thm`, and so on). The namespace `BEEP.Main` is now
+-- `BEEP.Scalar`, and the comments are adapted to the three files.]
 
 -- A line starting with `--` is a comment, which Lean ignores. In this file each comment explains
 -- the line, or the few lines, directly below it. The reading guide after the module documentation
--- explains the notation and every tactic used in the file.
+-- explains every tactic used in the file; the one of `BEEP/Scalar/Defs.lean` explains the notation.
 
--- Load Mathlib, Lean's library of formalized mathematics (fields, vector spaces, linear maps,
--- finite sets, sums, real numbers, ...). Every name used below and not defined in this file
--- (`Finset`, `card_le_card`, `map_smul`, ...) comes from Mathlib.
-import Mathlib
+-- Load the definitions of `BEEP/Scalar/Defs.lean`, and with them Mathlib, Lean's library of
+-- formalized mathematics. Every name used below and defined neither in this file nor in
+-- `BEEP/Scalar/Defs.lean` (`Finset`, `card_le_card`, `map_smul`, ...) comes from Mathlib.
+import BEEP.Scalar.Defs
 
 /-!
-# BEEP: Theorem 3.4 of the BEEP paper
+# BEEP with scalar challenges: the proof of Theorem 3.4
 
-A formalization of Theorem 3.4 of the BEEP paper (`paper/main.typ`, Section 3, "Better
-Elimination of Pretenders", label `t:main_thm`, "For most `z ∈ Z`, there are few DEEP-MCA-bad
-elements `α ∈ F`"), together with the four lemmas of its proof: Lemma 3.7 (label
-`l:few_bad_points_on_line`, "A parameterized line contains few pretenders"), Lemma 3.8
-(`l:colinear`, "Colinearity of codewords"), Lemma 3.9 (`l:colinear_zero`) and Lemma 3.10
-(`l:third_moment_bound`). The numbers of theorems, lemmas and definitions are those of the PDF
-compiled from `paper/main.typ` on November 16, 2026, which numbers them within sections; the
-labels do not change when the numbers do.
+The proof of Theorem 3.4 of the BEEP paper (`paper/main.typ`, Section 3, label `t:main_thm`):
+the four lemmas of the paper's proof, namely Lemma 3.7 (label `l:few_bad_points_on_line`, "A
+parameterized line contains few pretenders"), Lemma 3.8 (`l:colinear`, "Colinearity of
+codewords"), Lemma 3.9 (`l:colinear_zero`) and Lemma 3.10 (`l:third_moment_bound`), the
+definitions that only the proof uses, and the proofs of the statements of
+`BEEP/Scalar/Theorem.lean`. The objects of the statements are defined in `BEEP/Scalar/Defs.lean`.
 
-## Setting (Sections 2.2, 2.3 and 3.1 of the paper)
+There is no need to read this file to know what is proved: for that, read `BEEP/Scalar/Defs.lean`
+and `BEEP/Scalar/Theorem.lean`. This file is for following the proof. It declares definitions and
+theorems only (no notation and no instance), so it cannot change how a statement of
+`BEEP/Scalar/Theorem.lean` is read.
 
-* `F` is a finite field with `q = |F|` elements.
-* The positions of a word form a finite type `ι` with `n = |ι|` elements, and a word is a
-  function `ι → F`.
-* The linear code `C ⊂ F^n` of dimension `ℓ` is given by its injective linear encoding map
-  `Enc_C : F^ℓ → F^n` (Section 2.2), here `R.enc` (`R` collects the data that the paper fixes,
-  see `Setup`). A codeword is represented by its message: `c : Fin R.ℓ → F` stands for the
-  codeword `Enc_C(c)`, whose entries are `R.enc c i`. The paper does the same when it applies the
-  zero evader to a codeword (`φ_z(Enc_C(w)) := φ_z(w)`, Section 3.1).
-* Words are folded with the weights `λ₁(α) = a₁ + α d₁` and `λ₂(α) = a₂ + α d₂`, where
-  `a₁ d₂ ≠ a₂ d₁`. The fold of `u₁, u₂` with the challenge `α ∈ F` is the word
-  `λ₁(α) u₁ + λ₂(α) u₂`.
-* The zero evader is a family of linear maps `φ_z : F^ℓ → F^m`, indexed by a finite nonempty type
-  `Z` (Definition 2.3), here `R.φ z`. A number `ε ≥ 0` is an error bound of the evader if every
-  nonzero `v ∈ F^ℓ` has `Pr_z[φ_z(v) = 0] ≤ ε` (`R.IsErrorBound ε`).
-* The paper measures agreement with the proximity parameter `δ` (agreement sets of size at least
-  `(1 - δ) n`). As in `BEEP/AffineMain.lean`, we use instead an integer agreement threshold `s`
-  (agreement sets of size at least `s`), so that `δ n` becomes `n - s`. The last section of the
-  file states the theorem with `δ` again, with `s = ⌈(1 - δ) n⌉`. For this `s` and `0 ≤ δ ≤ 1`,
-  `n - s = ⌊δ n⌋` (and `n - s ≤ ⌊δ n⌋ ≤ δ n` for every `δ ≥ 0`), so the integer form is slightly
-  stronger when `δ n` is not an integer.
+## Results of this file
 
-## Main results
-
-* `BEEP.Main.Setup.few_pretenders_on_line` (Lemma 3.7): a parameterized line `α ↦ c₁ + α c₂`
+* `BEEP.Scalar.Setup.mcaBad_iff_exists_pretender`: an element `α` is MCA-bad if and only if there
+  is an `α`-pretender.
+* `BEEP.Scalar.Setup.few_pretenders_on_line` (Lemma 3.7): a parameterized line `α ↦ c₁ + α c₂`
   contains at most `n - s + 1` pretenders.
-* `BEEP.Main.defect_eq_zero_iff` (Lemma 3.8): for `α₁ ≠ α₂`, three tuples `(α_i, v_i)` lie on one
-  parameterized line if and only if `U((α_i, v_i)) = 0`.
-* `BEEP.Main.Setup.evader_defect_eq_zero` (Lemma 3.9): if three tuples are consistent with the
+* `BEEP.Scalar.defect_eq_zero_iff` (Lemma 3.8): for `α₁ ≠ α₂`, three tuples `(α_i, v_i)` lie on
+  one parameterized line if and only if `U((α_i, v_i)) = 0`.
+* `BEEP.Scalar.Setup.evader_defect_eq_zero` (Lemma 3.9): if three tuples are consistent with the
   same `(z, b₁, b₂)`, then `φ_z(U) = 0`.
-* `BEEP.Main.Setup.third_moment_bound` (Lemma 3.10):
+* `BEEP.Scalar.Setup.third_moment_bound` (Lemma 3.10):
   `|A| (|A| - 1) (|A| - (n - s) - 1) ≤ |T_z|`, where `A` is the set of DEEP-MCA-bad elements at
   `z` for the answers `(b₁, b₂) = B z`, and `T_z` is defined with the same answers.
-* `BEEP.Main.Setup.main_thm_nat` (Theorem 3.4, counting form): for every `t`,
-  `t (t - 1) (t - (n - s) - 1) · #{z ∈ Z | |A_z| ≥ t} ≤ (q L)³ M`, where `M` bounds the number of
-  `z` with `φ_z(v) = 0` for every nonzero `v`, and `|A_z|` is the largest number of DEEP-MCA-bad
-  elements at `z` over all answers `b₁, b₂` (`maxHits`). The subtractions are those of `ℕ`, so
-  for `t ≤ n - s + 1` the left-hand side is `0` and the statement says nothing.
-* `BEEP.Main.Setup.main_thm` (Theorem 3.4): for every integer `t ≥ n - s + 2`, for `z` uniform in
-  `Z`, `Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - (n - s) - 1))`.
-* `BEEP.Main.Setup.main_thm_delta` (Theorem 3.4 as stated in the paper): the same with the
-  proximity parameter `δ` and the relative Hamming distance in the list decodability of `C`: for
-  every integer `t ≥ δ n + 2`, `Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - δ n - 1))`.
-  `BEEP.Main.Setup.main_thm_delta_real` is the same for a real threshold `t`.
-* `BEEP.Main.Setup.main_thm_delta_floor`: the same with `⌊δ n⌋` in place of `δ n`, for every
-  integer `t ≥ ⌊δ n⌋ + 2`. When `δ n` is not an integer this is slightly stronger: it covers the
-  threshold `t = ⌊δ n⌋ + 2`, which `main_thm_delta` does not, and its bound is smaller.
-* `BEEP.Main.Setup.fold_challenge_le`: if `|A_z| < t`, then a uniform challenge is DEEP-MCA-bad
-  with probability at most `(t - 1)/q`. With the least threshold of `main_thm_delta_floor`,
-  `t = ⌊δ n⌋ + 2`, this is `(⌊δ n⌋ + 1)/q`, which is at most the term `(δ n + 1)/|F|` of the error
-  `κ₂` of Theorem 4.3 (and equal to it when `δ n` is an integer). Theorem 4.3 is not formalized
-  here.
+* `BEEP.Scalar.Setup.main_thm_gen_nat` and `BEEP.Scalar.Setup.main_thm_gen`: Theorem 3.4 for
+  given answers `B`, in the counting form and with a probability.
+* `BEEP.Scalar.Setup.satisfiesMCA_ceil_iff` and `BEEP.Scalar.Setup.isPretender_ceil_iff`: with
+  `s = ⌈(1 - δ) n⌉`, the MCA property and the pretenders of `BEEP/Scalar/Defs.lean` are those of
+  the paper, with agreement sets of size at least `(1 - δ) n`.
+* `BEEP.Scalar.Setup.main_thm_nat_proof`, `main_thm_proof`, `fold_challenge_le_proof`,
+  `main_thm_delta_proof`, `main_thm_delta_real_proof` and `main_thm_delta_floor_proof`: the
+  proofs of the theorems `main_thm_nat`, ..., `main_thm_delta_floor` of
+  `BEEP/Scalar/Theorem.lean`, which states them again and explains them.
 
-## Dictionary paper ↔ Lean
+## Dictionary paper ↔ Lean, for the objects of the proof
 
-| paper (Sections 2 and 3 of `paper/main.typ`) | Lean |
+The dictionary of `BEEP/Scalar/Defs.lean` has the objects of the statement.
+
+| paper (Section 3 of `paper/main.typ`) | Lean |
 |---|---|
-| `Enc_C : F^ℓ → C`, linear and injective | `R.enc`, `R.enc_inj` |
-| a codeword `c ∈ C` | its message `c : Fin R.ℓ → F`; the entries of the codeword are `R.enc c i` |
-| `λ₁(α)`, `λ₂(α)`, with `a₁ d₂ ≠ a₂ d₁` | `R.lam₁ α`, `R.lam₂ α`, `R.det_ne` |
-| the fold `λ₁(α) · u₁ + λ₂(α) · u₂` | `R.fold u₁ u₂ α` |
-| `(u₁, u₂)` has CA with `C` over `S` | `R.CA u₁ u₂ S` |
-| `(1 - δ) n` | `s`; then `δ n` is `n - s` (`= ⌊δ n⌋` for `s = ⌈(1 - δ) n⌉` and `0 ≤ δ ≤ 1`) |
-| `α` satisfies the `δ`-MCA property; `α` is MCA-bad (Definition 3.1) | `R.SatisfiesMCA u₁ u₂ s α`; `R.MCABad u₁ u₂ s α` |
-| Definition 3.2, `c` is an `α`-pretender | `R.IsPretender u₁ u₂ s α c` |
-| the zero evader `(φ_z)_{z ∈ Z}` (Definition 2.3); `ε` is an error bound | `R.φ`; `R.IsErrorBound ε` |
-| Definition 3.3 (consistency); DEEP-MCA-bad element | `R.Consistent z b α c`; `R.DeepBad u₁ u₂ s z b α` |
-| `A_{z, b₁, b₂}`; `|A_z|` (maximal over `b₁, b₂`) | `R.hits u₁ u₂ s (fun _ => b) z`; `R.maxHits u₁ u₂ s z` |
-| `C` is `(δ, L)`-list decodable | `R.ListDecodable s L` (or `hL` of `main_thm_delta`) |
 | Definition 3.6, a parameterized line `θ(α) = c_{θ,1} + α · c_{θ,2}` | `c₁ + α • c₂`, for messages `c₁ c₂` |
 | `A_θ^pret` of Lemma 3.7 | `R.lineHits u₁ u₂ s c₁ c₂` |
 | `U((α_i, v_i)_{i ∈ [3]})` | `defect α₁ v₁ α₂ v₂ α₃ v₃` |
 | `P` (pretender points), `T_z` | `R.pretPts u₁ u₂ s`, `R.consTriples u₁ u₂ s B z` |
 | `δ n + 1` (Lemma 3.7), `t ≥ δ n + 2` | `n - s + 1`, `n - s + 2 ≤ t` |
-
-Not needed for Theorem 3.4 in this form, and so not assumed: that `n` is a power of two, that
-`δ < 1`, that `ε ≤ 1` and that `L ≥ 1`. The injectivity of the encoding map is used only to count
-codewords instead of messages in the form with `δ` (`card_filter_codewords`).
 -/
 
 /-!
-## Reading guide for newcomers to Lean
+## Reading guide for newcomers to Lean: the proofs
 
-This guide follows the one of `BEEP/AffineMain.lean`, with what is new here (linear maps, vectors).
+The reading guide of `BEEP/Scalar/Defs.lean` explains the notation (types, statements, arguments,
+structures, finite sets, linear algebra, numbers). This one explains how to read a proof.
 
-**What Lean checks.** A Lean file is a list of definitions (`def`) and theorems (`theorem`). A
-theorem is a statement followed by a proof, and Lean accepts the file only if every proof is
-complete: no step is left to the reader. This file compiles with no errors and no `sorry` (the
-keyword for a missing proof), so all its theorems are proved. The only axioms involved are the
-three standard ones of Lean's logic (propositional extensionality, the axiom of choice, and
-soundness of quotients), as the command `#print axioms BEEP.Main.Setup.main_thm` shows.
-
-**Types.** `x : X` means "`x` is an element of `X`". Types play the role of sets: `ℕ` (the
-natural numbers, starting at `0`), `ℝ` (the reals), `F` (our field), `F × F` (pairs), `ι → F`
-(functions from `ι` to `F`, that is, words of length `n`), `Fin k → F` (vectors of `F^k`).
-Function application is written without brackets: `u₁ i` is `u₁(i)`, and `f a b` is `f(a, b)`.
-`fun x => e` is the function `x ↦ e`.
-
-**Statements are types as well.** `Prop` is the type of statements, and a proof of a statement
-`P` is an element `h : P`. So the hypothesis `(hab : a ≠ b)` reads "`hab` is a proof that
-`a ≠ b`". Logical symbols: `∧` (and), `∨` (or), `¬` (not), `→` (implies), `↔` (iff), `∀ x, P x`,
-`∃ x, P x`, `∀ x ∈ S, P x`, `∃ x ∈ S, P x`, and `a ≠ b` for `¬ (a = b)`.
-Working with proofs:
+**Working with proofs.**
 * from `h : P ∧ Q` we get `h.1 : P` and `h.2 : Q` (so `h.2.1` is the first part of `h.2`);
 * from `h : P ↔ Q` we get `h.mp : P → Q` and `h.mpr : Q → P`;
 * `⟨a, b⟩` is a proof of `P ∧ Q` made of `a : P` and `b : Q`, or a proof of `∃ x, P x` made of
@@ -137,39 +84,6 @@ Working with proofs:
 * `h.trans h'` chains `h : a ≤ b` and `h' : b ≤ c` into `a ≤ c` (also for `=`), and
   `h.symm : b = a` flips `h : a = b`;
 * `rfl` proves `a = a`, and more generally `a = b` when both sides are equal by definition.
-
-**Arguments.** In `def f {X : Type*} [Field X] (x : X) ...`:
-* `(x : X)` is an explicit argument, written whenever `f` is used;
-* `{X : Type*}` is an implicit argument, which Lean infers from the other arguments;
-* `[Field X]` says that `X` carries a field structure; Lean finds it automatically.
-`Type*` means "some type": read it as "some set". A `variable` line declares arguments once,
-for all the definitions and theorems that follow it and use them. `(ε₁ := e)` passes an implicit
-argument by name, when Lean cannot infer it.
-
-**Structures.** A `structure` is a record with named fields. `Setup F ι Z` below has the fields
-`ℓ`, `m`, `enc`, `enc_inj`, `a₁`, `d₁`, `a₂`, `d₂`, `det_ne` and `φ`, and for `R : Setup F ι Z`
-they are written `R.ℓ`, `R.enc`, `R.φ`, ... Definitions in the namespace `Setup` are also written
-with a dot: `R.fold u₁ u₂ α` is `Setup.fold R u₁ u₂ α`.
-
-**Finite sets.** `Finset X` is the type of finite subsets of `X`.
-* `univ` is the whole of a finite type `X`, and `Fintype.card X` is its number of elements;
-* `U.filter P`, or `univ.filter fun x => P x`, is the set `{x ∈ U | P x}`;
-* `U.card` is the number of elements of `U`; `∑ x ∈ U, f x` and `∑ x : X, f x` are sums;
-* `U ∩ V`, `U ∪ V`, `U ⊆ V` as usual; `insert a U` is `{a} ∪ U`; `U.erase a` is `U` minus `{a}`;
-  `U ×ˢ V` is the cartesian product; `Uᶜ` is the complement of `U` in `X`; `U.image f` is the
-  set of the `f x` with `x ∈ U`; `U.biUnion T` is the union of the sets `T x` with `x ∈ U`;
-* `F × F × F` means `F × (F × F)`, so the entries of a triple `t` are `t.1`, `t.2.1`, `t.2.2`.
-
-**Linear algebra.** `α • v` is the scalar multiple of the vector `v` by `α ∈ F` (for `v ∈ F` it
-is the product `α * v`). `α⁻¹` is the inverse in `F` (Lean sets `0⁻¹ = 0`). `V →ₗ[F] W` is the
-type of `F`-linear maps from `V` to `W`; such a map `f` satisfies `f (v + w) = f v + f w`
-(`map_add`), `f (v - w) = f v - f w` (`map_sub`) and `f (a • v) = a • f v` (`map_smul`). Vectors
-of `F^k` are functions `Fin k → F`, added and scaled entry by entry (`Pi.add_apply`,
-`Pi.smul_apply`).
-
-**Numbers.** On `ℕ`, subtraction is truncated: `3 - 5 = 0`. `(n : ℝ)`, displayed `↑n`, is the
-natural number `n` viewed as a real number. `⌈y⌉₊` is the least natural number `≥ y`, and `⌊y⌋₊`
-is the largest natural number `≤ y` (for `y ≥ 0`).
 
 **Tactic proofs.** After `:= by` comes a list of *tactics*. Lean keeps track of the current
 *goal* (what remains to be proved) and of the hypotheses available. In the editor the goal is
@@ -225,18 +139,17 @@ tactic shows the hypotheses and the goal at that point in the "Lean Infoview" pa
 best way to follow a proof: the comments describe the goal in words, the Infoview shows it
 exactly.
 
-**Plan.** `Setup` collects the data of Sections 2.2, 2.3 and 3.1, and the section `Defs` sets up
-the objects of Section 3.1 (`fold`, `CA`, `SatisfiesMCA`, `MCABad`, `IsPretender`, `Consistent`,
-`DeepBad`, `ListDecodable`, `IsErrorBound`). The section `Lemma37` proves Lemma 3.7
+**Plan.** The section `Defs` shows that an element is MCA-bad exactly when it has a pretender
+(`mcaBad_iff_exists_pretender`). The section `Lemma37` proves Lemma 3.7
 (`few_pretenders_on_line`). The section `TheU` has the vector `U` of Lemma 3.8 (`defect`) and the
 lemma itself (`defect_eq_zero_iff`), and `evader_defect_eq_zero` is Lemma 3.9. The section
-`Counting` follows the rest of the proof: the DEEP-MCA-bad elements (`hits`) and a chosen
-pretender for each (`pt`); Lemma 3.10 (`card_collinear_le`, `card_goodTriples`,
-`card_goodTriples_le`, `third_moment_bound`); the double count over the pretender points
-(`card_pretPts`, `sum_card_consTriples`); the theorem for given answers (`main_thm_gen_nat`,
-`main_thm_gen`); and the theorem with the maximal `A_z` (`maxHits`, `main_thm_nat`, `main_thm`,
-`fold_challenge_le`). The last section, `WithDelta`, states the theorem with `δ`
-(`main_thm_delta`, `main_thm_delta_real`, `main_thm_delta_floor`).
+`Counting` follows the rest of the proof: a chosen pretender for each DEEP-MCA-bad element
+(`pt`); Lemma 3.10 (`card_collinear_le`, `card_goodTriples`, `card_goodTriples_le`,
+`third_moment_bound`); the double count over the pretender points (`card_pretPts`,
+`sum_card_consTriples`); the theorem for given answers (`main_thm_gen_nat`, `main_thm_gen`); and
+the theorem with the maximal `A_z` (`main_thm_nat_proof`, `main_thm_proof`,
+`fold_challenge_le_proof`). The last section, `WithDelta`, proves the theorem with `δ`
+(`main_thm_delta_proof`, `main_thm_delta_real_proof`, `main_thm_delta_floor_proof`).
 -/
 
 -- `open Finset` lets us write `univ`, `card_le_card`, `mem_filter`, ... instead of `Finset.univ`,
@@ -248,14 +161,14 @@ open Finset
 set_option linter.unusedSectionVars false
 
 -- From here to the end of the file, definitions may use non-constructive ingredients (the axiom
--- of choice in `pt`, real numbers in `main_thm`), so Lean does not try to compile them into
+-- of choice in `pt`, real numbers in `main_thm_proof`), so Lean does not try to compile them into
 -- executable code.
 noncomputable section
 
--- All names defined below get the prefix `BEEP.Main.` (e.g. `BEEP.Main.Setup.main_thm`), so that
--- they cannot clash with names in Mathlib or in `BEEP/AffineMain.lean`. The namespace is closed by
--- `end BEEP.Main` at the end of the file.
-namespace BEEP.Main
+-- All names defined below get the prefix `BEEP.Scalar.` (e.g.
+-- `BEEP.Scalar.Setup.few_pretenders_on_line`), like those of `BEEP/Scalar/Defs.lean`. The
+-- namespace is closed by `end BEEP.Scalar` at the end of the file.
+namespace BEEP.Scalar
 
 -- Classical logic: every statement `P` may be treated as decidable (true or false). Lean needs
 -- this to form `U.filter P` and `if P then _ else _` when no algorithm deciding `P` is provided.
@@ -268,34 +181,8 @@ variable {F : Type*} [Field F] [Fintype F]
 -- `ι` is the finite set of positions of a word, and `n = Fintype.card ι`.
 variable {ι : Type*} [Fintype ι]
 -- `Z` is the finite set that indexes the zero evader. The theorems that speak of a probability
--- over `z ∈ Z` also assume that `Z` is nonempty (`[Nonempty Z]`), as Definition 2.3 does.
+-- over `z ∈ Z` also assume that `Z` is nonempty (`[Nonempty Z]`), as Definition 2.2 does.
 variable {Z : Type*} [Fintype Z]
-
-/-! ### The setting of Sections 2.2, 2.3 and 3.1 -/
-
-/-- The data that the paper fixes in Sections 2.2, 2.3 and 3.1: the code (through its encoding
-map), the weights of the fold, and the zero evader. -/
-structure Setup (F : Type*) [Field F] (ι : Type*) (Z : Type*) where
-  /-- the dimension `ℓ` of the code `C` -/
-  ℓ : ℕ
-  /-- the number `m` of entries of an output of the zero evader -/
-  m : ℕ
-  /-- the linear encoding map `Enc_C : F^ℓ → F^n`, whose image is the code `C` -/
-  enc : (Fin ℓ → F) →ₗ[F] (ι → F)
-  /-- the encoding map is injective -/
-  enc_inj : Function.Injective enc
-  /-- the constant term of the weight `λ₁(α) = a₁ + α d₁` -/
-  a₁ : F
-  /-- the coefficient of `α` in `λ₁(α) = a₁ + α d₁` -/
-  d₁ : F
-  /-- the constant term of the weight `λ₂(α) = a₂ + α d₂` -/
-  a₂ : F
-  /-- the coefficient of `α` in `λ₂(α) = a₂ + α d₂` -/
-  d₂ : F
-  /-- the assumption `a₁ d₂ ≠ a₂ d₁` of Section 3.1 -/
-  det_ne : a₁ * d₂ ≠ a₂ * d₁
-  /-- the zero evader: for every `z ∈ Z`, a linear map `φ_z : F^ℓ → F^m` -/
-  φ : Z → (Fin ℓ → F) →ₗ[F] (Fin m → F)
 
 namespace Setup
 
@@ -303,76 +190,13 @@ namespace Setup
 -- as its first explicit argument, written with a dot: `R.fold`, `R.IsPretender`, ...
 variable (R : Setup F ι Z)
 
-/-- The weight `λ₁(α) = a₁ + α d₁`. -/
-def lam₁ (α : F) : F := R.a₁ + α * R.d₁
-
-/-- The weight `λ₂(α) = a₂ + α d₂`. -/
-def lam₂ (α : F) : F := R.a₂ + α * R.d₂
-
-/-- The fold `λ₁(α) · u₁ + λ₂(α) · u₂` of two words with the challenge `α`: the word whose `i`-th
-entry is `λ₁(α) u₁(i) + λ₂(α) u₂(i)`. -/
-def fold (u₁ u₂ : ι → F) (α : F) : ι → F :=
-  fun i => R.lam₁ α * u₁ i + R.lam₂ α * u₂ i
-
-/-! ### The MCA property, pretenders, consistency and DEEP-MCA-bad elements -/
+/-! ### An element is MCA-bad exactly when it has a pretender -/
 
 section Defs
 
 -- In this section `u₁ u₂` are the two words, and `s` is the agreement threshold (the paper's
 -- `(1 - δ) n`). Round brackets make them explicit arguments.
 variable (u₁ u₂ : ι → F) (s : ℕ)
-
-/-- `(u₁, u₂)` has Correlated Agreement with `C` over `S`: there are codewords `c₁, c₂ ∈ C` such
-that `u₁` agrees with `c₁` on `S` and `u₂` agrees with `c₂` on `S`. -/
--- (The codewords are given by their messages `c₁ c₂`, as everywhere in this file.)
-def CA (S : Finset ι) : Prop :=
-  ∃ c₁ c₂ : Fin R.ℓ → F, ∀ i ∈ S, u₁ i = R.enc c₁ i ∧ u₂ i = R.enc c₂ i
-
-/-- `α` satisfies the MCA property with respect to `u₁, u₂`: for every set `S` of at least `s`
-positions on which the fold `λ₁(α) u₁ + λ₂(α) u₂` agrees with `C` (that is, with some codeword of
-`C`), the pair `(u₁, u₂)` has Correlated Agreement with `C` over `S`. -/
-def SatisfiesMCA (α : F) : Prop :=
-  ∀ S : Finset ι, s ≤ S.card →
-    ((∃ c : Fin R.ℓ → F, ∀ i ∈ S, R.enc c i = R.fold u₁ u₂ α i) → R.CA u₁ u₂ S)
-
-/-- **Definition 3.1.** `α` is MCA-bad: it does not satisfy the MCA property. -/
-def MCABad (α : F) : Prop := ¬ R.SatisfiesMCA u₁ u₂ s α
-
-/-- **Definition 3.2.** The codeword `c ∈ C` is an `α`-pretender: the fold
-`λ₁(α) u₁ + λ₂(α) u₂` and `c` agree on a set `S` of size at least `s` such that `(u₁, u₂)` does
-not have Correlated Agreement with `C` over `S`. -/
--- (The paper states the definition for an MCA-bad `α`. This is no restriction: an `α` with an
--- `α`-pretender is MCA-bad, see `mcaBad_iff_exists_pretender` below.)
-def IsPretender (α : F) (c : Fin R.ℓ → F) : Prop :=
-  ∃ S : Finset ι, s ≤ S.card ∧ (∀ i ∈ S, R.enc c i = R.fold u₁ u₂ α i) ∧ ¬ R.CA u₁ u₂ S
-
-/-- **Definition 3.3.** `(α, c)` is consistent with `(z, b₁, b₂)`, where `b = (b₁, b₂)`:
-`φ_z(c) = λ₁(α) · b₁ + λ₂(α) · b₂`. -/
-def Consistent (z : Z) (b : (Fin R.m → F) × (Fin R.m → F)) (α : F) (c : Fin R.ℓ → F) : Prop :=
-  R.φ z c = R.lam₁ α • b.1 + R.lam₂ α • b.2
-
-/-- **Definition 3.3, second part.** `α` is a DEEP-MCA-bad element with respect to `z, b₁, b₂`
-and `u₁, u₂`: `α` is MCA-bad and some `α`-pretender `c` is such that `(α, c)` is consistent with
-`(z, b₁, b₂)`. -/
--- (The first condition follows from the second, by `mcaBad_iff_exists_pretender`; we keep both,
--- as the paper does.)
-def DeepBad (z : Z) (b : (Fin R.m → F) × (Fin R.m → F)) (α : F) : Prop :=
-  R.MCABad u₁ u₂ s α ∧ ∃ c, R.IsPretender u₁ u₂ s α c ∧ R.Consistent z b α c
-
-/-- `C` is list decodable with list size `L` at agreement `s`: every word `w` agrees on at least
-`s` positions with at most `L` codewords of `C` (counted through their messages, which is the
-same since the encoding map is injective, see `card_filter_codewords`). -/
-def ListDecodable (L : ℕ) : Prop :=
-  ∀ w : ι → F, (univ.filter fun c : Fin R.ℓ → F =>
-    s ≤ (univ.filter fun i => R.enc c i = w i).card).card ≤ L
-
-/-- **Definition 2.3.** `ε` is an error bound of the zero evader: `ε ≥ 0`, and for every nonzero
-`v ∈ F^ℓ`, `Pr_z[φ_z(v) = 0] ≤ ε`. The probability is the number of such `z` divided by `|Z|`. -/
--- (This definition does not mention `u₁ u₂ s`, so they are not among its arguments. The paper
--- takes `ε ∈ [0, 1]`; the bound `ε ≤ 1` is not needed.)
-def IsErrorBound (ε : ℝ) : Prop :=
-  0 ≤ ε ∧ ∀ v : Fin R.ℓ → F, v ≠ 0 →
-    ((univ.filter fun z : Z => R.φ z v = 0).card : ℝ) / Fintype.card Z ≤ ε
 
 /-- An element `α` is MCA-bad exactly when there exists an `α`-pretender. -/
 theorem mcaBad_iff_exists_pretender (α : F) :
@@ -705,12 +529,8 @@ section Counting
 
 -- The words, the threshold, and the prover's answers `B`: for every `z ∈ Z` a pair
 -- `B z = (b₁, b₂)` of vectors of `F^m`. The answers may depend on `z` in any way. Theorem 3.4
--- takes the answers that maximize the number of DEEP-MCA-bad elements (`maxHits` below).
+-- takes the answers that maximize the number of DEEP-MCA-bad elements (`maxHits` of `Defs.lean`).
 variable (u₁ u₂ : ι → F) (s : ℕ) (B : Z → (Fin R.m → F) × (Fin R.m → F))
-
-/-- The set `A_{z, b₁, b₂}` of DEEP-MCA-bad elements at `z`, with the answers `(b₁, b₂) = B z`. -/
-def hits (z : Z) : Finset F :=
-  univ.filter fun α => R.DeepBad u₁ u₂ s z (B z) α
 
 /-- A chosen consistent pretender at the element `α` (junk if there is none): the paper's `c_α`
 in the proof of Lemma 3.10. -/
@@ -992,7 +812,7 @@ theorem third_moment_bound (z : Z) :
 
 /-! #### Theorem 3.4 for given answers -/
 
-/-- The function `f(h) = h (h - 1) (h - N)` is monotone (as in `BEEP/AffineMain.lean`). -/
+/-- The function `f(h) = h (h - 1) (h - N)` is monotone (as in `BEEP/Affine/Proof.lean`). -/
 theorem cubic_mono {t h N : ℕ} (hth : t ≤ h) : t * (t - 1) * (t - N) ≤ h * (h - 1) * (h - N) :=
   -- Multiply the three inequalities `t ≤ h`, `t - 1 ≤ h - 1` and `t - N ≤ h - N`.
   Nat.mul_le_mul (Nat.mul_le_mul hth (Nat.sub_le_sub_right hth 1)) (Nat.sub_le_sub_right hth N)
@@ -1092,12 +912,6 @@ theorem main_thm_gen [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s
 
 /-! #### Theorem 3.4, with the answers that maximize `|A_{z,b₁,b₂}|` -/
 
-/-- `|A_z|`: the largest number of DEEP-MCA-bad elements at `z` over all answers `(b₁, b₂)`. -/
--- `fun _ => b` is the strategy that answers `b` to every `z`, and `univ.sup f` is the largest value
--- of `f b` over all `b` (Mathlib's `Finset.sup`).
-def maxHits (z : Z) : ℕ :=
-  univ.sup fun b : (Fin R.m → F) × (Fin R.m → F) => (R.hits u₁ u₂ s (fun _ => b) z).card
-
 -- The DEEP-MCA-bad elements of `z` only depend on the answers `B z` to `z`, so
 -- `|A_{z, B z}| ≤ |A_z|` for every strategy `B`.
 theorem card_hits_le_maxHits (z : Z) :
@@ -1124,12 +938,9 @@ theorem exists_worst_answers :
   obtain ⟨b, hb⟩ := Classical.axiom_of_choice (R.exists_eq_maxHits u₁ u₂ s)
   exact ⟨b, hb⟩
 
-/-- **Theorem 3.4, counting form.** For every `t`,
-`t (t - 1) (t - N) · #{z ∈ Z | |A_z| ≥ t} ≤ (q L)³ M`, where `N = n - s + 1`, every nonzero
-`v ∈ F^ℓ` has `φ_z(v) = 0` for at most `M` of the `z ∈ Z`, and `|A_z|` is the largest number of
-DEEP-MCA-bad elements at `z` over all answers. As in `main_thm_gen_nat`, the subtractions are
-those of `ℕ`, so for `t ≤ N` the left-hand side is `0`. -/
-theorem main_thm_nat (L M t : ℕ) (hL : R.ListDecodable s L)
+/-- **Proof of `main_thm_nat`** (Theorem 3.4, counting form). `BEEP/Scalar/Theorem.lean` states this
+theorem again, under the name `main_thm_nat`, and explains it. -/
+theorem main_thm_nat_proof (L M t : ℕ) (hL : R.ListDecodable s L)
     (hM : ∀ v : Fin R.ℓ → F, v ≠ 0 → (univ.filter fun z : Z => R.φ z v = 0).card ≤ M) :
     t * (t - 1) * (t - (Fintype.card ι - s + 1)) *
         (univ.filter fun z : Z => t ≤ R.maxHits u₁ u₂ s z).card ≤
@@ -1141,11 +952,9 @@ theorem main_thm_nat (L M t : ℕ) (hL : R.ListDecodable s L)
   -- This is `main_thm_gen_nat` for the strategy `B'`.
   exact R.main_thm_gen_nat u₁ u₂ s B' L M t hL hM
 
-/-- **Theorem 3.4.** Let `C` be list decodable with list size `L` at agreement `s`, and let `ε` be
-an error bound of the zero evader. Then for every integer `t ≥ n - s + 2` and `z` uniform in `Z`,
-`Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - (n - s) - 1))`, where `|A_z|` is the largest number of
-DEEP-MCA-bad elements at `z` over all answers `b₁, b₂`. -/
-theorem main_thm [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s L)
+/-- **Proof of `main_thm`** (Theorem 3.4 with the integer agreement threshold `s`).
+`BEEP/Scalar/Theorem.lean` states this theorem again, under the name `main_thm`, and explains it. -/
+theorem main_thm_proof [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s L)
     (hε : R.IsErrorBound ε) (ht : Fintype.card ι - s + 2 ≤ t) :
     ((univ.filter fun z : Z => t ≤ R.maxHits u₁ u₂ s z).card : ℝ) / Fintype.card Z ≤
       ((Fintype.card F : ℝ) * L) ^ 3 * ε /
@@ -1156,11 +965,10 @@ theorem main_thm [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s L)
   -- This is `main_thm_gen` for the strategy `B'`.
   exact R.main_thm_gen u₁ u₂ s B' L t ε hL hε ht
 
-/-- **How Theorem 3.4 is used (the fold challenge).** If `|A_z| < t`, then whatever the answers `B`
-to `z`, a uniform challenge `α ∈ F` is DEEP-MCA-bad with probability at most `(t - 1)/q`. With
-`t = (n - s) + 2`, the least threshold of `main_thm`, this is `(n - s + 1)/q`; for
-`s = ⌈(1 - δ) n⌉` it is at most the term `(δ n + 1)/|F|` of the error `κ₂` of Theorem 4.3. -/
-theorem fold_challenge_le (z : Z) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
+/-- **Proof of `fold_challenge_le`** (how Theorem 3.4 is used: the fold challenge).
+`BEEP/Scalar/Theorem.lean` states this theorem again, under the name `fold_challenge_le`, and
+explains it. -/
+theorem fold_challenge_le_proof (z : Z) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
     ((univ.filter fun α : F => R.DeepBad u₁ u₂ s z (B z) α).card : ℝ) / Fintype.card F ≤
       ((t : ℝ) - 1) / Fintype.card F := by
   -- In `ℕ`: `|A_{z, B z}| ≤ |A_z| < t`, so `|A_{z, B z}| + 1 ≤ t`.
@@ -1183,10 +991,6 @@ section WithDelta
 
 -- In this section `u₁ u₂` are the words.
 variable (u₁ u₂ : ι → F)
-
-/-- The codewords of `C`, as words (functions `ι → F`): the image of the encoding map. -/
-def codewords : Finset (ι → F) :=
-  (univ : Finset (Fin R.ℓ → F)).image R.enc
 
 /-- Counting the codewords of `C` with a property is counting their messages, since the encoding
 map is injective. -/
@@ -1253,13 +1057,9 @@ theorem card_sub_ceil_le {δ : ℝ} (hδ : 0 ≤ δ) :
   · rw [Nat.sub_eq_zero_of_le h.le, Nat.cast_zero]
     positivity
 
-/-- **Theorem 3.4, as stated in the paper.** Let `δ ≥ 0` (the paper takes `δ ∈ (0, 1)`), let `C`
-be `(δ, L)`-list decodable, and let `ε` be an error bound of the zero evader. Then for every
-integer `t ≥ δ n + 2` and `z` uniform in `Z`,
-`Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - δ n - 1))`, where `A_z` is defined with agreement sets
-of size at least `(1 - δ) n`: `s = ⌈(1 - δ) n⌉`, for which the MCA property and the pretenders
-are those of the paper (`satisfiesMCA_ceil_iff`, `isPretender_ceil_iff`). -/
-theorem main_thm_delta [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
+/-- **Proof of `main_thm_delta`** (Theorem 3.4, as stated in the paper). `BEEP/Scalar/Theorem.lean`
+states this theorem again, under the name `main_thm_delta`, and explains it. -/
+theorem main_thm_delta_proof [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
     (hL : ∀ w : ι → F, ((R.codewords).filter fun c =>
       ((univ.filter fun i => c i ≠ w i).card : ℝ) ≤ δ * Fintype.card ι).card ≤ L)
     (hε : R.IsErrorBound ε) (ht : δ * Fintype.card ι + 2 ≤ t) :
@@ -1279,7 +1079,7 @@ theorem main_thm_delta [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
     have : ((Fintype.card ι - s : ℕ) : ℝ) + 2 ≤ t := by linarith
     exact_mod_cast this
   -- `main_thm` with `s` and `L` (list decodability by `listDecodable_of_delta`).
-  have hmain := R.main_thm u₁ u₂ s L t ε (R.listDecodable_of_delta hL) hε htN
+  have hmain := R.main_thm_proof u₁ u₂ s L t ε (R.listDecodable_of_delta hL) hε htN
   refine hmain.trans ?_
   -- It remains to compare the denominators: `t (t - 1) (t - δ n - 1) ≤ t (t - 1) (t - N)` with
   -- `N = (n - s) + 1`, both positive (`div_le_div_of_nonneg_left`), with the same nonnegative
@@ -1293,11 +1093,10 @@ theorem main_thm_delta [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
   push_cast
   exact mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg (by linarith) (by linarith))
 
-/-- **Theorem 3.4, as stated in the paper, for a real threshold.** The same as `main_thm_delta`
-for a real number `t ≥ δ n + 2`. -/
--- (The paper does not say that `t` is an integer. `|A_z| ≥ t` is `|A_z| ≥ ⌈t⌉`, and the bound for
--- `⌈t⌉` is at most the bound for `t`.)
-theorem main_thm_delta_real [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L : ℕ) (t : ℝ)
+/-- **Proof of `main_thm_delta_real`** (Theorem 3.4, as stated in the paper, for a real threshold).
+`BEEP/Scalar/Theorem.lean` states this theorem again, under the name `main_thm_delta_real`, and
+explains it. -/
+theorem main_thm_delta_real_proof [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L : ℕ) (t : ℝ)
     (hL : ∀ w : ι → F, ((R.codewords).filter fun c =>
       ((univ.filter fun i => c i ≠ w i).card : ℝ) ≤ δ * Fintype.card ι).card ≤ L)
     (hε : R.IsErrorBound ε) (ht : δ * Fintype.card ι + 2 ≤ t) :
@@ -1309,7 +1108,7 @@ theorem main_thm_delta_real [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L : ℕ
   have htk : t ≤ (k : ℝ) := Nat.le_ceil t
   have hδn : 0 ≤ δ * Fintype.card ι := by positivity
   -- `main_thm_delta` for the integer `k ≥ t ≥ δ n + 2`.
-  have hmain := R.main_thm_delta u₁ u₂ hδ L k hL hε (ht.trans htk)
+  have hmain := R.main_thm_delta_proof u₁ u₂ hδ L k hL hε (ht.trans htk)
   -- For a natural number `a`, `t ≤ a ↔ ⌈t⌉ ≤ a` (`Nat.ceil_le`): the set of `z` is the same.
   simp only [← Nat.ceil_le]
   refine hmain.trans ?_
@@ -1326,14 +1125,10 @@ theorem main_thm_delta_real [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L : ℕ
   exact mul_le_mul (mul_le_mul htk h1 (by linarith) (by linarith)) h2 (by linarith)
     (mul_nonneg (by linarith) (by linarith))
 
-/-- **Theorem 3.4 with `⌊δ n⌋` in place of `δ n`.** Under the hypotheses of `main_thm_delta`, for
-every integer `t ≥ ⌊δ n⌋ + 2` and `z` uniform in `Z`,
-`Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - ⌊δ n⌋ - 1))`. -/
--- (The notions of Section 3 depend on `δ` only through `⌊δ n⌋`, the largest number of positions
--- in which a word may differ from a `δ`-close codeword. When `δ n` is an integer this is
--- `main_thm_delta`. When it is not, this form is slightly stronger: it covers the threshold
--- `t = ⌊δ n⌋ + 2`, the least integer `t` for which "not `|A_z| ≥ t`" gives `|A_z| ≤ δ n + 1`.)
-theorem main_thm_delta_floor [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
+/-- **Proof of `main_thm_delta_floor`** (Theorem 3.4 with `⌊δ n⌋` in place of `δ n`).
+`BEEP/Scalar/Theorem.lean` states this theorem again, under the name `main_thm_delta_floor`, and
+explains it. -/
+theorem main_thm_delta_floor_proof [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : ℕ)
     (hL : ∀ w : ι → F, ((R.codewords).filter fun c =>
       ((univ.filter fun i => c i ≠ w i).card : ℝ) ≤ δ * Fintype.card ι).card ≤ L)
     (hε : R.IsErrorBound ε) (ht : ⌊δ * Fintype.card ι⌋₊ + 2 ≤ t) :
@@ -1351,7 +1146,7 @@ theorem main_thm_delta_floor [Nonempty Z] {δ ε : ℝ} (hδ : 0 ≤ δ) (L t : 
   -- So `t ≥ e + 2 ≥ (n - s) + 2`.
   have htN : Fintype.card ι - s + 2 ≤ t := by omega
   -- `main_thm` with `s` and `L` (list decodability by `listDecodable_of_delta`).
-  have hmain := R.main_thm u₁ u₂ s L t ε (R.listDecodable_of_delta hL) hε htN
+  have hmain := R.main_thm_proof u₁ u₂ s L t ε (R.listDecodable_of_delta hL) hε htN
   refine hmain.trans ?_
   -- The same facts in `ℝ`: `n - s ≤ e`, `0 ≤ e` and `e + 2 ≤ t`.
   have hle' : ((Fintype.card ι - s : ℕ) : ℝ) ≤ (e : ℝ) := Nat.cast_le.mpr hle
@@ -1369,4 +1164,4 @@ end WithDelta
 
 end Setup
 
-end BEEP.Main
+end BEEP.Scalar

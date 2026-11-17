@@ -1,134 +1,79 @@
--- [AI-drafted (claude-opus-5-5), 2026-11-14, at the author's request ("Write a Lean formalization
--- of Theorem 30 in the BEEP paper. Use the same formatting (with lots of comments) as you did when
--- formalizing the result in the folder deep improvement"): this whole file. It formalizes
--- Theorem 30 (`t:affine_main`) of `typst/deep+.typ`, together with Lemma 33 (`l:affine_line`), and
--- it is commented in the style of `2-deep-fold-lemma/lean/DeepFold/Lemma1.lean`. Please review the
--- statements against the paper; the dictionary is at the end of the module documentation.]
--- [AI-revised (claude-opus-5-5), 2026-11-16, when the file was copied into the repository BEEP:
--- comments only. The paper now numbers its results within sections, so Theorem 30, Lemma 33 and
--- Definitions 28, 29, 32 of the comments are now Theorem 5.3, Lemma 5.5 and Definitions 5.1, 5.2,
--- 5.4, and Lemma 22 is Lemma 3.10; the labels are now `t:affine_main_0` and
--- `l:few_bad_points_on_line_0`; the two sentences on Theorem 36 (in a Section 5.3 that the paper no
--- longer has) are reworded. No definition, statement or proof changed. Later that day
--- (claude-fable-5-2): the paper's file is now `paper/main.typ` (it was `typst/deep+.typ`), and the
--- comments say so; `BEEP/MainTheorem.lean` is the new file with Theorem 3.4. Please review]
+-- [AI-drafted (claude-opus-5-5), 2026-11-14, at the author's request, as part of
+-- `BEEP/AffineMain.lean`, the formalization of what is now Theorem 5.3 (`t:affine_main_0`) of
+-- `paper/main.typ` (then Theorem 30 of `typst/deep+.typ`). AI-revised (claude-opus-5-5 and
+-- claude-fable-5-2), 2026-11-16: the paper's new numbers and paths, in the comments only.
+-- AI-revised (claude-fable-5-2), 2026-11-17, at the author's request: that file is now the three
+-- files `BEEP/Affine/Defs.lean` (the definitions that the statement of the theorem uses),
+-- `BEEP/Affine/Theorem.lean` (the statements) and `BEEP/Affine/Proof.lean` (this one: the lemmas,
+-- the other definitions and the proofs). The lemmas, definitions and proofs are moved here
+-- without change, except that the four theorems that `BEEP/Affine/Theorem.lean` states are called
+-- `x_proof` here (`affine_main_proof` for `affine_main`, and so on). The namespace `BEEP` is now
+-- `BEEP.Affine`, and the comments are adapted to the three files.]
 
 -- A line starting with `--` is a comment, which Lean ignores. In this file each comment explains
 -- the line, or the few lines, directly below it. The reading guide after the module documentation
--- explains the notation and every tactic used in the file.
+-- explains every tactic used in the file; the one of `BEEP/Affine/Defs.lean` explains the notation.
 
--- Load Mathlib, Lean's library of formalized mathematics (fields, polynomials, finite sets, sums,
--- real numbers, ...). Every name used below and not defined in this file (`Finset`, `Polynomial`,
--- `degreeLT`, `card_le_card`, ...) comes from Mathlib.
-import Mathlib
+-- Load the definitions of `BEEP/Affine/Defs.lean`, and with them Mathlib, Lean's library of
+-- formalized mathematics. Every name used below and defined neither in this file nor in
+-- `BEEP/Affine/Defs.lean` (`Finset`, `Polynomial`, `degreeLT`, `card_le_card`, ...) comes from
+-- Mathlib.
+import BEEP.Affine.Defs
 
 /-!
-# BEEP with affine folds: Theorem 5.3 of the BEEP paper
+# BEEP with affine challenges: the proof of Theorem 5.3
 
-A formalization of Theorem 5.3 of the BEEP paper (`paper/main.typ`, Section 5, "BEEP with affine
-folding for Reed-Solomon codes", label `t:affine_main_0`, "For most `z ∈ F^m`, there are few
-DEEP-MCA-bad challenges"), together with the lemma on which its proof rests, Lemma 5.5 (label
-`l:few_bad_points_on_line_0`, "A parameterized line contains few pretenders, for the affine
-fold"). The numbers of theorems, lemmas and definitions are those of the PDF compiled from
-`paper/main.typ` on November 16, 2026, which numbers them within sections; the labels do not
-change when the numbers do.
+The proof of Theorem 5.3 of the BEEP paper (`paper/main.typ`, Section 5, label
+`t:affine_main_0`): the lemma on which it rests, Lemma 5.5 (label `l:few_bad_points_on_line_0`,
+"A parameterized line contains few pretenders, for the affine fold"), the definitions that only
+the proof uses, and the proofs of the statements of `BEEP/Affine/Theorem.lean`. The objects of
+the statements are defined in `BEEP/Affine/Defs.lean`.
 
-## Setting (Section 5.1 of the paper)
+There is no need to read this file to know what is proved: for that, read `BEEP/Affine/Defs.lean`
+and `BEEP/Affine/Theorem.lean`. This file is for following the proof. It declares definitions and
+theorems only (no notation and no instance), so it cannot change how a statement of
+`BEEP/Affine/Theorem.lean` is read.
 
-* `F` is a finite field with `q = |F|` elements.
-* The positions of a word form a finite type `ι` with `n = |ι|` elements, and `R.x : ι → F` gives
-  the distinct evaluation points `x_i` of the Reed–Solomon codes (`R` collects the data that the
-  paper fixes in Section 5.1, see `Setup`).
-* As in the paper, a codeword of the Reed–Solomon code `RS_e` is identified with its polynomial
-  of degree less than `e` (unique when `e ≤ n`), so `RS_e` is Mathlib's `degreeLT F e`. The code
-  dimension is `ℓ`, `C = RS_ℓ` and `C⁺ = RS_{ℓ+1}`.
-* A challenge is a polynomial `α = σ + τ X` of degree at most one. We write it as the pair
-  `(σ, τ) : F × F`, so that there are `q²` challenges, and `chal (σ, τ)` is the polynomial.
-* Words are folded with the weights `λ₁(α) = a₁ + α d₁` and `λ₂(α) = a₂ + α d₂` of Section 3, where
-  `a₁ d₂ ≠ a₂ d₁`. The affine fold of `u₁, u₂` is the word with entries
-  `λ₁(α)(x_i) u₁(i) + λ₂(α)(x_i) u₂(i)`.
-* The paper measures agreement with the proximity parameter `δ` (agreement sets of size at least
-  `(1 - δ) n`). As in `DeepFold/Lemma1.lean`, we use instead an integer agreement threshold `s`
-  (agreement sets of size at least `s`), so that `δ n` becomes `n - s`. The last section of the
-  file states the theorem with `δ` again, with `s = ⌈(1 - δ) n⌉`. For this `s` (and `δ ≥ 0`),
-  `n - s = ⌊δ n⌋ ≤ δ n`, so the `N` of the integer form is at most the paper's `N`, and the
-  integer form is slightly stronger when `δ n` is not an integer.
-* The zero evader is the evaluation at `m` points of `F`: for `z : Fin m → F` (that is,
-  `z ∈ F^m`), `φ_z(p) = (p(z_1), ..., p(z_m))`.
+## Results of this file
 
-## Main results
+* `BEEP.Affine.mem_polysLT`: a polynomial lies in `polysLT F k` exactly when it has degree less
+  than `k`.
+* `BEEP.Affine.Setup.affine_line_pairs` (the second case of the proof of Lemma 5.5): a
+  parameterized line `α ↦ λ₁(α) F₁ + λ₂(α) F₂` with `(F₁, F₂)` in the set `C_λ^{≡2}` contains at
+  most `(n - s + 2)(n - s + 1)/2` pretenders.
+* `BEEP.Affine.Setup.affine_line` (Lemma 5.5): a parameterized line with coefficients in `F(X)`
+  contains at most `N = max(q, (n - s + 2)(n - s + 1)/2)` pretenders.
+* `BEEP.Affine.Setup.affine_main_gen_nat` and `BEEP.Affine.Setup.affine_main_gen`: Theorem 5.3
+  for given answers `B`, in the counting form and with a probability.
+* `BEEP.Affine.Setup.isPretender_ceil_iff`: with `s = ⌈(1 - δ) n⌉`, the pretenders of
+  `BEEP/Affine/Defs.lean` are those of Definition 5.1, with agreement sets of size at least
+  `(1 - δ) n`.
+* `BEEP.Affine.Setup.affine_main_nat_proof`, `affine_main_proof`, `fold_challenge_le_proof` and
+  `affine_main_delta_proof`: the proofs of the theorems `affine_main_nat`, `affine_main`,
+  `fold_challenge_le` and `affine_main_delta` of `BEEP/Affine/Theorem.lean`, which states them
+  again and explains them.
 
-* `BEEP.Setup.affine_line_pairs` (the second case of the proof of Lemma 5.5): a parameterized line
-  `α ↦ λ₁(α) F₁ + λ₂(α) F₂` with `(F₁, F₂)` in the set `C_λ^{≡2}` contains at most
-  `(n - s + 2)(n - s + 1)/2` pretenders.
-* `BEEP.Setup.affine_line` (Lemma 5.5): a parameterized line with coefficients in `F(X)` contains
-  at most `N = max(q, (n - s + 2)(n - s + 1)/2)` pretenders.
-* `BEEP.Setup.affine_main_nat` (Theorem 5.3, counting form): for every `t`,
-  `t (t - 1) (t - N) · #{z ∈ F^m | |A_z| ≥ t} ≤ (q² L)³ (ℓ + 1)^m`, where `|A_z|` is the largest
-  number of DEEP-MCA-bad challenges at `z` over all answers `b₁, b₂` (`maxHits`). The subtractions
-  are those of `ℕ`, so for `t ≤ N` the left-hand side is `0` and the statement says nothing.
-* `BEEP.Setup.affine_main` (Theorem 5.3): for every integer `t ≥ N + 1`, for `z` uniform in `F^m`,
-  `Pr[|A_z| ≥ t] ≤ (q² L)³ ((ℓ + 1)/q)^m / (t (t - 1) (t - N))`.
-* `BEEP.Setup.affine_main_delta` (Theorem 5.3 as stated in the paper): the same with the proximity
-  parameter `δ`, the relative Hamming distance in the list decodability of `C⁺`, and
-  `N = max(q, (δ n + 2)(δ n + 1)/2)`.
-* `BEEP.Setup.fold_challenge_le`: if `|A_z| < t`, then a uniform challenge is DEEP-MCA-bad with
-  probability at most `(t - 1)/q²`. This is the error of the fold challenge that follows the
-  samples in a protocol that uses Theorem 5.3 (no such protocol is formalized here).
+## Dictionary paper ↔ Lean, for the objects of the proof
 
-## Dictionary paper ↔ Lean
+The dictionary of `BEEP/Affine/Defs.lean` has the objects of the statement.
 
 | paper (Section 5 of `paper/main.typ`) | Lean |
 |---|---|
-| `x_1, ..., x_n`, distinct | `R.x : ι → F`, `R.x_inj` |
-| `RS_e`, `C = RS_ℓ`, `C⁺ = RS_{ℓ+1}` | `degreeLT F e`, `degreeLT F R.ℓ`, `degreeLT F (R.ℓ + 1)` |
-| challenge `α = σ + τ X ∈ F^lin[X]` | `α : F × F`, the polynomial `chal α` |
-| `λ₁(α)`, `λ₂(α)` | `R.lam₁ α`, `R.lam₂ α` |
-| affine fold `λ₁(α) · u₁ + λ₂(α) · u₂` | `R.affineFold u₁ u₂ α` |
-| `C_λ^{≡2}` | `R.Pairs c₁ c₂` |
-| CA with `C_λ^{≡2}` over `S` up to one position | `R.CAUpToOne u₁ u₂ S` |
-| `(1 - δ) n` | `s`; then `δ n` is `n - s` (`= ⌊δ n⌋` for `s = ⌈(1 - δ) n⌉`) |
-| Definition 5.1, `c` is an `α`-pretender; `α` MCA-bad | `R.IsPretender u₁ u₂ s α c`; `R.MCABad u₁ u₂ s α` |
-| `φ_z`, Definition 5.2 (consistency) | `p.eval (z j)`; `R.Consistent z b α c` |
-| DEEP-MCA-bad challenge | `R.DeepBad u₁ u₂ s z b α` |
-| `A_{z, b₁, b₂}`; `|A_z|` (maximal over `b₁, b₂`) | `R.hits u₁ u₂ s (fun _ => b) z`; `R.maxHits u₁ u₂ s z` |
-| `C⁺` is `(δ, L)`-list decodable | `R.ListDecodable s L` (or `hL` of `affine_main_delta`) |
 | Definition 5.4, a parameterized line `θ(α) = F_θ + α G_θ` | `D θ(α) = P + α Q`, with `F_θ = P/D`, `G_θ = Q/D` |
 | `A_θ^pret` of Lemma 5.5 | `R.lineHits u₁ u₂ s D P Q` |
 | `U((α_i, v_i)_{i ∈ [3]})` | `defect α₁ v₁ α₂ v₂ α₃ v₃` |
 | `P` (pretender points), `T_z` | `R.pretPts u₁ u₂ s`, `R.consTriples u₁ u₂ s B z` |
 | `N = max(|F|, (δn + 2)(δn + 1)/2)` | `max (Fintype.card F) ((n - s + 2) * (n - s + 1) / 2)` (exact division) |
-
-The standing assumptions `ℓ ≥ 1` and `ℓ + 2 ≤ n` of Section 5.1 are not needed for Theorem 5.3
-in this form. The list decodability of `R.ListDecodable` counts polynomials of degree `≤ ℓ`, which
-is the same as counting the codewords of `C⁺` when `ℓ + 1 ≤ n` (`card_close_rsWords`); the form
-with `δ` assumes `ℓ + 1 ≤ n` and counts codewords.
 -/
 
 /-!
-## Reading guide for newcomers to Lean
+## Reading guide for newcomers to Lean: the proofs
 
-This guide follows the one of `2-deep-fold-lemma/lean/DeepFold/Lemma1.lean`, with what is new here
-(polynomials, structures, a few tactics).
+The reading guide of `BEEP/Affine/Defs.lean` explains the notation (types, statements, arguments,
+structures, finite sets, polynomials, numbers). This one explains how to read a proof; it
+follows the one of `2-deep-fold-lemma/lean/DeepFold/Lemma1.lean`, with a few more tactics.
 
-**What Lean checks.** A Lean file is a list of definitions (`def`) and theorems (`theorem`). A
-theorem is a statement followed by a proof, and Lean accepts the file only if every proof is
-complete: no step is left to the reader. This file compiles with no errors and no `sorry` (the
-keyword for a missing proof), so all its theorems are proved. The only axioms involved are the
-three standard ones of Lean's logic (propositional extensionality, the axiom of choice, and
-soundness of quotients), as the command `#print axioms BEEP.Setup.affine_main` shows.
-
-**Types.** `x : X` means "`x` is an element of `X`". Types play the role of sets: `ℕ` (the
-natural numbers, starting at `0`), `ℝ` (the reals), `F` (our field), `F × F` (pairs), `ι → F`
-(functions from `ι` to `F`, that is, words of length `n`), `Fin m → F` (vectors `z ∈ F^m`).
-Function application is written without brackets: `u₁ i` is `u₁(i)`, and `f a b` is `f(a, b)`.
-`fun x => e` is the function `x ↦ e`.
-
-**Statements are types as well.** `Prop` is the type of statements, and a proof of a statement
-`P` is an element `h : P`. So the hypothesis `(hD : D ≠ 0)` reads "`hD` is a proof that `D ≠ 0`".
-Logical symbols: `∧` (and), `∨` (or), `¬` (not), `→` (implies), `↔` (iff), `∀ x, P x`,
-`∃ x, P x`, `∀ x ∈ S, P x`, `∃ x ∈ S, P x`, `∃ S' ⊆ S, P S'`, and `a ≠ b` for `¬ (a = b)`.
-Working with proofs:
+**Working with proofs.**
 * from `h : P ∧ Q` we get `h.1 : P` and `h.2 : Q` (so `h.2.1` is the first part of `h.2`);
 * from `h : P ↔ Q` we get `h.mp : P → Q` and `h.mpr : Q → P`;
 * `⟨a, b⟩` is a proof of `P ∧ Q` made of `a : P` and `b : Q`, or a proof of `∃ x, P x` made of
@@ -138,40 +83,6 @@ Working with proofs:
 * `h.trans h'` chains `h : a ≤ b` and `h' : b ≤ c` into `a ≤ c` (also for `=`), and
   `h.symm : b = a` flips `h : a = b`;
 * `rfl` proves `a = a`, and more generally `a = b` when both sides are equal by definition.
-
-**Arguments.** In `def f {X : Type*} [Field X] (x : X) ...`:
-* `(x : X)` is an explicit argument, written whenever `f` is used;
-* `{X : Type*}` is an implicit argument, which Lean infers from the other arguments;
-* `[Field X]` says that `X` carries a field structure; Lean finds it automatically.
-`Type*` means "some type": read it as "some set". A `variable` line declares arguments once,
-for all the definitions and theorems that follow it and use them. `(m := m)` passes an implicit
-argument by name, when Lean cannot infer it.
-
-**Structures.** A `structure` is a record with named fields. `Setup F ι` below has the fields
-`x`, `x_inj`, `ℓ`, `a₁`, `d₁`, `a₂`, `d₂` and `det_ne`, and for `R : Setup F ι` they are written
-`R.x`, `R.ℓ`, `R.a₁`, ... Definitions in the namespace `Setup` are also written with a dot:
-`R.affineFold u₁ u₂ α` is `Setup.affineFold R u₁ u₂ α`.
-
-**Finite sets.** `Finset X` is the type of finite subsets of `X`.
-* `univ` is the whole of a finite type `X`, and `Fintype.card X` is its number of elements;
-* `U.filter P`, or `univ.filter fun x => P x`, is the set `{x ∈ U | P x}`;
-* `U.card` is the number of elements of `U`; `∑ x ∈ U, f x` and `∑ x : X, f x` are sums;
-* `U ∩ V`, `U ∪ V`, `U ⊆ V` as usual; `insert a U` is `{a} ∪ U`; `U.erase a` is `U` minus `{a}`;
-  `U ×ˢ V` is the cartesian product; `Uᶜ` is the complement of `U` in `X`;
-* `U.offDiag` is the set of ordered pairs `(i, j)` with `i, j ∈ U` and `i ≠ j`; it has
-  `#U · #U - #U` elements;
-* `F × F × F` means `F × (F × F)`, so the entries of a triple `t` are `t.1`, `t.2.1`, `t.2.2`.
-
-**Polynomials.** `F[X]` is the ring of polynomials with coefficients in `F`, `X` is the variable
-and `C a` is the constant polynomial `a`. `p.eval y` is the value `p(y)`, `p.coeff k` is the
-coefficient of `X^k`, `p.degree` is the degree (with `degree 0 = -∞`) and `p.natDegree` the degree
-as a natural number (with `natDegree 0 = 0`). `degreeLT F k` is the `F`-linear subspace of the
-polynomials of degree less than `k`: the Reed–Solomon code `RS_k`, with codewords identified with
-their polynomials. `a • p` is the scalar multiple of `p` by `a ∈ F`, which is `C a * p`.
-
-**Numbers.** On `ℕ`, subtraction is truncated: `3 - 5 = 0`, and division rounds down. `(n : ℝ)`,
-displayed `↑n`, is the natural number `n` viewed as a real number. `⌈y⌉₊` is the least natural
-number `≥ y`.
 
 **Tactic proofs.** After `:= by` comes a list of *tactics*. Lean keeps track of the current
 *goal* (what remains to be proved) and of the hypotheses available. In the editor the goal is
@@ -229,18 +140,18 @@ tactic shows the hypotheses and the goal at that point in the "Lean Infoview" pa
 best way to follow a proof: the comments describe the goal in words, the Infoview shows it
 exactly.
 
-**Plan.** The first section has the polynomials of bounded degree as a finite set (`polysLT`),
-the challenges (`chal`) and three facts on polynomials. Then `Setup` collects the data of
-Section 5.1, and the section `Defs` sets up the objects of Section 5.1 (`affineFold`, `Pairs`,
-`CAUpToOne`, `IsPretender`, `Consistent`, `DeepBad`, `ListDecodable`). The section `Lemma33`
+**Plan.** The first section has facts on the polynomials of bounded degree (`mem_polysLT` and
+three more), on the challenges (`eval_chal`, `chal_injective`, `eq_of_eval_chal_eq`), and the
+arithmetic at the end of the proof of Lemma 5.5 (`pair_count_arith`). The section `Lemma33`
 proves Lemma 5.5: `affine_line_pairs` is its second case, and `affine_line` is the lemma. The
 section `TheU` has the polynomial `U` of the proof of Theorem 5.3 (`defect`) and its first two
-properties. The section `Counting` follows the proof of Theorem 5.3: the DEEP-MCA-bad challenges
-(`hits`) and a chosen pretender for each (`pt`); the bound on `|T_z|` (`card_collinear_le`,
-`card_goodTriples`, `card_goodTriples_le`); the double count over the pretender points
-(`card_pretPts`, `sum_card_consTriples`); the theorem for given answers (`affine_main_gen_nat`,
-`affine_main_gen`); and the theorem with the maximal `A_z` (`maxHits`, `affine_main_nat`,
-`affine_main`, `fold_challenge_le`). The last section, `WithDelta`, states the theorem with `δ`.
+properties. The section `Counting` follows the proof of Theorem 5.3: a chosen pretender for each
+DEEP-MCA-bad challenge (`pt`); the bound on `|T_z|` (`card_collinear_le`, `card_goodTriples`,
+`card_goodTriples_le`); the double count over the pretender points (`card_pretPts`,
+`sum_card_consTriples`); the theorem for given answers (`affine_main_gen_nat`,
+`affine_main_gen`); and the theorem with the maximal `A_z` (`affine_main_nat_proof`,
+`affine_main_proof`, `fold_challenge_le_proof`). The last section, `WithDelta`, proves the
+theorem with `δ` (`affine_main_delta_proof`).
 -/
 
 -- `open Finset Polynomial` lets us write `univ`, `card_le_card`, `C`, `X`, `eval_add`, ... instead
@@ -253,13 +164,14 @@ open Finset Polynomial
 set_option linter.unusedSectionVars false
 
 -- From here to the end of the file, definitions may use non-constructive ingredients (the axiom
--- of choice in `pt`, real numbers in `affine_main`), so Lean does not try to compile them into
--- executable code.
+-- of choice in `pt`, real numbers in `affine_main_proof`), so Lean does not try to compile them
+-- into executable code.
 noncomputable section
 
--- All names defined below get the prefix `BEEP.` (e.g. `BEEP.Setup.affine_main`), so that they
--- cannot clash with names in Mathlib. The namespace is closed by `end BEEP` at the end of the file.
-namespace BEEP
+-- All names defined below get the prefix `BEEP.Affine.` (e.g. `BEEP.Affine.Setup.affine_line`),
+-- like those of `BEEP/Affine/Defs.lean`. The namespace is closed by `end BEEP.Affine` at the end
+-- of the file.
+namespace BEEP.Affine
 
 -- Classical logic: every statement `P` may be treated as decidable (true or false). Lean needs
 -- this to form `U.filter P` and `if P then _ else _` when no algorithm deciding `P` is provided.
@@ -272,19 +184,7 @@ variable {F : Type*} [Field F] [Fintype F]
 -- `ι` is the finite set of positions of a word, and `n = Fintype.card ι`.
 variable {ι : Type*} [Fintype ι]
 
-/-! ### Polynomials of degree less than `k`, and challenges -/
-
--- `variable (F) in` makes `F` an explicit argument of the next definition only: we write
--- `polysLT F k`, as Mathlib writes `degreeLT F k`.
-variable (F) in
-/-- The polynomials of degree less than `k`, as a finite set (for `k ≤ n`, one for each codeword of
-`RS_k`). -/
--- Mathlib's `degreeLTEquiv F k` is the linear bijection between `degreeLT F k` and `F^k`, which sends
--- a polynomial to its first `k` coefficients. We take the image of all of `F^k` (a finite type)
--- under the inverse bijection, and keep the polynomials (`(... : F[X])` forgets that they lie in
--- `degreeLT F k`).
-def polysLT (k : ℕ) : Finset F[X] :=
-  (univ : Finset (Fin k → F)).image fun v => ((degreeLTEquiv F k).symm v : F[X])
+/-! ### Polynomials of degree less than `k`, and challenges: the facts that the proof uses -/
 
 /-- A polynomial lies in `polysLT F k` exactly when it has degree less than `k`. -/
 theorem mem_polysLT {k : ℕ} {p : F[X]} : p ∈ polysLT F k ↔ p ∈ degreeLT F k := by
@@ -335,9 +235,6 @@ theorem card_eval_eq_zero_le {U : F[X]} (hU : U ≠ 0) :
   rw [mem_val, mem_filter] at hy
   -- ... and `mem_roots`: for `U ≠ 0`, `y` is a root of `U` iff `U.eval y = 0`.
   exact (mem_roots hU).mpr hy.2
-
-/-- The challenge `σ + τ X` of the pair `α = (σ, τ)`. -/
-def chal (α : F × F) : F[X] := C α.2 * X + C α.1
 
 /-- The value of a challenge at `y`. -/
 theorem eval_chal (α : F × F) (y : F) : (chal α).eval y = α.2 * y + α.1 := by
@@ -424,39 +321,11 @@ theorem pair_count_arith {a d e : ℕ}
     -- ... and we cancel the positive factor `(j + 2)(j + 1)` (`Nat.le_of_mul_le_mul_right`).
     exact Nat.le_of_mul_le_mul_right hmain hpos
 
-/-! ### The setting of Section 5.1 -/
-
-/-- The data that Section 5.1 of the paper fixes: the evaluation points, the code dimension and
-the weights of the fold. -/
-structure Setup (F : Type*) [Field F] (ι : Type*) where
-  /-- the evaluation point `x_i` of each position `i` -/
-  x : ι → F
-  /-- the evaluation points are distinct -/
-  x_inj : Function.Injective x
-  /-- the code dimension `ℓ`, so that `C = RS_ℓ` and `C⁺ = RS_{ℓ+1}` -/
-  ℓ : ℕ
-  /-- the constant term of the weight `λ₁(α) = a₁ + α d₁` -/
-  a₁ : F
-  /-- the coefficient of `α` in `λ₁(α) = a₁ + α d₁` -/
-  d₁ : F
-  /-- the constant term of the weight `λ₂(α) = a₂ + α d₂` -/
-  a₂ : F
-  /-- the coefficient of `α` in `λ₂(α) = a₂ + α d₂` -/
-  d₂ : F
-  /-- the assumption `a₁ d₂ ≠ a₂ d₁` of Section 3 -/
-  det_ne : a₁ * d₂ ≠ a₂ * d₁
-
 namespace Setup
 
 -- `R` is the data of Section 5.1. Every definition and theorem below that mentions `R` takes it as
 -- its first explicit argument, written with a dot: `R.affineFold`, `R.IsPretender`, ...
 variable (R : Setup F ι)
-
-/-- The weight `λ₁(α) = a₁ + α d₁`, a polynomial of degree at most one. -/
-def lam₁ (α : F × F) : F[X] := C R.a₁ + C R.d₁ * chal α
-
-/-- The weight `λ₂(α) = a₂ + α d₂`. -/
-def lam₂ (α : F × F) : F[X] := C R.a₂ + C R.d₂ * chal α
 
 -- The values of the weights at a point `y`.
 theorem eval_lam₁ (α : F × F) (y : F) : (R.lam₁ α).eval y = R.a₁ + R.d₁ * (chal α).eval y := by
@@ -465,70 +334,11 @@ theorem eval_lam₁ (α : F × F) (y : F) : (R.lam₁ α).eval y = R.a₁ + R.d�
 theorem eval_lam₂ (α : F × F) (y : F) : (R.lam₂ α).eval y = R.a₂ + R.d₂ * (chal α).eval y := by
   simp only [lam₂, eval_add, eval_mul, eval_C]
 
-/-- The affine fold `λ₁(α) · u₁ + λ₂(α) · u₂` of two words: the word whose `i`-th entry is
-`λ₁(α)(x_i) u₁(i) + λ₂(α)(x_i) u₂(i)`. -/
-def affineFold (u₁ u₂ : ι → F) (α : F × F) : ι → F :=
-  fun i => (R.lam₁ α).eval (R.x i) * u₁ i + (R.lam₂ α).eval (R.x i) * u₂ i
-
-/-! ### Pretenders, consistency and DEEP-MCA-bad challenges -/
-
-section Defs
-
--- In this section `u₁ u₂` are the two words, and `s` is the agreement threshold (the paper's
--- `(1 - δ) n`). Round brackets make them explicit arguments.
-variable (u₁ u₂ : ι → F) (s : ℕ)
-
-/-- `(c₁, c₂)` belongs to the set `C_λ^{≡2}`: `c₁, c₂ ∈ C⁺` and `d₁ c₁ + d₂ c₂ ∈ C`. -/
-def Pairs (c₁ c₂ : F[X]) : Prop :=
-  c₁ ∈ degreeLT F (R.ℓ + 1) ∧ c₂ ∈ degreeLT F (R.ℓ + 1) ∧
-    C R.d₁ * c₁ + C R.d₂ * c₂ ∈ degreeLT F R.ℓ
-
-/-- `(u₁, u₂)` has Correlated Agreement with `C_λ^{≡2}` over `S` up to one position: some pair
-`(c₁, c₂)` of `C_λ^{≡2}` agrees with `(u₁, u₂)` on a set `S' ⊆ S` with `|S'| ≥ |S| - 1`. -/
--- (`|S'| ≥ |S| - 1` is written `|S| ≤ |S'| + 1`, which avoids truncated subtraction.)
-def CAUpToOne (S : Finset ι) : Prop :=
-  ∃ c₁ c₂ : F[X], R.Pairs c₁ c₂ ∧
-    ∃ S' ⊆ S, S.card ≤ S'.card + 1 ∧ ∀ i ∈ S', u₁ i = c₁.eval (R.x i) ∧ u₂ i = c₂.eval (R.x i)
-
-/-- **Definition 5.1.** `c ∈ C⁺` is an `α`-pretender: the affine fold and `c` agree on a set `S` of
-size at least `s` such that `(u₁, u₂)` does not have Correlated Agreement with `C_λ^{≡2}` over `S`
-up to one position. -/
-def IsPretender (α : F × F) (c : F[X]) : Prop :=
-  c ∈ degreeLT F (R.ℓ + 1) ∧
-    ∃ S : Finset ι, s ≤ S.card ∧ (∀ i ∈ S, c.eval (R.x i) = R.affineFold u₁ u₂ α i) ∧
-      ¬ R.CAUpToOne u₁ u₂ S
-
-/-- **Definition 5.1, second part.** The challenge `α` is MCA-bad: there exists an `α`-pretender. -/
-def MCABad (α : F × F) : Prop := ∃ c, R.IsPretender u₁ u₂ s α c
-
-/-- **Definition 5.2.** `(α, c)` is consistent with `(z, b₁, b₂)`, where `b = (b₁, b₂)`:
-`φ_z(c) = φ_z(λ₁(α)) ⊙ b₁ + φ_z(λ₂(α)) ⊙ b₂`, that is,
-`c(z_j) = λ₁(α)(z_j) b₁(j) + λ₂(α)(z_j) b₂(j)` for every `j`. -/
-def Consistent {m : ℕ} (z : Fin m → F) (b : (Fin m → F) × (Fin m → F)) (α : F × F)
-    (c : F[X]) : Prop :=
-  ∀ j, c.eval (z j) = (R.lam₁ α).eval (z j) * b.1 j + (R.lam₂ α).eval (z j) * b.2 j
-
-/-- **Definition 5.2, second part.** `α` is a DEEP-MCA-bad challenge with respect to `z, b₁, b₂`
-and `u₁, u₂`: `α` is MCA-bad and some `α`-pretender `c` is such that `(α, c)` is consistent with
-`(z, b₁, b₂)`. -/
--- (The first condition follows from the second, since an `α`-pretender shows that `α` is MCA-bad;
--- we keep both, as the paper does.)
-def DeepBad {m : ℕ} (z : Fin m → F) (b : (Fin m → F) × (Fin m → F)) (α : F × F) : Prop :=
-  R.MCABad u₁ u₂ s α ∧ ∃ c, R.IsPretender u₁ u₂ s α c ∧ R.Consistent z b α c
-
-/-- `C⁺` is list decodable with list size `L` at agreement `s`: every word `w` agrees on at least
-`s` positions with at most `L` codewords of `C⁺` (counted through their polynomials). -/
-def ListDecodable (L : ℕ) : Prop :=
-  ∀ w : ι → F, ((polysLT F (R.ℓ + 1)).filter fun c =>
-    s ≤ (univ.filter fun i => c.eval (R.x i) = w i).card).card ≤ L
-
-end Defs
-
 /-! ### Lemma 5.5: a parameterized line contains few pretenders -/
 
 section Lemma33
 
--- The two words and the agreement threshold, as in the section `Defs`.
+-- The two words and the agreement threshold, as in the section `Defs` of `Defs.lean`.
 variable (u₁ u₂ : ι → F) (s : ℕ)
 
 /-- The step behind "linearly dependent" in the proof of Lemma 5.5: if two challenges give fold
@@ -923,12 +733,8 @@ section Counting
 
 -- The words, the threshold, the number `m` of samples, and the prover's answers `B`: for every
 -- `z ∈ F^m` a pair `B z = (b₁, b₂)`. The answers may depend on `z` in any way. Theorem 5.3 takes
--- the answers that maximize the number of DEEP-MCA-bad challenges (`maxHits` below).
+-- the answers that maximize the number of DEEP-MCA-bad challenges (`maxHits` of `Defs.lean`).
 variable (u₁ u₂ : ι → F) (s : ℕ) {m : ℕ} (B : (Fin m → F) → (Fin m → F) × (Fin m → F))
-
-/-- The set `A_{z, b₁, b₂}` of DEEP-MCA-bad challenges at `z`, with the answers `(b₁, b₂) = B z`. -/
-def hits (z : Fin m → F) : Finset (F × F) :=
-  univ.filter fun α => R.DeepBad u₁ u₂ s z (B z) α
 
 /-- A chosen consistent pretender at the challenge `α` (junk if there is none): the paper's
 `c_α` in the proof of Lemma 3.10, used in the third step of the proof of Theorem 5.3. -/
@@ -1321,12 +1127,6 @@ theorem affine_main_gen (L t : ℕ) (hL : R.ListDecodable s L)
 
 /-! #### Theorem 5.3, with the answers that maximize `|A_{z,b₁,b₂}|` -/
 
-/-- `|A_z|`: the largest number of DEEP-MCA-bad challenges at `z` over all answers `(b₁, b₂)`. -/
--- `fun _ => b` is the strategy that answers `b` to every `z`, and `univ.sup f` is the largest value
--- of `f b` over all `b` (Mathlib's `Finset.sup`).
-def maxHits (z : Fin m → F) : ℕ :=
-  univ.sup fun b : (Fin m → F) × (Fin m → F) => (R.hits u₁ u₂ s (fun _ => b) z).card
-
 -- The DEEP-MCA-bad challenges of `z` only depend on the answers `B z` to `z`, so
 -- `|A_{z, B z}| ≤ |A_z|` for every strategy `B`.
 theorem card_hits_le_maxHits (z : Fin m → F) :
@@ -1353,12 +1153,9 @@ theorem exists_worst_answers :
   obtain ⟨b, hb⟩ := Classical.axiom_of_choice (R.exists_eq_maxHits u₁ u₂ s (m := m))
   exact ⟨b, hb⟩
 
-/-- **Theorem 5.3, counting form.** For every `t`,
-`t (t - 1) (t - N) · #{z ∈ F^m | |A_z| ≥ t} ≤ (q² L)³ (ℓ + 1)^m`, where
-`N = max(q, (n - s + 2)(n - s + 1)/2)` and `|A_z|` is the largest number of DEEP-MCA-bad
-challenges at `z` over all answers. As in `affine_main_gen_nat`, the subtractions are those of `ℕ`,
-so for `t ≤ N` the left-hand side is `0`. -/
-theorem affine_main_nat (L t : ℕ) (hL : R.ListDecodable s L) :
+/-- **Proof of `affine_main_nat`** (Theorem 5.3, counting form). `BEEP/Affine/Theorem.lean` states
+this theorem again, under the name `affine_main_nat`, and explains it. -/
+theorem affine_main_nat_proof (L t : ℕ) (hL : R.ListDecodable s L) :
     t * (t - 1) *
         (t - max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)) *
         (univ.filter fun z : Fin m → F => t ≤ R.maxHits u₁ u₂ s z).card ≤
@@ -1370,11 +1167,10 @@ theorem affine_main_nat (L t : ℕ) (hL : R.ListDecodable s L) :
   -- This is `affine_main_gen_nat` for the strategy `B'`.
   exact R.affine_main_gen_nat u₁ u₂ s B' L t hL
 
-/-- **Theorem 5.3.** Let `N = max(q, (n - s + 2)(n - s + 1)/2)`, and let `C⁺` be list decodable with
-list size `L` at agreement `s`. Then for every integer `t ≥ N + 1` and `z` uniform in `F^m`,
-`Pr[|A_z| ≥ t] ≤ (q² L)³ ((ℓ + 1)/q)^m / (t (t - 1) (t - N))`, where `|A_z|` is the largest number
-of DEEP-MCA-bad challenges at `z` over all answers `b₁, b₂`. -/
-theorem affine_main (L t : ℕ) (hL : R.ListDecodable s L)
+/-- **Proof of `affine_main`** (Theorem 5.3 with the integer agreement threshold `s`).
+`BEEP/Affine/Theorem.lean` states this theorem again, under the name `affine_main`, and explains it.
+-/
+theorem affine_main_proof (L t : ℕ) (hL : R.ListDecodable s L)
     (ht : max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2) + 1 ≤
       t) :
     ((univ.filter fun z : Fin m → F => t ≤ R.maxHits u₁ u₂ s z).card : ℝ) /
@@ -1389,10 +1185,10 @@ theorem affine_main (L t : ℕ) (hL : R.ListDecodable s L)
   -- This is `affine_main_gen` for the strategy `B'`.
   exact R.affine_main_gen u₁ u₂ s B' L t hL ht
 
-/-- **How Theorem 5.3 is used (the fold challenge).** If `|A_z| < t`, then whatever the answers `B`
-to `z`, a uniform challenge `α ∈ F × F` is DEEP-MCA-bad with probability at most `(t - 1)/q²`. This
-is the error of the fold challenge that follows the samples in a protocol that uses Theorem 5.3. -/
-theorem fold_challenge_le (z : Fin m → F) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
+/-- **Proof of `fold_challenge_le`** (how Theorem 5.3 is used: the fold challenge).
+`BEEP/Affine/Theorem.lean` states this theorem again, under the name `fold_challenge_le`, and
+explains it. -/
+theorem fold_challenge_le_proof (z : Fin m → F) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
     ((univ.filter fun α : F × F => R.DeepBad u₁ u₂ s z (B z) α).card : ℝ) /
         (Fintype.card (F × F) : ℝ) ≤ ((t : ℝ) - 1) / (Fintype.card F : ℝ) ^ 2 := by
   -- In `ℕ`: `|A_{z, B z}| ≤ |A_z| < t`, so `|A_{z, B z}| + 1 ≤ t`.
@@ -1417,10 +1213,6 @@ section WithDelta
 
 -- In this section `u₁ u₂` are the words and `m` is the number of samples.
 variable (u₁ u₂ : ι → F) {m : ℕ}
-
-/-- The codewords of `RS_k`, as words (functions `ι → F`). -/
-def rsWords (k : ℕ) : Finset (ι → F) :=
-  (polysLT F k).image fun p => fun i => p.eval (R.x i)
 
 /-- For `k ≤ n`, a codeword of `RS_k` has a single polynomial of degree `< k`: evaluation at the
 `n` distinct points is injective on the polynomials of degree `< k`. -/
@@ -1490,12 +1282,10 @@ theorem listDecodable_of_delta {δ : ℝ} {L : ℕ} (hn : R.ℓ + 1 ≤ Fintype.
   -- So `#differ = n - #agree ≤ n - (1 - δ) n = δ n`.
   linarith
 
-/-- **Theorem 5.3, as stated in the paper.** Let `δ ≥ 0` (the paper takes `δ ∈ (0, 1)`), let
-`ℓ + 1 ≤ n`, and let `C⁺` be `(δ, L)`-list decodable. Let `N = max(q, (δ n + 2)(δ n + 1)/2)`. Then for
-every integer `t ≥ N + 1` and `z` uniform in `F^m`,
-`Pr[|A_z| ≥ t] ≤ (q² L)³ ((ℓ + 1)/q)^m / (t (t - 1) (t - N))`, where `A_z` is defined with agreement
-sets of size at least `(1 - δ) n` (`s = ⌈(1 - δ) n⌉`, see `isPretender_ceil_iff`). -/
-theorem affine_main_delta {δ : ℝ} (hδ : 0 ≤ δ) (L t : ℕ) (hn : R.ℓ + 1 ≤ Fintype.card ι)
+/-- **Proof of `affine_main_delta`** (Theorem 5.3, as stated in the paper).
+`BEEP/Affine/Theorem.lean` states this theorem again, under the name `affine_main_delta`, and
+explains it. -/
+theorem affine_main_delta_proof {δ : ℝ} (hδ : 0 ≤ δ) (L t : ℕ) (hn : R.ℓ + 1 ≤ Fintype.card ι)
     (hL : ∀ w : ι → F, ((R.rsWords (R.ℓ + 1)).filter fun c =>
       ((univ.filter fun i => c i ≠ w i).card : ℝ) ≤ δ * Fintype.card ι).card ≤ L)
     (ht : max (Fintype.card F : ℝ)
@@ -1537,7 +1327,7 @@ theorem affine_main_delta {δ : ℝ} (hδ : 0 ≤ δ) (L t : ℕ) (hn : R.ℓ + 
     have : (N : ℝ) + 1 ≤ t := by linarith
     exact_mod_cast this
   -- `affine_main` with `s` and `L` (list decodability by `listDecodable_of_delta`).
-  have hmain := R.affine_main u₁ u₂ s (m := m) L t (R.listDecodable_of_delta hn hL) htN
+  have hmain := R.affine_main_proof u₁ u₂ s (m := m) L t (R.listDecodable_of_delta hn hL) htN
   refine hmain.trans ?_
   -- It remains to compare the denominators: `t (t - 1) (t - Nr) ≤ t (t - 1) (t - N)`, both
   -- positive (`div_le_div_of_nonneg_left`), with the same nonnegative numerator.
@@ -1553,4 +1343,4 @@ end WithDelta
 
 end Setup
 
-end BEEP
+end BEEP.Affine
