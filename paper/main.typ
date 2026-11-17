@@ -421,15 +421,15 @@ We proceed to define round-by-round knowledge soundness of an IOR, following @BC
 
 Let $FF$ be a finite field and let $cal(C) subset FF^blockclength$ be a linear code of blocklength $blockclength$ and dimension $codedim$, with $blockclength$ a power of two. Let $delta in (0,1)$ be a proximity parameter.
 
-// [AI-edited (claude-fable-5-2), 2026-11-12, at the author's request: words are folded with two linear maps lambda_1, lambda_2 of alpha instead of the weights (1, alpha). Edited: the next paragraph; the MCA, MCA-bad, pretender and consistency definitions; the proofs of l:few_bad_points_on_line and l:colinear_zero; one sentence in the proof of t:main_thm. Please review]
-#aiedit[We fix two linear maps $lambda_1, lambda_2: FF arrow FF$, so that $lambda_i (alpha) = a_i + alpha dot d_i$ for some $a_i, d_i in FF$, and we assume that $a_1 dot d_2 != a_2 dot d_1$. We use $lambda_1(alpha)$ and $lambda_2(alpha)$ as the weights when folding two words with a challenge $alpha in FF$. For example, $(lambda_1(alpha), lambda_2(alpha))$ can be $(1, alpha)$, or $(1-alpha, alpha)$ as in Section @s:BEEP_fold. The assumption $a_1 dot d_2 != a_2 dot d_1$ guarantees that the vectors $(lambda_1(alpha), lambda_2(alpha))$ and $(lambda_1(alpha'), lambda_2(alpha'))$ are linearly independent for all distinct $alpha, alpha' in FF$.]
+/
+#aiedit[We fix two linear maps $theta_1, theta_2: FF arrow FF$, so that $theta_i (alpha) = a_i + alpha dot d_i$ for some $a_i, d_i in FF$, and we assume that $a_1 dot d_2 != a_2 dot d_1$. We use $theta_1(alpha)$ and $theta_2(alpha)$ as the weights when folding two words with a challenge $alpha in FF$. For example, $(theta_1(alpha), theta_2(alpha))$ can be $(1, alpha)$, or $(1-alpha, alpha)$ as in Section @s:BEEP_fold. The assumption $a_1 dot d_2 != a_2 dot d_1$ guarantees that the vectors $(theta_1(alpha), theta_2(alpha))$ and $(theta_1(alpha'), theta_2(alpha'))$ are linearly independent for all distinct $alpha, alpha' in FF$.]
 
 
  Let $u_1, u_2 in FF^blockclength$ be two words. Given $S subset [blockclength]$, we say $(u_1,u_2)$ has #emph[Correlated Agreement with $C$ over $S$] if there exist codewords $c_1,c_2 in cal(C)$ such that $u_1$ agrees with $c_1$ on $S$ and $u_2$ agrees with $c_2$ on $S$. 
 
 
 
-  Let  $u_1,u_2 in FF^blockclength$ be two words. We say that a field element $alpha in FF$ satisfies the #emph[$delta$-Mutual Correlated Agreement (MCA) property] with respect to $u_1,u_2$, if for every subset $S subset [blockclength]$ with $|S|≥ (1-delta) dot blockclength$ such that #aiedit[$lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$] agrees with $cal(C)$ on $S$, the pair $(u_1,u_2)$ has Correlated Agreement (CA) with $cal(C)$ over $S$.
+  Let  $u_1,u_2 in FF^blockclength$ be two words. We say that a field element $alpha in FF$ satisfies the #emph[$delta$-Mutual Correlated Agreement (MCA) property] with respect to $u_1,u_2$, if for every subset $S subset [blockclength]$ with $|S|≥ (1-delta) dot blockclength$ such that #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] agrees with $cal(C)$ on $S$, the pair $(u_1,u_2)$ has Correlated Agreement (CA) with $cal(C)$ over $S$.
 
 
 #definition[MCA-bad element.][
@@ -439,7 +439,7 @@ Let $FF$ be a finite field and let $cal(C) subset FF^blockclength$ be a linear c
 The code $cal(C)$ is said to have #emph[$delta$-Mutual Correlated Agreement (MCA)] with error $epsilon$, if for any two words $u_1,u_2 in FF^blockclength$, there are at most $epsilon dot |FF|$ MCA-bad field elements.
 
 #definition[Pretender codeword][
-  Fix two words $u_1,u_2 in FF^blockclength$, and let $alpha in FF$ be an MCA-bad field element. We say that a codeword $c in cal(C)$ is an #emph[$alpha$-pretender] if, intuitively speaking, it is a witness to the failing of the MCA property for $alpha$. Formally, $c$ is an $alpha$-pretender if #aiedit[$lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$] and $c$ agree on a set $S subset [blockclength]$ of size $|S| ≥ (1-delta) dot blockclength$ and $(u_1,u_2)$ does not have CA with $cal(C)$ over $S$.
+  Fix two words $u_1,u_2 in FF^blockclength$, and let $alpha in FF$ be an MCA-bad field element. We say that a codeword $c in cal(C)$ is an #emph[$alpha$-pretender] if, intuitively speaking, it is a witness to the failing of the MCA property for $alpha$. Formally, $c$ is an $alpha$-pretender if #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] and $c$ agree on a set $S subset [blockclength]$ of size $|S| ≥ (1-delta) dot blockclength$ and $(u_1,u_2)$ does not have CA with $cal(C)$ over $S$.
 ]
 
 Fix a zero-evader $(φ_z)_(z ∈ 𝒵)$, i.e. a famility of linear maps $phi_z : FF^codedim -> FF^numsamples$, with error bound $ε$.  Abusing the notation, we also define $phi_z$ on $cal(C)$ by letting $phi_z(Enc_cal(C)(vb(w))) := phi_z(vb(w))$. Since $Enc_cal(C)$ is linear and injective, $phi_z$ is linear on $cal(C)$ and $Pr_(z <- Z)[phi_z(c) =0] ≤ epsilon$ for all nonzero codeword $c$.
@@ -449,7 +449,7 @@ Let $𝐛_(1), 𝐛_(2) ∈ 𝔽^numsamples$. For intuition, for an honest prove
 #definition[Consistency of MCA-bad elements $α ∈ 𝔽$  with $z ∈ cal(Z)_(sans("evader"))$][
   Let $α ∈ 𝔽$ and $c ∈ 𝒞$. Given $z ∈ 𝒵$ and $vb(b)_(1), vb(b)_(2) in FF^numsamples$,  we say that $(α, c)$ is _consistent_ with $(z, vb(b)_(1), vb(b)_(2))$ if 
   $
-    φ_z (c) = aiedit(λ_1 (α) ·) 𝐛_(1) + aiedit(λ_2 (α)) · 𝐛_(2).
+    φ_z (c) = aiedit(θ_1 (α) ·) 𝐛_(1) + aiedit(θ_2 (α)) · 𝐛_(2).
   $
   When $α$ is an MCA-bad element and there exists an $α$-pretender $c in cal(C)$ such that $(α, c)$ is consistent with  $(z, vb(b)_(1), vb(b)_(2))$, then we say that $α$ is a _DEEP-MCA-bad element_ with respect to $z,vb(b)_(1), vb(b)_(2)$ and $u_1, u_2$. 
 
@@ -503,13 +503,13 @@ The following result is well-known, see for example @?. We include a proof for c
   $
 ]<l:few_bad_points_on_line>
 #proof[
-  #aiedit[Since $a_1 dot d_2 != a_2 dot d_1$, there exist codewords $c_1, c_2 in cal(C)$ such that $lmap(alpha) = lambda_1(alpha) dot c_1 + lambda_2(alpha) dot c_2$ for all $alpha in FF$ (they are the solution to the system $a_1 dot c_1 + a_2 dot c_2 = c_(lmap,1)$, $d_1 dot c_1 + d_2 dot c_2 = c_(lmap,2)$).] Let $D subset [blockclength]$ be the set
+  #aiedit[Since $a_1 dot d_2 != a_2 dot d_1$, there exist codewords $c_1, c_2 in cal(C)$ such that $lmap(alpha) = theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ for all $alpha in FF$ (they are the solution to the system $a_1 dot c_1 + a_2 dot c_2 = c_(lmap,1)$, $d_1 dot c_1 + d_2 dot c_2 = c_(lmap,2)$).] Let $D subset [blockclength]$ be the set
   $
   D := {x in [blockclength] | u_1(x) != aiedit(c_1(x)) " or " u_2(x) != aiedit(c_2(x))}.
   $
-  Let $alpha in A_lmap^(sans("pret"))$. Since $theta(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$  where $lmap(alpha)$ and #aiedit[$lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$] agree, with $|S_alpha|≥ (1-delta) dot blockclength$ and such that $(u_0,u_1)$ do not have correlated agreement with $cal(C)$ over $S_alpha$. Hence $S_alpha inter D != emptyset$.
+  Let $alpha in A_lmap^(sans("pret"))$. Since $theta(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$  where $lmap(alpha)$ and #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] agree, with $|S_alpha|≥ (1-delta) dot blockclength$ and such that $(u_0,u_1)$ do not have correlated agreement with $cal(C)$ over $S_alpha$. Hence $S_alpha inter D != emptyset$.
 
-  We claim that for every distinct $alpha, alpha' in A_lmap^(sans("pret"))$ we have $(S_alpha inter D) inter (S_(alpha') inter D) = emptyset$. Indeed, assume to the contrary that $x in [blockclength]$ belongs to such set. Then #aiedit[$lambda_1(alpha) dot u_1(x) + lambda_2(alpha) dot u_2(x)= lambda_1(alpha) dot c_1(x) + lambda_2(alpha) dot c_2(x)$] and #aiedit[$lambda_1(alpha') dot u_1(x) + lambda_2(alpha') dot u_2(x)= lambda_1(alpha') dot c_1(x) + lambda_2(alpha') dot c_2(x)$]. #aiedit[Since $alpha != alpha'$, the vectors $(lambda_1(alpha), lambda_2(alpha))$ and $(lambda_1(alpha'), lambda_2(alpha'))$ are linearly independent, and so] we obtain $u_1(x)=aiedit(c_1(x))$ and $u_2(x)=aiedit(c_2(x))$, contradicting the fact that $x in D$, and thus proving the claim.
+  We claim that for every distinct $alpha, alpha' in A_lmap^(sans("pret"))$ we have $(S_alpha inter D) inter (S_(alpha') inter D) = emptyset$. Indeed, assume to the contrary that $x in [blockclength]$ belongs to such set. Then #aiedit[$theta_1(alpha) dot u_1(x) + theta_2(alpha) dot u_2(x)= theta_1(alpha) dot c_1(x) + theta_2(alpha) dot c_2(x)$] and #aiedit[$theta_1(alpha') dot u_1(x) + theta_2(alpha') dot u_2(x)= theta_1(alpha') dot c_1(x) + theta_2(alpha') dot c_2(x)$]. #aiedit[Since $alpha != alpha'$, the vectors $(theta_1(alpha), theta_2(alpha))$ and $(theta_1(alpha'), theta_2(alpha'))$ are linearly independent, and so] we obtain $u_1(x)=aiedit(c_1(x))$ and $u_2(x)=aiedit(c_2(x))$, contradicting the fact that $x in D$, and thus proving the claim.
 
   This immediately implies that $|A_lmap^(sans("pret"))| ≤ |D|$, since each set $S_alpha$ intersects $D$ non-trivially, and the sets $S_alpha inter D$ are pairwise disjoint. Now if $|D|≤  delta dot blockclength +1$ we are done. Hence assume this is not the case.
 
@@ -553,7 +553,7 @@ Note that, for any $(alpha_i, v_i)_(i in [3]) in (FF times cal(C))^3$, the eleme
   $
 ]<l:colinear_zero>
 #proof[
-  It follows by direct evaluation, using the linearity of $evalmap_z$ and the assumption that $evalmap_z (v_i) = aiedit(lambda_1(alpha_i) dot 𝐛_1 + lambda_2(alpha_i) dot 𝐛_2)$ for $i=1,2,3$. #aiedit[Writing $lambda_j (alpha) = a_j + alpha dot d_j$ and $𝐛' := d_1 dot 𝐛_1 + d_2 dot 𝐛_2$, this gives $evalmap_z (v_i) - evalmap_z (v_1) = (alpha_i - alpha_1) dot 𝐛'$ for $i=2,3$, and so:] 
+  It follows by direct evaluation, using the linearity of $evalmap_z$ and the assumption that $evalmap_z (v_i) = aiedit(theta_1(alpha_i) dot 𝐛_1 + theta_2(alpha_i) dot 𝐛_2)$ for $i=1,2,3$. #aiedit[Writing $theta_j (alpha) = a_j + alpha dot d_j$ and $𝐛' := d_1 dot 𝐛_1 + d_2 dot 𝐛_2$, this gives $evalmap_z (v_i) - evalmap_z (v_1) = (alpha_i - alpha_1) dot 𝐛'$ for $i=2,3$, and so:] 
   $  
      evalmap_z (U((alpha_i, v_i)_(i in [3]))) &=
      (alpha_3-alpha_1) dot (evalmap_z (v_2) - evalmap_z (v_1))-(alpha_2-alpha_1) dot (evalmap_z (v_3) - evalmap_z (v_1)),\
@@ -610,7 +610,7 @@ We are ready to prove @t:main_thm.
   sum_(z in cal(Z)) |T_z| ≤ (|FF| dot L)^3 dot epsilon_(sans("evader")) dot |cal(Z)|.
   $
   Indeed, let $P subset FF times cal(C)$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. We have $|P| ≤ |FF| dot L$,
-  where the list size factor $L$ is due  to the fact that an $alpha$-pretender is $delta$-close to #aiedit[$lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$], and since $cal(C)$ is $(delta, L)$-list decodable, there are at most $L$ codewords in $cal(C)$ that are $delta$-close to #aiedit[$lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$].
+  where the list size factor $L$ is due  to the fact that an $alpha$-pretender is $delta$-close to #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$], and since $cal(C)$ is $(delta, L)$-list decodable, there are at most $L$ codewords in $cal(C)$ that are $delta$-close to #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$].
   
   Now, for each triple $(alpha_i, c_i)_(i in [3]) in T_z$, we have by definition that $U((alpha_i, c_i)_(i in [3])) != 0$ and $(alpha_i, c_i)$ is consistent with $(z, vb(b)_1^*, vb(b)_2^*)$ for all $i in [3]$. By @l:colinear_zero, $evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. Since $0!=U((alpha_i, c_i)_(i in [3])) in cal(C)$, by the definition of zero evader there are at most $epsilon_(sans("evader")) dot |cal(Z)|$ elements $z in cal(Z)$ such that $evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. 
 
@@ -630,8 +630,8 @@ $<e:proof_thm_2> as claimed. Combining @e:proof_thm_1 and @e:proof_thm_2 we now 
 = Folding of constrained interleaved  codes with BEEP <s:BEEP_fold>
 
 == The BEEP IOR
-// [AI-edited (claude-fable-5-2), 2026-11-12, at the author's request: this section uses lambda_1(alpha) = 1-alpha, lambda_2(alpha) = alpha throughout. Edited: the second sentence below; the weights (1, alpha) became (1-alpha, alpha) in c:BEEP (Rounds 2, 3 and Output) and in Round 2 of the proof of t:beep_soundness. Please review]
-We assume the notation from Section @s:better_pretenders. #aiedit[Throughout this section, the linear maps $lambda_1, lambda_2$ fixed there are $lambda_1(alpha) = 1-alpha$ and $lambda_2(alpha) = alpha$ (they satisfy the assumption made there), i.e. two words $u_1, u_2$ are folded as $(1-alpha) dot u_1 + alpha dot u_2$.] Define the following relation:
+// [AI-edited (claude-fable-5-2), 2026-11-12, at the author's request: this section uses theta_1(alpha) = 1-alpha, theta_2(alpha) = alpha throughout. Edited: the second sentence below; the weights (1, alpha) became (1-alpha, alpha) in c:BEEP (Rounds 2, 3 and Output) and in Round 2 of the proof of t:beep_soundness. Please review]
+We assume the notation from Section @s:better_pretenders. #aiedit[Throughout this section, the linear maps $theta_1, theta_2$ fixed there are $theta_1(alpha) = 1-alpha$ and $theta_2(alpha) = alpha$ (they satisfy the assumption made there), i.e. two words $u_1, u_2$ are folded as $(1-alpha) dot u_1 + alpha dot u_2$.] Define the following relation:
 $ cal(R)_(cal(C)) := lr({
     lr(( cases(delim: #none,
       bb(x) = (mu, vb(v)) in FF times FF^(codedim) \,,
@@ -865,7 +865,7 @@ We stress that Ligerito (Flock) differs from BEEP-Ligerito in its levels, in an 
 #let RS(e) = $sans("RS")_(#e)$
 #let ratlines = $cal(L)^(1)[chal arrow FF(X)]$
 #let emul = $dot.o$
-#let Cpair = $cal(C)_lambda^(equiv 2)$
+#let Cpair = $cal(C)_theta^(equiv 2)$
 
 In the context of Reed-Solomon codes, in @CWYZ26, the authors propose, instead of sampling folding challenges $alpha$ in $FF$, to sample them on the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$.  sampling folding challenges of the form $alpha$. As shown in @CWYZ26, doing so results in a folding error term of $4\/|FF| + blockclength\/|F|^2$ instead of the usual $O(sans("poly")(blockclength)\/|F|)$. #albert[Mention Polygero?]
 
@@ -896,11 +896,11 @@ $<e:poly_times_word>
 
 
 
- Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps #albert[Replace $lambda$ by another symbol everywhere] $lambda_i (Y):= a_i + d_i dot Y$, $i=1,2$, with, as in @s:better_pretenders $a_1 dot d_2 != a_2 dot d_1$. Looking ahead, given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, the $alpha$-fold of $u_1, u_2$ is the word (recall our notation convention from @e:poly_times_word)
+ Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps $theta_i (Y):= a_i + d_i dot Y$, $i=1,2$, with, as in @s:better_pretenders $a_1 dot d_2 != a_2 dot d_1$. Looking ahead, given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, the $alpha$-fold of $u_1, u_2$ is the word (recall our notation convention from @e:poly_times_word)
 $
-lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2 in FF^blockclength.
+theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2 in FF^blockclength.
 $
-Note that  if $c_1, c_2 in cal(C)$, then the folded word $lambda_1(alpha) dot c_1 + lambda_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. We are interested in pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
+Note that  if $c_1, c_2 in cal(C)$, then the folded word $theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. We are interested in pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
 $
 Cpair := {(c_1, c_2) in Cplus times Cplus | d_1 dot c_1 + d_2 dot c_2 in cal(C)}.
 $
@@ -910,7 +910,7 @@ $
 Let $u_1, u_2 in FF^blockclength$ be two words and let $delta in (0,1)$. Given $S subset [blockclength]$, we say that $(u_1, u_2)$ has #emph[Correlated Agreement with $Cpair$ over $S$ up to one position] if there exist a pair $(c_1, c_2) in Cpair$ and a set $S' subset S$ with $|S'| ≥ |S| - 1$ such that $u_1$ agrees with $c_1$ on $S'$ and $u_2$ agrees with $c_2$ on $S'$.
 
 #definition[Pretender codeword][
-  Let $u_1, u_2 in FF^blockclength$ be two words and let $alpha in chal$. We say that a codeword $c in Cplus$ is an #emph[$alpha$-pretender] (with respect to $u_1, u_2$) if $lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$ and $c$ agree on a set $S subset [blockclength]$ of size $|S| ≥ (1-delta) dot blockclength$ such that $(u_1, u_2)$ does not have Correlated Agreement with $Cpair$ over $S$ up to one position. We say that $alpha$ is #emph[MCA-bad] (with respect to $u_1, u_2$) if there exists an $alpha$-pretender.
+  Let $u_1, u_2 in FF^blockclength$ be two words and let $alpha in chal$. We say that a codeword $c in Cplus$ is an #emph[$alpha$-pretender] (with respect to $u_1, u_2$) if $theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$ and $c$ agree on a set $S subset [blockclength]$ of size $|S| ≥ (1-delta) dot blockclength$ such that $(u_1, u_2)$ does not have Correlated Agreement with $Cpair$ over $S$ up to one position. We say that $alpha$ is #emph[MCA-bad] (with respect to $u_1, u_2$) if there exists an $alpha$-pretender.
 ]<d:affine_pretender>
 
 
@@ -930,7 +930,7 @@ Given $vb(b), vb(b)' in FF^numsamples$ we write $vb(b) emul vb(b)' in FF^numsamp
 #definition[Consistency of MCA-bad elements $alpha in chal$ with $samples in FF^numsamples$][
   Let $alpha in chal$ and $c in Cplus$. Given $vb(z) in FF^numsamples$ and $vb(b)_1, vb(b)_2 in FF^numsamples$, we say that $(alpha, c)$ is _consistent_ with $(vb(z), vb(b)_1, vb(b)_2)$ if
   $
-    evalmap_vb(z) (c) = evalmap_vb(z) (lambda_1(alpha)) emul vb(b)_1 + evalmap_vb(z) (lambda_2(alpha)) emul vb(b)_2.
+    evalmap_vb(z) (c) = evalmap_vb(z) (theta_1(alpha)) emul vb(b)_1 + evalmap_vb(z) (theta_2(alpha)) emul vb(b)_2.
   $
   When $alpha$ is MCA-bad and there exists an $alpha$-pretender $c in Cplus$ such that $(alpha, c)$ is consistent with $(vb(z), vb(b)_1, vb(b)_2)$, we say that $alpha$ is a _DEEP-MCA-bad challenge_ with respect to $vb(z), vb(b)_1, vb(b)_2$ and $u_1, u_2$.
 ]<d:affine_consistency>
@@ -976,7 +976,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
   $ 
 ]<l:few_bad_points_on_line_0>
 #proof[
-  As in the proof of @l:few_bad_points_on_line, since $a_1 dot d_2 != a_2 dot d_1$ there exist $F_1, F_2 in FF(X)$ such that $lmap(Y) = lambda_1(Y) dot F_1 + lambda_2(Y) dot F_2$ as polynomials on $Y$ (it suffices to solve the system of equations obtained by equating coefficients on both sides) #albert[update original lemma with this explanation].
+  As in the proof of @l:few_bad_points_on_line, since $a_1 dot d_2 != a_2 dot d_1$ there exist $F_1, F_2 in FF(X)$ such that $lmap(Y) = theta_1(Y) dot F_1 + theta_2(Y) dot F_2$ as polynomials on $Y$ (it suffices to solve the system of equations obtained by equating coefficients on both sides) #albert[update original lemma with this explanation].
 
   
   Let $V subset chal$ be the set of all  $alpha in chal$ such that $lmap(alpha) in Cplus$. Note that $chal$ is a linear space of dimension two over $FF$. We claim that either $V = chal$ or $|V| ≤ |FF|$. If $V$ is empty there is nothing to prove, so assume that $V$ contains some $alpha_0$. Let $W subset chal$ be the set of all $beta in chal$ such that $beta dot G_lmap in Cplus$. Since $Cplus$ is an $FF$-vector space, $W$ is an $FF$-vector subspace of $chal$. Now, since $lmap(alpha_0) in Cplus$, an element $alpha in chal$ belongs to $V$ if and only if $(alpha - alpha_0) dot G_lmap in Cplus$, i.e. if and only if $alpha - alpha_0 in W$. It follows that $V = {alpha_0 + beta | beta in W}$, and so $|V| = |W|$. Hence either $W$ has dimension at most $1$ and $|V| ≤ |FF|$, or $W = chal$ and then $V = chal$.
@@ -985,7 +985,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
   
   Hence assume $V=chal$. We claim that  $(F_1, F_2) in Cpair$. Indeed, since $V=chal$, we have $(theta(0), theta(1) - theta(0), theta(X) - theta(0)) = (F_lmap, G_lmap, X dot G_lmap) in Cplus^3$, meaning $F_lmap in Cplus$ and $G_lmap in cal(C)$.  We know that the following equality of polynomials holds
   $
-  lmap(Y) = lambda_1(Y) dot F_1 + lambda_2(Y) dot F_2 = (a_1 dot F_1+ a_2 dot F_2) +  (d_1 dot F_1 + d_2 dot F_2) dot Y
+  lmap(Y) = theta_1(Y) dot F_1 + theta_2(Y) dot F_2 = (a_1 dot F_1+ a_2 dot F_2) +  (d_1 dot F_1 + d_2 dot F_2) dot Y
   = F_lmap + Y dot G_lmap 
   $
   and so $a_1 dot F_1 + a_2 dot F_2 = F_lmap in Cplus$ and $d_1 dot F_1 + d_2 dot F_2 = G_lmap in cal(C)$. Since $a_1 dot d_2 != a_2 dot d_1$, solving this system we obtain that $F_1$ and $F_2$ are linear combinations of $F_lmap$ and $G_lmap$ with coefficients in $FF$, and so $F_1, F_2 in Cplus$. Hence  $(F_1, F_2) in Cpair$, as claimed.
@@ -996,13 +996,13 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
   \
   Looking ahead, from here on the proof is analogous to that of @l:few_bad_points_on_line, except that the sets $S_alpha inter D$ (for $alpha in A_lmap^(sans("pret"))$) contain at least $2$ elements instead of $1$, and, for $alpha != alpha'$, these sets pairwise intersect on at most one element, instead of being pairwise disjoint.
   
-   Let $alpha in A_lmap^(sans("pret"))$. Since $lmap(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$ where $lmap(alpha)$ and $lambda_1(alpha) dot u_1 + lambda_2(alpha) dot u_2$ agree, with $|S_alpha| ≥ (1-delta) dot blockclength$ and such that $(u_1, u_2)$ does not have Correlated Agreement with $Cpair$ over $S_alpha$ up to one position. We argue that $|S_alpha inter D| ≥ 2$. Indeed, assume towards contradiction that $|S_alpha inter D| ≤ 1$, and let $S_alpha ' := S_alpha \\ D$. Then $S_alpha ' subset S_alpha$ is a set of size $≥ |S_alpha| -1$ over which $u_1,u_2$ agree with $F_1, F_2$, respectively (by definition of $D$). Since $(F_1, F_2) in Cpair$, this means that $(u_1, u_2)$ has Correlated Agreement with $Cpair$ over $S_alpha$ up to one position, a contradiction. Hence $|S_alpha inter D| ≥ 2$ for all $alpha in A_lmap^(sans("pret"))$.
+   Let $alpha in A_lmap^(sans("pret"))$. Since $lmap(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$ where $lmap(alpha)$ and $theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$ agree, with $|S_alpha| ≥ (1-delta) dot blockclength$ and such that $(u_1, u_2)$ does not have Correlated Agreement with $Cpair$ over $S_alpha$ up to one position. We argue that $|S_alpha inter D| ≥ 2$. Indeed, assume towards contradiction that $|S_alpha inter D| ≤ 1$, and let $S_alpha ' := S_alpha \\ D$. Then $S_alpha ' subset S_alpha$ is a set of size $≥ |S_alpha| -1$ over which $u_1,u_2$ agree with $F_1, F_2$, respectively (by definition of $D$). Since $(F_1, F_2) in Cpair$, this means that $(u_1, u_2)$ has Correlated Agreement with $Cpair$ over $S_alpha$ up to one position, a contradiction. Hence $|S_alpha inter D| ≥ 2$ for all $alpha in A_lmap^(sans("pret"))$.
 
  We now claim that for every two distinct  $alpha, alpha' in A_lmap^(sans("pret"))$ the set $(S_alpha inter D) inter (S_(alpha') inter D)$ has at most one element. Indeed, let $i in [blockclength]$ be an element of such set. Then #albert[Isn't it weird how $u_i$'s are indexed with $[blockclength]$?]
   $
-    lambda_1(alpha(x_i)) dot u_1(i) + lambda_2(alpha(x_i)) dot u_2(i) =   lambda_1(alpha(x_i)) dot F_1(x_i) + lambda_2(alpha(x_i)) dot F_2(x_i),
+    theta_1(alpha(x_i)) dot u_1(i) + theta_2(alpha(x_i)) dot u_2(i) =   theta_1(alpha(x_i)) dot F_1(x_i) + theta_2(alpha(x_i)) dot F_2(x_i),
   $
-  and similarly for $alpha'$. Since $i in D$, the vector $(u_1(i) - F_1(x_i), u_2(i) - F_2(x_i))$ is nonzero, and so the vectors $(lambda_1(alpha(x_i)), lambda_2(alpha(x_i)))$ and $(lambda_1(alpha'(x_i)), lambda_2(alpha'(x_i)))$ are linearly dependent. Hence the determinant of $((a_1 + alpha(X) dot d_1, a_2 + alpha(X) dot d_2), (a_1 + alpha'(X) dot d_1, a_2 + alpha'(X) dot d_2))$ vanishes at $x_i$.  This determinant equals $(alpha(X)-alpha'(X)) dot (a_2 dot d_1 - d_2 dot a_1)$. Since we assumed $a_2 dot d_1 != d_2 dot a_1$, we have $alpha(x_i) = alpha'(x_i)$. Since $alpha!= alpha'$ are polynomials of degree at most one, there is at most one $i in D$ satisfying  $alpha(x_i) = alpha'(x_i)$.  This proves the claim.
+  and similarly for $alpha'$. Since $i in D$, the vector $(u_1(i) - F_1(x_i), u_2(i) - F_2(x_i))$ is nonzero, and so the vectors $(theta_1(alpha(x_i)), theta_2(alpha(x_i)))$ and $(theta_1(alpha'(x_i)), theta_2(alpha'(x_i)))$ are linearly dependent. Hence the determinant of $((a_1 + alpha(X) dot d_1, a_2 + alpha(X) dot d_2), (a_1 + alpha'(X) dot d_1, a_2 + alpha'(X) dot d_2))$ vanishes at $x_i$.  This determinant equals $(alpha(X)-alpha'(X)) dot (a_2 dot d_1 - d_2 dot a_1)$. Since we assumed $a_2 dot d_1 != d_2 dot a_1$, we have $alpha(x_i) = alpha'(x_i)$. Since $alpha!= alpha'$ are polynomials of degree at most one, there is at most one $i in D$ satisfying  $alpha(x_i) = alpha'(x_i)$.  This proves the claim.
 
   
   Because of the claim, every subset of $D$ with two elements is contained in $S_alpha$ for at most one $alpha in A_lmap^(sans("pret"))$. By the same argument as in the proof of @l:few_bad_points_on_line we have $|S_alpha inter D| ≥ |D| - delta dot blockclength$. Let $s := max(2, |D| - delta dot blockclength)$ so that $|S_alpha inter D|≥ s$ for all $alpha in A_lmap^(sans("pret"))$. Now,  double counting the set $E= {(alpha, {i,j}) | alpha in A_lmap^(sans("pret")),  {i,j} subset S_alpha inter D, thick i!=j}$,
@@ -1055,7 +1055,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
   The reason this works is the following. Let $Lambda$ be the set of all pairs of codewords of $Cplus$ that are close to the original words $(u_1, u_2)$. Note that $Lambda$ does not depend on $xi$, since $u_1, u_2$ are fixed before $xi$ is sampled. On the other hand, the pairs of codewords of $Cplus$ that are close to the new words $(u'_1, u'_2)$ do depend on $xi$: for each $xi in FF$, they are exactly the pairs $(c_1, c_2 + xi dot c_1)$ with $(c_1, c_2) in Lambda$. 
 
-  Now let $(c_1, c_2) in Lambda$. If $(c_1, c_2)$ belongs to $interleavedcode(2)$, then so does $(c_1, c_2 + xi dot c_1)$, for all $xi in FF$. Otherwise we claim that $(c_1, c_2 + xi dot c_1)$ belongs to $Cpair$ for at most one $xi in FF$. Indeed, let $s_1, s_2 in FF$ be the leading coefficients $c_1$ and $c_2$, which are not both zero. By definition of $Cpair$, the pair $(c_1, c_2 + xi dot c_1)$ belongs to $Cpair$ if and only if $d_1 dot s_1 + d_2 dot (s_2 + xi dot s_1) = 0$. Here we assume that $d_2 != 0$ (this is the case for the folding maps $(lambda_1, lambda_2)=(1, alpha)$ and $(1-alpha, alpha)$). Then this equation has at most one solution $xi$, proving the claim. 
+  Now let $(c_1, c_2) in Lambda$. If $(c_1, c_2)$ belongs to $interleavedcode(2)$, then so does $(c_1, c_2 + xi dot c_1)$, for all $xi in FF$. Otherwise we claim that $(c_1, c_2 + xi dot c_1)$ belongs to $Cpair$ for at most one $xi in FF$. Indeed, let $s_1, s_2 in FF$ be the leading coefficients $c_1$ and $c_2$, which are not both zero. By definition of $Cpair$, the pair $(c_1, c_2 + xi dot c_1)$ belongs to $Cpair$ if and only if $d_1 dot s_1 + d_2 dot (s_2 + xi dot s_1) = 0$. Here we assume that $d_2 != 0$ (this is the case for the folding maps $(theta_1, theta_2)=(1, alpha)$ and $(1-alpha, alpha)$). Then this equation has at most one solution $xi$, proving the claim. 
 
   Hence there are at most $|Lambda|$ elements $xi in FF$ for which some pair from $Cpair$ that is close to the new words does not belong to $interleavedcode(2)$. . For the rest of $xi in FF$, every pair $(c'_1, c'_2)$ from $Cpair$ that is close to $(u'_1, u'_2)$ belongs to $interleavedcode(2)$. From such a pair we obtain $(c'_1, c'_2 - xi dot c'_1) in interleavedcode(2)$, which is close to $(u_1, u_2)$. Note that $|Lambda|$ is bounded by the list size of  $(Cplus)^(equiv 2)$ at distance $delta + 1\/blockclength$.
 ]<r:affine_pairs>
