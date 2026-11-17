@@ -95,11 +95,11 @@
 // Abstract 
 #abstract[
   
-  We present an improved soundness analysis of the DEEP technique @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. 
+  We present an improved soundness analysis of the DEEP technique for linear codes @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. 
   The modification consists simply in performing $m$ DEEP samples, instead of one. The resulting  DEEP sampling decreases exponentially with $m$, and in practice $2$-$5$ makes it tiny. The subsequent folding error is of $(delta dot n +1)\/|FF|$, for $delta$ a proximity parameter and $n$ the code length.
    
   
-  We  modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of MCA, with smaller soundness errors than their counterparts. This potentially allows to use smaller fields, less grinding, and proximity parameters closer to known bound such as the Johnson bound, thus improving proof sizes and, possibly, speed. 
+  We  modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of Mutual Correlated Agreement (MCA), with smaller soundness errors than their counterparts. This potentially allows to use smaller fields, less grinding, and proximity parameters closer to known bound such as the Johnson bound, possibly improving proof sizes and speed. 
   
   Further, since it does not rely on MCA for its soundness, this improved DEEP technique allows to use #emph[arbitrary linear codes] in code-based IOPPs with $delta$ up to the Johnson bound. Additionally, this opens the door to using  codes (e.g. perhaps Reed-Solomon codes) with $delta$ beyond the Johnson bound, assuming the code is $delta$-list decodable, even if it does not have the $delta$-MCA property.
 
@@ -113,14 +113,14 @@
 // Rest of paper
 
 
-#albert[Todos: Review lean, review experiments, overall pass,  glue text, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
+#albert[Todos: Review lean,  overall pass,  glue text, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
 ]
 
 = Introduction
 
 The soundness of most modern code-based Polynomial Commitment Schemes (PCSs) and IOPPs requires using codes satisfying the #emph[$delta$-Mutual Correlated Agreement (MCA) property] @whir, for a proximity parameter $delta$ as large as possible. A code $cal(C)$ with blocklength $blockclength$ and dimension $codedim$ is said to satisfy this property if, for any two words $u_1, u_2 in FF^blockclength$, for almost all $alpha in FF$, if $u_1+ alpha dot u_2$ agrees with a codeword $c$ from $cal(C)$ on a large set $S$ (concretely $|S|≥ (1-delta) dot blockclength$), then both $u_1$ and $u_2$ agree as well with codewords from $cal(C)$ on $S$. 
 
-A related property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative hamming distance $≤ delta$ from $u$.  There are examples of codes having good list decodability bounds, but not good MCA bounds, see  @Man26[Theorem 3], @KTZ26,  @deep[Lemma 22]. Conversely, @Man26[Theorem 4] provides examples of codes with good MCA bounds but superpolynomially large lists.
+A related property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative Hamming distance $≤ delta$ from $u$.  There are examples of codes having good list decodability bounds, but not good MCA bounds, see  @Man26[Theorem 3], @KTZ26,  @deep[Lemma 22]. Conversely, @Man26[Theorem 4] provides examples of codes with good MCA bounds but superpolynomially large lists.
 
 
 
@@ -137,7 +137,7 @@ As we mentioned, modern code-based IOPPs rely on the MCA (or the weaker CA#footn
 
 Similarly as above, the DEEP technique also analyses the number of elements $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword $c in cal(C)$ on a large set $S$, while $u_1, u_2$ do not. The element $alpha in FF$ is called a #emph[folding challenge], and in practice it is sent by a verifier. We say $alpha$ is MCA-bad if the previous scenario holds ($u_1+ alpha dot u_2$ agrees on a large set $S$ but $u_1, u_2$ not), and then we call $c$ an #emph[$alpha$-pretender]. Additionally, before $alpha$ is sampled, in the DEEP technique, the verifier sends a so-called   #emph[DEEP sample point] $z in FF$, to which the prover replies with $b_1, b_2 in FF$, supposedly the evaluations at $z$ of codewords $c_1, c_2$ (which we think of polynomials) that are $delta$-close to $u_1, u_2$, respectively.  
 
-One can show (see @deep, Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$, there are negligibly many $alpha in FF$  such that 1) $alpha$ is MCA-bad; and 2) there is an $alpha$-pretender $c$ that, evaluated at $z$, equals $b_1 + alpha dot b_2$.  In @deep and in the present work, such bounds are obtained by  using only the list decodability of $cal(C)$, and not its MCA or CA (which may in any case not hold). We are not aware of any other results of this kind, even though plenty of prior work uses evauations at random points (called #emph[Out Of Domain (OOD)] samples) to pin  words to a single close codeword, but yet rely on CA or MCA to obtain soundness of their folding step, see e.g. @stir@whir@BCFW25@zook etc. #aiedit[DeepFold @deepfold adds a DEEP sample to each folding round of Basefold @basefold, and relies on the analysis of @deep for the soundness of its folds.] #albert[Review Deepfold]
+One can show (see @deep and Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$, there are negligibly many $alpha in FF$  such that 1) $alpha$ is MCA-bad; and 2) there is an $alpha$-pretender $c$ that, evaluated at $z$, equals $b_1 + alpha dot b_2$.  In @deep and in the present work, such bounds are obtained by  using only the list decodability of $cal(C)$, and not its MCA or CA (which may in any case not hold). We are not aware of any other results of this kind, even though plenty of prior work uses evauations at random points (called #emph[Out Of Domain (OOD)] samples) to pin  words to a single close codeword, but yet rely on CA or MCA to obtain soundness of their folding step, see e.g. @stir@whir@BCFW25@zook etc. #aiedit[DeepFold @deepfold adds a DEEP sample to each folding round of Basefold @basefold, and relies on the analysis of @deep for the soundness of its folds.] #albert[Review Deepfold]
 
 #remark[DEEP evaluations and OOD evaluations][
   Above, we deliberately distinguished between DEEP sampling and OOD sampling. We understand the latter as the technique by which a word is pinned to a single close codeword by means of evaluating the word at a random point. The former is, informally, a technique by which evaluations of the two halves of a word are used to obtain an MCA-like property when folding these two halves.
@@ -173,7 +173,7 @@ We state our main result next, but before we generalize the notion of "an evalua
 
 
 #remark[General linear codes and zero evaders][
-  For a non-RS code $cal(C)$, by "evaluation of a codeword $c in cal(C)$ at a point $z$" we mean a value of the form $evalmap_z(c)$, where $(evalmap_z)_z$ is a fixed family of linear maps from $cal(C)$ to $FF^numsamples$, indexed by $z$ in some set $cal(Z)$. The family  $(evalmap_z)_z$ is called a #emph[zero evader]. We say $z in cal(Z)$ is a #emph[DEEP sample point]. Its error is $max_(c in cal(C))Pr_(z in cal(Z))[evalmap_z(c)]=vb(0)$. 
+  For a non-RS code $cal(C)$, by "evaluation of a codeword $c in cal(C)$ at a point $z$" we mean a value of the form $evalmap_z(c)$, where $(evalmap_z)_z$ is a fixed family of linear maps from $cal(C)$ to $FF^numsamples$, indexed by $z$ in some set $cal(Z)$. The family  $(evalmap_z)_z$ is called a #emph[zero evader]. We say $z in cal(Z)$ is a #emph[DEEP sample point]. Its error is $max_(c in cal(C), thin c != 0)Pr_(z in cal(Z))[evalmap_z(c)=vb(0)]$. 
   
   For example, if $cal(C)$ is an RS code of dimension $codedim$, we may take $cal(Z)=FF^numsamples$ and $evalmap_(vb(z))(c)$ is the vector of evaluations of the polynomial corresponding to $c$, at the points from $vb(z)$. Its error is $(codedim\/|FF|)^numsamples$.
 ]
@@ -207,10 +207,10 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 
 
-We also provide a variation (@thm:main_batch in @s:high_arity) of @t:affine_main_0 where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:affine_main_0.
+We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:affine_main_0 where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:affine_main_0.
 
 
-In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors.We also include the affine version of our result (@t:affine_main_0), which we discuss later.
+In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors. We also include the affine version of our result (@t:affine_main_0), which we discuss later.
 
 #show figure.caption: set align(left)
 #figure(
@@ -236,9 +236,9 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
     rule,
     res[BEEP][This work, @t:main_thm_informal[Thm]], [any $(delta, L)$-list \ decodable linear code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3 dot epsilon_(sans("evader"))\/(delta dot blockclength + 1)^2$\ $epsilon_(sans("BEEP"),2)$: $quad (delta dot blockclength + 1)\/|FF|$],
     rule,
-    res[BEEP, affine fold#super[†]][This work, @t:affine_main_0[Thm]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3\/3 dot ((codedim + 1)\/|FF|)^numsamples$\ $epsilon_(sans("BEEP"),2)$: $quad 2\/|FF|$],
+    res[BEEP, affine fold][This work, @t:affine_main_0[Thm]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3\/3 dot ((codedim + 1)\/|FF|)^numsamples$\ $epsilon_(sans("BEEP"),2)$: $quad 2\/|FF|$],
     rule,
-    res[MCA#super[‡]][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
+    res[Katham][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
     table.hline(stroke: 0.6pt),
     table.cell(colspan: 4, inset: (x: 3.5pt, top: 5pt, bottom: 0pt), text(size: 8pt)[
     ]),
@@ -246,8 +246,8 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
   },
   placement: auto,
   caption: [
-    Comaprison of known MCA error bounds with the errors from @t:main_thm_informal and its affine version @t:affine_main_0 (discussed below).  $blockclength$ is the code length and $codedim$ its dimension.
-    As long as $L$ is relatively small, the error $epsilon_(sans("BEEP"),1)$ can always be made arbitrarily small by taking a zero evader with $epsilon_(sans("evader"))$ small. For example, when $cal(C)$ is an RS code, the evader can consists on evaluating a codeword on $numsamples$ points, and then $epsilon_(sans("evader")) = ((codedim)/(|FF|))^numsamples$. 
+    Comparison of known MCA error bounds with the errors from @t:main_thm_informal and its affine version @t:affine_main_0 (discussed below).  $blockclength$ is the code length and $codedim$ its dimension.
+    As long as $L$ is relatively small, the error $epsilon_(sans("BEEP"),1)$ can always be made arbitrarily small by taking a zero evader with $epsilon_(sans("evader"))$ small. For example, when $cal(C)$ is an RS code, the evader can consists of evaluating a codeword on $numsamples$ points, and then $epsilon_(sans("evader")) = ((codedim)/(|FF|))^numsamples$. 
     $M$ is either $|FF|$ or an MCA bound for the code. In practice $m$ is $4$-$5$ when $M=|FF|$, and $2$ when setting $M$ to the MCA bound of @DKT26[Thm 4.4]. 
      ]
 ) <tab:mca_comparison>
@@ -308,15 +308,15 @@ In contrast to @CWYZ26, our analysis in the affine setting is elementary, amount
   
   For RS codes in particular, it is enough to obtain good list decodability bounds beyond the Johnson bound.\
 \
-*Code-agnostic IOPPs up to the Johsnon bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
+*Code-agnostic IOPPs up to the Johnson bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
 \
-*Folding error bounds which improve upon those obtained solely with MCA* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a smaller error than in all prior results we are aware of, as shown in @tab:mca_comparison.
+*Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a smaller error than in all prior results we are aware of, as shown in @tab:mca_comparison.
 
 
 == Use of AI and Lean formalization
 Most of this document was written without the use of AI, except for making small refactorings, and light edits. Sections @s:BEEP_WHIR and @s:affine were initially drafted with AI and heavily edited by us afterward.
 
-The novel results in this work were obtained through a long interactive process with an AI . We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
+The novel results in this work were obtained through a long interactive process with an AI. We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
 
 == Acknowledgements
 
@@ -358,7 +358,7 @@ Given a word $u in FF^blockclength$ and $x in [blockclength]$, we let $u(x)$ den
 
 #paragraph[Interleaved codes] 
 Given $k ≥ 1$, the #emph[$k$-interleaving] of $cal(C)$ is the code $interleavedcode(k) subset (FF^k)^blockclength$ whose codewords are  tuples $(c_1, dots, c_k)$ of codewords of $cal(C)$, seen as words of length $blockclength$ over the alphabet $FF^k$. The minimum distance of $interleavedcode(k)$ is the same as that of $cal(C)$. Moreover, for $delta < 1 - sqrt(1-Delta(cal(C)))- eta$, $interleavedcode(k)$ admits the Johnson decodability bound $
-L=floor(1/(2 dot eta dot sqrt(1-Delta(cal(C))))),
+L=floor(1\/(2 dot eta dot sqrt(1-Delta(cal(C))))),
 $ the same as $cal(C)$. For $delta$ at or above the Johnson bound, if  $cal(C)$ is $(delta, L)$-list decodable, then $interleavedcode(k)$ is $(delta, L^k)$-list decodable. The following lemma improves such bound  for larger values of $k$.
 #lemma[@GGR11, see @zook[Lemma 3.13]][
   Let $delta in [0, hamming(cal(C)))$ and assume $cal(C)$ is $(delta, L)$-list decodable. Let
@@ -374,7 +374,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 #let evaderdim = $e$
 
 #definition[Zero evader][
-  A _zero evader_ is a family of linear maps ${φ_z : 𝔽^evaderdim → 𝔽^numsamples | z in cal(Z)}$ indexed by a finite non-empty set $𝒵$. We call $ε ∈ [0,1]$ an _error bound_ of the evader if #albert[For consistency we should write $phi_z(vb(b))$]
+  A _zero evader_ is a family of linear maps ${φ_z : 𝔽^evaderdim → 𝔽^numsamples | z in cal(Z)}$ indexed by a finite non-empty set $𝒵$. We call $ε ∈ [0,1]$ an _error bound_ of the evader if #albert-postponable[For consistency we should write $phi_z(vb(b))$]
   $
     max_(𝐯 ∈ 𝔽^evaderdim \ 𝐯 ≠ 𝟎) thick Pr_(z ← 𝒵) thick [φ_z 𝐯 = 𝟎] ≤ ε.
   $
@@ -385,13 +385,12 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 ]
 
 #definition[Univariate evader][
-  Define the $numsamples$-sample _univariate evader_ with index family $𝒵 ≔ 𝔽^evaderdim$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_numsamples)$ as the map given by the $numsamples × evaderdim$ Vandermonde matrix on $𝐳$. #albert-postponable[Maybe let's now write the evader explicitly]
+  Define the $numsamples$-sample _univariate evader_ with index family $𝒵 ≔ 𝔽^numsamples$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_numsamples)$ as the map given by the $numsamples × evaderdim$ Vandermonde matrix on $𝐳$. #albert-postponable[Maybe let's now write the evader explicitly]
 ]
 
 #lemma[
   The $numsamples$-sample univariate zero evader has error bound
-  $
-  ε = min(1, ((evaderdim- 1) / (|FF|))^numsamples).
+  $ε = min(1, ((evaderdim- 1) / (|FF|))^numsamples).
   $ 
 ]
 
@@ -399,7 +398,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   Fix a nonzero $𝐯 ∈ FF^evaderdim$. The polynomial
   $ P(X) = sum_(j∈[evaderdim]) v_j dot X^(j - 1)$
   is nonzero and has degree at most $evaderdim - 1$, so it has
-  at most $evaderdim - 1$ roots in $𝔽$. By construction, $φ_𝐳 (𝐯) = (P(z_1), …, P(z_k))$. Since the coordinates of $𝐳$ are independent and uniform,
+  at most $evaderdim - 1$ roots in $𝔽$. By construction, $φ_𝐳 (𝐯) = (P(z_1), …, P(z_numsamples))$. Since the coordinates of $𝐳$ are independent and uniform,
   $
     Pr_(𝐳 ← 𝔽^numsamples)[φ_𝐳 (𝐯) = 𝟎]
     = product_(i ∈ [numsamples]) med Pr_(z_i ← 𝔽) med [P(z_i) = 0]
@@ -412,19 +411,17 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 ]
 
 #definition[Multilinear evader][
-  Let $e_0 := ceil(log_2 evaderdim)$ and fix a basis. We define the scalar _multilinear evader_ with index family $𝒵 ≔ 𝔽^(e_0)$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_numsamples)$ as the first $evaderdim$ values of the MLE tensor product:
-  $
-    φ_𝐳 = (⨀_(i ∈ [e_0]) mat(1 - z_i; z_i))_[evaderdim] .
-  $
+  Let $e_0 := ceil(log_2 evaderdim)$ and fix a basis. We define the scalar _multilinear evader_ with index family $𝒵 ≔ 𝔽^(e_0)$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_(e_0))$ as the first $evaderdim$ values of the MLE tensor product:
+  $φ_𝐳 = (⨀_(i ∈ [e_0]) mat(1 - z_i; z_i))_[evaderdim].$
   #albert-postponable[As with the other one, let's write the application of $phi_z$ explicitly now]
 ]
 
 #lemma[
-  The _multilinear evader_ has error bound $ε = min(1, e_0\/ q)$.
+  The _multilinear evader_ has error bound $ε = min(1, e_0\/aiedit(|𝔽|))$.
 ]
 
 #proof[
-  Fix a nonzero $𝐯 ∈ FF^evaderdim$ and pad its coordinates with zeros to obtain a vector of length $2^(e_0)$. Its multilinear extension $tilde(𝐯)$ #albert[We are using MLE in most sections so far] has total degree at most $e_0$, and $φ_𝐳 𝐯 = tilde(𝐯)(𝐳)$. The result follows from the Schwartz–Zippel bound.
+  Fix a nonzero $𝐯 ∈ FF^evaderdim$ and pad its coordinates with zeros to obtain a vector of length $2^(e_0)$. Its multilinear extension $MLE[𝐯]$  has total degree at most $e_0$, and $φ_𝐳 𝐯 = MLE[𝐯](𝐳)$. The result follows from the Schwartz–Zippel bound.
 ]
 
 
@@ -482,14 +479,14 @@ Let $FF$ be a finite field and let $cal(C) subset FF^blockclength$ be a linear c
 #aiedit[We fix two linear maps $theta_1, theta_2: FF arrow FF$, so that $theta_i (alpha) = a_i + alpha dot d_i$ for some $a_i, d_i in FF$, and we assume that $a_1 dot d_2 != a_2 dot d_1$. We use $theta_1(alpha)$ and $theta_2(alpha)$ as the weights when folding two words with a challenge $alpha in FF$. For example, $(theta_1(alpha), theta_2(alpha))$ can be $(1, alpha)$, or $(1-alpha, alpha)$ as in Section @s:BEEP_fold. The assumption $a_1 dot d_2 != a_2 dot d_1$ guarantees that the vectors $(theta_1(alpha), theta_2(alpha))$ and $(theta_1(alpha'), theta_2(alpha'))$ are linearly independent for all distinct $alpha, alpha' in FF$.]
 
 
- Let $u_1, u_2 in FF^blockclength$ be two words. Given $S subset [blockclength]$, we say $(u_1,u_2)$ has #emph[Correlated Agreement with $C$ over $S$] if there exist codewords $c_1,c_2 in cal(C)$ such that $u_1$ agrees with $c_1$ on $S$ and $u_2$ agrees with $c_2$ on $S$. 
+ Let $u_1, u_2 in FF^blockclength$ be two words. Given $S subset [blockclength]$, we say $(u_1,u_2)$ has #emph[Correlated Agreement with $cal(C)$ over $S$] if there exist codewords $c_1,c_2 in cal(C)$ such that $u_1$ agrees with $c_1$ on $S$ and $u_2$ agrees with $c_2$ on $S$. 
 
 
 
   Let  $u_1,u_2 in FF^blockclength$ be two words. We say that a field element $alpha in FF$ satisfies the #emph[$delta$-Mutual Correlated Agreement (MCA) property] with respect to $u_1,u_2$, if for every subset $S subset [blockclength]$ with $|S|≥ (1-delta) dot blockclength$ such that #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] agrees with $cal(C)$ on $S$, the pair $(u_1,u_2)$ has Correlated Agreement (CA) with $cal(C)$ over $S$.
 
 
-#definition[MCA-bad element.][
+#definition[MCA-bad element][
    We say $alpha$ is #emph[MCA-bad] if it does not satisfy the $delta$-MCA property.
 ]
 
@@ -499,7 +496,7 @@ The code $cal(C)$ is said to have #emph[$delta$-Mutual Correlated Agreement (MCA
   Fix two words $u_1,u_2 in FF^blockclength$, and let $alpha in FF$ be an MCA-bad field element. We say that a codeword $c in cal(C)$ is an #emph[$alpha$-pretender] if, intuitively speaking, it is a witness to the failing of the MCA property for $alpha$. Formally, $c$ is an $alpha$-pretender if #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] and $c$ agree on a set $S subset [blockclength]$ of size $|S| ≥ (1-delta) dot blockclength$ and $(u_1,u_2)$ does not have CA with $cal(C)$ over $S$.
 ]
 
-Fix a zero-evader $(φ_z)_(z ∈ 𝒵)$, i.e. a famility of linear maps $phi_z : FF^codedim -> FF^numsamples$, with error bound $ε$.  Abusing the notation, we also define $phi_z$ on $cal(C)$ by letting $phi_z(Enc_cal(C)(vb(w))) := phi_z(vb(w))$. Since $Enc_cal(C)$ is linear and injective, $phi_z$ is linear on $cal(C)$ and $Pr_(z <- Z)[phi_z(c) =0] ≤ epsilon$ for all nonzero codeword $c$.
+Fix a zero-evader $(φ_z)_(z ∈ 𝒵)$, i.e. a family of linear maps $phi_z : FF^codedim -> FF^numsamples$, with error bound $ε$.  Abusing the notation, we also define $phi_z$ on $cal(C)$ by letting $phi_z(Enc_cal(C)(vb(w))) := phi_z(vb(w))$. Since $Enc_cal(C)$ is linear and injective, $phi_z$ is linear on $cal(C)$ and $Pr_(z <- Z)[phi_z(c) =0] ≤ epsilon$ for all nonzero codeword $c$.
 
 Let $𝐛_(1), 𝐛_(2) ∈ 𝔽^numsamples$. For intuition, for an honest prover, $𝐛_1, 𝐛_2$ will be the values $φ_z (c_1), φ_z (c_2)$, where $c_1, c_2 ∈ 𝒞$ are two codewords that are $δ$-close to $u_1$  and $u_2$.
 
@@ -555,7 +552,7 @@ We proceed to prove @t:main_thm. We assume the notation of its hypothesis. // We
 
 //Let $c_1, c_2 in cal(C)$ be two (not necessarily distinct) codewords. The  #emph[line] in $cal(C)$ spanned by  $c_1,c_2$  is the set $cal(C)_(c_1,c_2):={c_1 + alpha dot c_2 | alpha in FF}$.  // Given a MCA-bad $alpha in FF$ and an $alpha$-pretender (w.r.t. $(u_1,u_2)$) $c in cal(C)$, we say $c$ is in the  
 
-The following result is well-known, see for example @? #albert[citation]. We include a proof for completeness. 
+#albert-postponable[The following result is well-known, see for example @? #albert[citation]. We include a proof for completeness. ]
 
 
 #lemma[A parameterized line contains few pretenders][
@@ -569,7 +566,7 @@ The following result is well-known, see for example @? #albert[citation]. We inc
   $
   D := {x in [blockclength] | u_1(x) != aiedit(c_1(x)) " or " u_2(x) != aiedit(c_2(x))}.
   $
-  Let $alpha in A_lmap^(sans("pret"))$. Since $theta(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$  where $lmap(alpha)$ and #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] agree, with $|S_alpha|≥ (1-delta) dot blockclength$ and such that $(u_0,u_1)$ do not have correlated agreement with $cal(C)$ over $S_alpha$. Hence $S_alpha inter D != emptyset$.
+  Let $alpha in A_lmap^(sans("pret"))$. Since $theta(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$  where $lmap(alpha)$ and #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$] agree, with $|S_alpha|≥ (1-delta) dot blockclength$ and such that $(u_1,u_2)$ do not have correlated agreement with $cal(C)$ over $S_alpha$. Hence $S_alpha inter D != emptyset$.
 
   We claim that for every distinct $alpha, alpha' in A_lmap^(sans("pret"))$ we have $(S_alpha inter D) inter (S_(alpha') inter D) = emptyset$. Indeed, assume to the contrary that $x in [blockclength]$ belongs to such set. Then #aiedit[$theta_1(alpha) dot u_1(x) + theta_2(alpha) dot u_2(x)= theta_1(alpha) dot c_1(x) + theta_2(alpha) dot c_2(x)$] and #aiedit[$theta_1(alpha') dot u_1(x) + theta_2(alpha') dot u_2(x)= theta_1(alpha') dot c_1(x) + theta_2(alpha') dot c_2(x)$]. #aiedit[Since $alpha != alpha'$, the vectors $(theta_1(alpha), theta_2(alpha))$ and $(theta_1(alpha'), theta_2(alpha'))$ are linearly independent, and so] we obtain $u_1(x)=aiedit(c_1(x))$ and $u_2(x)=aiedit(c_2(x))$, contradicting the fact that $x in D$, and thus proving the claim.
 
@@ -664,7 +661,7 @@ We are ready to prove @t:main_thm.
    Let $cal(Z)_t subset cal(Z)$ be the set of all $z in cal(Z)$ such that $|A_z| ≥ t$ for all $z in cal(Z)_t$. Then by @l:third_moment_bound,
   $
   cases(delim: #none,
-  sum_(z in cal(Z)_t) |T_z| &≥ sum_(z in cal(Z)_t) |A_z| dot (|A_z| -1) dot (|A_z| - delta dot blockclength -1) dot |cal(Z)_t|, &≥ t dot (t -1) dot (t - delta dot blockclength -1) dot |cal(Z)_t|
+  sum_(z in cal(Z)_t) |T_z| &≥ sum_(z in cal(Z)_t) |A_z| dot (|A_z| -1) dot (|A_z| - delta dot blockclength -1), &≥ t dot (t -1) dot (t - delta dot blockclength -1) dot |cal(Z)_t|
   )
   $<e:proof_thm_1>
   We now claim that 
@@ -687,7 +684,7 @@ $<e:proof_thm_2> where $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$,
   $
   t dot (t-1) dot (t -delta dot blockclength -1) dot |cal(Z)_t| ≤ (M dot L)^3 dot epsilon_(sans("evader")) dot |cal(Z)|
   $
-  and, since $t> delta dot blockclength-1$, both sides of the inequality are positive and then the theorem follows since $Pr_(z <- cal(Z))[ |A_z| ≥ t ] = |cal(Z)_t| \/ |cal(Z)|$.
+  and, since $t> delta dot blockclength +1$, both sides of the inequality are positive and then the theorem follows since $Pr_(z <- cal(Z))[ |A_z| ≥ t ] = |cal(Z)_t| \/ |cal(Z)|$.
 ]
 
 
@@ -723,22 +720,20 @@ We define an Interactive Oracle Reduction (IOR) from $cal(R)_(interleavedcode(2)
 
 In @c:BEEP below, we look at the linear constraint $langle vb(f), vb(v) rangle = mu$ from $cal(R)_(interleavedcode(2))$ as a sumcheck claim for the product of the MLE's of $vb(f)$ and $vb(v)$, exploiting that
 $
-langle vb(f), vb(v) rangle = sum_(vb(b)in {0,1}^(1+ codedim)) MLE(vb(f))(vb(b)) dot MLE(vb(v))(vb(b)).
+langle vb(f), vb(v) rangle = sum_(vb(b)in {0,1}^(1+ log(codedim))) MLE(vb(f))(vb(b)) dot MLE(vb(v))(vb(b)).
 $
 where here we index the entries of the $2 times codedim$ matrices $vb(f)$ and $vb(v)$ over the set ${0,1}^(1+log codedim)$, so that the first bit in the index indicates the row of the matrix. This way $MLE(vb(f))(X, vb(Y)) = (1-X) dot MLE(vb(f)_(1*))(vb(Y)) + X dot MLE(vb(f)_(2*))(vb(Y))$, and similarly for $MLE[vb(v)](X, vb(Y))$, where $vb(Y)=(Y_1, dots, Y_(log(codedim)))$.
 
 
 #construction[BEEP, an IOR from $cal(R)_(interleavedcode(2))$ to $cal(R)_(cal(C))$][
-  The prover and verifier receive as input  $bb(x)=(mu, vb(v)) in FF times FF^(2 dot codedim)$. The verifier also receives $bb(y)=f in FF^blockclength$, and the prover  receives $bb(w)=vb(f)in FF^(2 dot codedim)$ such that $(bb(x), bb(y), bb(w)) in cal(R)_(interleavedcode(2))$.
-
-  // Fix a scalar zero-evader $(γ_z)_(z ∈ 𝒵_batch)$ on $𝔽^(m+1)$ with error $ε_batch$ for batching linear claims.
-  
-  + *Round 1 (DEEP sampling).* The verifier samples and sends uniformly at random $z ∈ 𝒵$. The prover replies with two vectors $𝐛_1, 𝐛_2 ∈ 𝔽^m$, supposedly 
+  The prover and verifier receive as input  $bb(x)=(mu, vb(v)) in FF times FF^(2 dot codedim)$. The verifier also receives $bb(y)=f in FF^blockclength$, and the prover  receives $bb(w)=vb(f)in FF^(2 dot codedim)$ such that $(bb(x), bb(y), bb(w)) in cal(R)_(interleavedcode(2))$.\
+  \
+  *Round 1 (DEEP sampling).* The verifier samples and sends uniformly at random $z ∈ 𝒵$. The prover replies with two vectors $𝐛_1, 𝐛_2 ∈ 𝔽^m$, supposedly 
     $
       𝐛_1 &= φ_z (𝐟_(1*)), &quad quad
       𝐛_2 &= φ_z (𝐟_(2*))
     $
-  + *Round 2 (Fold and sumcheck round).* 
+  *Round 2 (Fold and sumcheck round).* 
     The prover sends the quadratic univariate polynomial#footnote[We do not discuss optimizations related to sumcheck that may be used in this step, see e.g. @Gru24 and @BDDT25.]
     $
       h(X):= sum_(vb(b)in {0,1}^(log codedim)) MLE(vb(f))(X,vb(b)) dot MLE(vb(v))(X,vb(b)) in FF^(<3)[X]
@@ -755,14 +750,15 @@ where here we index the entries of the $2 times codedim$ matrices $vb(f)$ and $v
       φ_z (𝐠) &= φ_z ((1-alpha) dot vb(f)_(1*)+alpha dot vb(f)_(2*)) = (1-alpha) dot 𝐛_1 + alpha dot 𝐛_2 .
     $<BEEP_new_lin_claims>
 
-    #remco[This uses $1,α$ instead of $1-α,α$ from above def of $𝐠$. But I really want to rewrite it as some $α_z upright(F)$ for interleaving matrix $upright(F)$ and some multilinear evader $α_z$.]
-
-  + *Round 3 (Batching of linear claims).* The verifier uniformly samples $vb(γ) ∈ 𝔽^(m + 1)$ to batch the linear claims from @BEEP_new_lin_claims, so that the claims are reduced to the single claim
+    #remco[This uses $1,α$ instead of $1-α,α$ from above def of $𝐠$. But I really want to rewrite it as some $α_z upright(F)$ for interleaving matrix $upright(F)$ and some multilinear evader $α_z$.]\
+  \
+  *Round 3 (Batching of linear claims).* The verifier uniformly samples $vb(γ) ∈ 𝔽^(m + 1)$ to batch the linear claims from @BEEP_new_lin_claims, so that the claims are reduced to the single claim
     $
       vb(gamma) dot mat(vb(v)_alpha; φ_z) dot vb(g) =
       vb(gamma) dot mat(h(alpha); aiedit((1-alpha) dot) 𝐛_1 + alpha dot 𝐛_2)
-    $
-  + *Output.*  The prover and verifier output
+    $\
+  \
+  *Output.*  The prover and verifier output
     $
       bb(x)' := (mu', vb(v)'), quad
       bb(y)' := g in FF^blockclength, quad
@@ -794,7 +790,7 @@ Before stating and proving the completeness and knowledge soundness of @c:BEEP, 
 
  
 #theorem[Completeness and round-by-round knowledge soundness of @c:BEEP][
-   Let $cal(C) subset FF^blockclength$ be a linear code of blocklength $blockclength$ and dimension $codedim$, and with minimum relative distance  $cal(C)$. Let $delta in (0,Delta(cal(C)))$ be a proximity parameter such that $delta dot blockclength$ is an integer, and let $L_(cal(C)), L_(interleavedcode(2))$ be such that $cal(C)$ is $(delta, L_(cal(C)))$-list decodable and  $interleavedcode(2)$ is $(delta, L_(interleavedcode(2)))$-list decodable, respectively,  (we do not require decodability to be efficient).  Let $(φ_z)_(z ∈ cal(Z)_(sans("evader")))$ be a zero evader with error $epsilon_(sans("evader"))$.
+   Let $cal(C) subset FF^blockclength$ be a linear code of blocklength $blockclength$ and dimension $codedim$, and with minimum relative distance  $Delta(cal(C))$. Let $delta in (0,Delta(cal(C)))$ be a proximity parameter such that $delta dot blockclength$ is an integer, and let $L_(cal(C)), L_(interleavedcode(2))$ be such that $cal(C)$ is $(delta, L_(cal(C)))$-list decodable and  $interleavedcode(2)$ is $(delta, L_(interleavedcode(2)))$-list decodable, respectively,  (we do not require decodability to be efficient).  Let $(φ_z)_(z ∈ cal(Z)_(sans("evader")))$ be a zero evader with error $epsilon_(sans("evader"))$.
   
   Then @c:BEEP is a perfectly complete three-round IOR from $cal(R)_(interleavedcode(2))$ to $cal(R)_(cal(C))$ with round-by-round knowledge soundness with relaxation $(cal(R)_(interleavedcode(2))^delta, cal(R)_(cal(C))^delta)$, with errors
   $
@@ -806,7 +802,7 @@ Before stating and proving the completeness and knowledge soundness of @c:BEEP, 
 ]<t:beep_soundness>
 
 
-We defer the proof of @t:beep_soundness to Appendix @s:proof_rbr_knowledge, and only provide a brief outline of it here. The proof follows arguments similar to those in @zook@BCFW25, with the main difference being that @c:BEEP has one initial extra round (the DEEP sampling round). For this round, it suffices to let the knowledge state function become $1$ iff $|A_z| ≥ delta dot blockclength + 2$ or if the input triple $(inp,oracle, kswit)$ is valid, i.e. belongs to $cal(R)_(interleavedcode(C))^(delta)$. The main result @t:main_thm from @s:better_pretenders then shows that a flip from state $0$ to $1$ occurs with probability at most $kappa_1$. 
+We defer the proof of @t:beep_soundness to Appendix @s:proof_rbr_knowledge, and only provide a brief outline of it here. The proof follows arguments similar to those in @zook@BCFW25, with the main difference being that @c:BEEP has one initial extra round (the DEEP sampling round). For this round, it suffices to let the knowledge state function become $1$ iff $|A_z| ≥ delta dot blockclength + 2$ or if the input triple $(inp,oracle, kswit)$ is valid, i.e. belongs to $cal(R)_(interleavedcode(2))^(delta)$. The main result @t:main_thm from Section @s:better_pretenders then shows that a flip from state $0$ to $1$ occurs with probability at most $kappa_1$. 
 
 After the first round, if the state is $0$, we have $|A_z| < delta dot blockclength+2$. Because of this, at this point, we are in a setting where our two words $f_(1*), f_(2*)$ effectively meet an MCA-like property. In this scenario, the arguments from @zook@BCFW25 apply. In particular, the extractor uses erasure decoding, leveraging the MCA-like property that @t:main_thm provides. As with @zook@BCFW25, this means that the code $cal(C)$ does not require an efficient decoder.
 
@@ -816,7 +812,7 @@ After the first round, if the state is $0$, we have $|A_z| < delta dot blockclen
 
 
 
-For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C)')$, where $cal(C)'$ is a new linear code of the same dimension as $cal(C)$. The oracle part $oracle'$ output of this IOR consists of a single oracle, which is supposdly an oracle to a codewords from $cal(C)'$ (this is in constrast to @c:BEEP, where the output $oracle'$ is a linear combination of other oracles). One can then repeatedly apply this IOR in order to obtain an IOPP (or, more intuiviely, a PCS) for $cal(R)_(interleavedcode(k))$. The resulting IOPP is a ``BEEP variant'' of Ligerito @ligerito, or of WHIR @whir when using Reed-Solomon codes of different rates. 
+For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C)')$, where $cal(C)'$ is a new linear code of the same dimension as $cal(C)$. The oracle part $oracle'$ output of this IOR consists of a single oracle, which is supposedly an oracle to a codeword from $cal(C)'$ (this is in contrast to @c:BEEP, where the output $oracle'$ is a linear combination of other oracles). One can then repeatedly apply this IOR in order to obtain an IOPP (or, more intuitively, a PCS) for $cal(R)_(interleavedcode(k))$. The resulting IOPP is a "BEEP variant" of Ligerito @ligerito, or of WHIR @whir when using Reed-Solomon codes of different rates. 
 
 #remark[BEEP-Basefold and BEEP-FRI-Binius @basefold@fribinius][
   One can equally envision BEEP variants of other code-based PCSs. For example, instead of performing the codeswitch step mentioned above, we could follow a more traditional approach where the spot checks made after repeatedly folding are verified by the verifier, rather than added as new terms to an ongoing sumcheck claim .  
@@ -824,39 +820,37 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 
 
 
- We moslty follow the blueprint of the Zook paper @zook[Theorem 9.10] (though we do not consider zk in our case). Concretley, we first compose  @c:BEEP with itself $log k$ times, so as to obtain an IOR from  $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C))$, and then we compose this IOR with a  the code-switching IOR from @zook, without zero-knowledge.
+ We mostly follow the blueprint of the Zook paper @zook[Theorem 9.10] (though we do not consider zk in our case). Concretely, we first compose  @c:BEEP with itself $log k$ times, so as to obtain an IOR from  $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C))$, and then we compose this IOR with the code-switching IOR from @zook, without zero-knowledge.
 
  Besides the fact that our folding step uses the BEEP sampling technique, this construction is well-known @whir@ligerito@blaze@zook. Because of this we discuss it only in broad terms.
 
  #construction[BEEP folding and code switching: an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C)')$][
     *Parameters.* The code $cal(C)$; a power of two $k$; a linear code $cal(C)'$ with message space $FF^codedim$ (possibly an interleaved code); zero evaders $(phi^((j))_z)_(z in cal(Z)_j)$ on $FF^(k dot codedim \/ 2^j)$ for $j in [log k]$, and $(phi'_z)_(z in cal(Z)')$ with $phi'_z : FF^codedim -> FF^(m')$; a number of queries $Q ≥ 1$. \
-  *Inputs.* The prover and verifier receive as input $inp = (mu, vb(v)) in FF times FF^(k dot codedim)$ and $oracle = f in (FF^k)^blockclength$. The prover also receives $wit = vb(f) in FF^(k dot codedim)$ such that $(inp, oracle, wit) in cal(R)_(interleavedcode(k))$.
-  
-  + *Folding.* Let $(inp_0, oracle_0, wit_0) := (inp, oracle, wit)$ and $cal(C)_j = interleavedcode(2^k\/2^j)$ for $j≥ 0$. Note that $cal(C)_(j-1) = cal(C)_j^(equiv 2)$ for all $j≥ 1$. For $j in [log k]$, the prover and verifier engage in @c:BEEP to reduce the claim that 
-    $
-      (inp_(j-1), oracle_(j-1), wit_(j-1)) in cal(R)_(cal(C)_(j)^(equiv 2))
+  *Inputs.* The prover and verifier receive as input $inp = (mu, vb(v)) in FF times FF^(k dot codedim)$ and $oracle = f in (FF^k)^blockclength$. The prover also receives $wit = vb(f) in FF^(k dot codedim)$ such that $(inp, oracle, wit) in cal(R)_(interleavedcode(k))$.\
+  \
+   *Step 1: Folding.* Let $(inp_0, oracle_0, wit_0) := (inp, oracle, wit)$ and #aiedit[$cal(C)_j = interleavedcode(k\/2^j)$] for $j≥ 0$. Note that $cal(C)_(j-1) = cal(C)_j^(equiv 2)$ for all $j≥ 1$. For $j in [log k]$, the prover and verifier engage in @c:BEEP to reduce the claim that 
+    $(inp_(j-1), oracle_(j-1), wit_(j-1)) in cal(R)_(cal(C)_(j)^(equiv 2))
     $
     to a claim of the form
-    $
-      (inp_(j), oracle_(j), wit_(j)) in cal(R)_(cal(C)_(j))
-    $
+    $(inp_(j), oracle_(j), wit_(j)) in cal(R)_(cal(C)_(j))$
     for $inp_j, oracle_j, wit_j$ output by @c:BEEP.  Write $((hat(mu), hat(vb(v))), g, vb(g)) := (inp_(log k), oracle_(log k), wit_(log k))$. If the prover is honest, we have $((hat(mu), hat(vb(v))), g, vb(g)) in cal(R)_cal(C)$. 
 
-    An important property of $g$ is that it is a linear combination of the rows of $f in FF^(k times blockclength)$. Hence the verifier can obtain $g(x)$ for any $x in [blockclength]$ by querying $f$.
-
-  + *Code switching.* We apply the IOR from #aiedit[@zook[Construction 9.7], without zero-knowledge]. The prover and verifier start with the claim $((hat(mu), hat(vb(v))), g, vb(g)) in cal(R)_cal(C)$ and proceed as follows:
-    + *Round 1 (New oracle and out of domain samples).* The prover sends a word $g'$, supposedly $g' = Enc_(cal(C)')(vb(g))$. The verifier uniformly samples and sends  $z' in cal(Z)'$. The prover replies with $vb(b)' in FF^(m')$, supposedly $vb(b)' = phi'_(z') (vb(g))$.
-    + *Round 2 (Queries).* The verifier uniformly samples and sends $x_1, dots, x_Q in [blockclength]$. If the prover is honest, then $vb(g)$ satisfies the following linear claims:
+    An important property of $g$ is that it is a linear combination of the rows of $f in FF^(k times blockclength)$. Hence the verifier can obtain $g(x)$ for any $x in [blockclength]$ by querying $f$.\
+\
+  *Step 2: Code switching.* We apply the IOR from #aiedit[@zook[Construction 9.7], without zero-knowledge]. The prover and verifier start with the claim $((hat(mu), hat(vb(v))), g, vb(g)) in cal(R)_cal(C)$ and proceed as follows:\
+  \ 
+  *Round 1 (New oracle and out of domain samples).* The prover sends a word $g'$, supposedly $g' = Enc_(cal(C)')(vb(g))$. The verifier uniformly samples and sends  $z' in cal(Z)'$. The prover replies with $vb(b)' in FF^(m')$, supposedly $vb(b)' = phi'_(z') (vb(g))$.\
+  \
+    *Round 2 (Queries).* The verifier uniformly samples and sends $x_1, dots, x_Q in [blockclength]$. If the prover is honest, then $vb(g)$ satisfies the following linear claims:
       $
-        langle vb(g), hat(vb(v)) rangle &= hat(mu), \
-        phi'_(z') (vb(g)) &= vb(b)', \
-        (M_cal(C))_(x_i) dot vb(g) &= g(x_i) quad "for all" i in [Q],
+        langle vb(g), hat(vb(v)) rangle &= hat(mu), quad  quad phi'_(z') (vb(g)) = vb(b)', quad  quad 
+        (M_cal(C))_(x_i) dot vb(g) = g(x_i) quad "for all" i in [Q],
       $<e:codeswitch_lin_claims>
       where $(M_cal(C))_x$ denotes the $x$-th row of an encoding matrix $M_cal(C)$ of $cal(C)$.
-      The verifier obtains the values $g(x_1), dots, g(x_Q)$ by querying $f$, as explained previously.
-    + *Round 3 (Batching of linear claims).* The verifier uniformly samples and sends $vb(gamma)' in FF^(1 + m' + Q)$ to batch the linear claims from @e:codeswitch_lin_claims into a single claim.
-
-  + *Output.*  The prover and verifier output $inp' := (mu', vb(v)')$, $oracle' := g'$ and $wit' := vb(g)$, where
+      The verifier obtains the values $g(x_1), dots, g(x_Q)$ by querying $f$, as explained previously.\
+\ *Round 3 (Batching of linear claims).* The verifier uniformly samples and sends $vb(gamma)' in FF^(1 + m' + Q)$ to batch the linear claims from @e:codeswitch_lin_claims into a single claim.\    
+\ 
+*Output.*  The prover and verifier output $inp' := (mu', vb(v)')$, $oracle' := g'$ and $wit' := vb(g)$, where
     $
       vb(v)' := vb(gamma)' dot (hat(vb(v)), phi'_(z'), (M_cal(C))_(x_1), dots, (M_cal(C))_(x_Q))^(sans("T")), quad
       mu' := vb(gamma)' dot (hat(mu), vb(b)', g(x_1), dots, g(x_Q))^(sans("T")).
@@ -879,7 +873,7 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 ]<t:beep_codeswitch> where $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$, for the $delta$-MCA error $epsilon_(sans("MCA"))$ of $interleavedcode(k\/2^j)$.
 
 #proof[Proof outline][Once the completeness and round-by-round knowledge of the code-switching step are established, the theorem follows from
-   @t:beep_soundness and the lemma for composing IORs (@r:ior_compositoin). The code switching step is an instantiation of  @zook[Construction 9.7] without zero-knowledge, for the relations $cal(R)_cal(C)$ and $cal(C)_cal(C')$. This IOR is clearly perfectly complete, and, by @zook[Lemma 9.9] #albert[review lemma], this IOR  has round-by-round knowledge soundness with  relaxation $(cal(R)^delta_cal(C), cal(R)^(delta')_(cal(C)'))$ and errors $kappa'_1, kappa'_2, kappa'_3$ #albert-postponable[Check if I should be more explicit mapping our notation to Zook's].
+   @t:beep_soundness and the lemma for composing IORs (@r:ior_compositoin). The code switching step is an instantiation of  @zook[Construction 9.7] without zero-knowledge, for the relations $cal(R)_cal(C)$ and #aiedit[$cal(R)_(cal(C)')$]. This IOR is clearly perfectly complete, and, by @zook[Lemma 9.9] #albert[review lemma], this IOR  has round-by-round knowledge soundness with  relaxation $(cal(R)^delta_cal(C), cal(R)^(delta')_(cal(C)'))$ and errors $kappa'_1, kappa'_2, kappa'_3$ #albert-postponable[Check if I should be more explicit mapping our notation to Zook's].
 ]
 
 
@@ -896,10 +890,10 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 
 In the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. As shown in #aiedit[@CWYZ26[Theorem 1.1], for Reed-Solomon codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$], doing so results in #aiedit[an MCA error of $4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ (assuming $blockclength dot eta^2 ≥ 4\/rho$, and with one position of agreement loss)] instead of the usual $O(sans("poly")(blockclength)\/|F|)$.
 
-In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to about $1\/|FF|$ (@t:affine_main_0). In practical terms this can, for example, reduce the amount of grinding required, if any, in @c:BEEP and @c:BEEP_codeswitch..
-Our proofs are elementary and essentially only require tweaking the definitions and adapting @l:few_bad_points_on_line to this new setting. This contrasts with the technical complexity in @CWYZ26. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree (see the introduction).] #albert[Review] We emphasize that these technique apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold.
+In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0). In practical terms this can, for example, reduce the amount of grinding required, if any, in @c:BEEP and @c:BEEP_codeswitch.
+Our proofs are elementary and essentially only require tweaking the definitions and adapting @l:few_bad_points_on_line to this new setting. This contrasts with the technical complexity in @CWYZ26. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree (see the introduction).] #albert[Review] We emphasize that these techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold.
 
-We stress that in this section we only provide an alternative to the result of @CWYZ26, i.e. a bound on the number of bad challenges of an affine fold, which in our case relies on out of domain samples (@t:affine_main_0). As in @CWYZ26, we do not formally describe a full PCS that uses affine folds, and only discuss some aspects of that in @r:affine_pairs. See @[CWYZ26 Section 5] for more details. #albert[check how many details they give]
+We stress that in this section we only provide an alternative to the result of @CWYZ26, i.e. a bound on the number of bad challenges of an affine fold, which in our case relies on out of domain samples (@t:affine_main_0). As in @CWYZ26, we do not formally describe a full PCS that uses affine folds, and only discuss some aspects of that in @r:affine_pairs. See #aiedit[@CWYZ26[Section 5]] for more details. #albert[check how many details they give]
 
 We only mention one point to keep in mind when using @t:affine_main_0. As we explain below, for affine folds we consider Correlated Agreement with a set of pairs of codewords $Cpair$, which is slightly larger than the interleaved code $interleavedcode(2)$ of the Reed-Solomon code $cal(C)$ at hand. In @r:affine_pairs we briefly explain how to obtain Correlated Agreement with $interleavedcode(2)$ instead, following @CWYZ26[Section 5].
 
@@ -923,7 +917,7 @@ $<e:poly_times_word>
 
 
 
- Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps $theta_i (Y):= a_i + d_i dot Y$, $i=1,2$, with, as in @s:better_pretenders $a_1 dot d_2 != a_2 dot d_1$. Looking ahead, given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, the $alpha$-fold of $u_1, u_2$ is the word (recall our notation convention from @e:poly_times_word)
+ Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps $theta_i (Y):= a_i + d_i dot Y$, $i=1,2$, with, as in #aiedit[Section] @s:better_pretenders, $a_1 dot d_2 != a_2 dot d_1$. Looking ahead, given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, the $alpha$-fold of $u_1, u_2$ is the word (recall our notation convention from @e:poly_times_word)
 $
 theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2 in FF^blockclength.
 $
@@ -946,7 +940,7 @@ Let $u_1, u_2 in FF^blockclength$ be two words and let $delta in (0,1)$. Given $
 #let samples = $vb(z)$
 
 \
-Let $numsamples≥ 1$ be a parameter. Given $samples=(z_1, dots, z_numsamples) in FF^numsamples$, let $evalmap_vb(z): FF[X] -> FF^numsamples$ consist on evaluating a polynomial at the entries of $samples$, i.e.
+Let $numsamples≥ 1$ be a parameter. Given $samples=(z_1, dots, z_numsamples) in FF^numsamples$, let $evalmap_vb(z): FF[X] -> FF^numsamples$ consist of evaluating a polynomial at the entries of $samples$, i.e.
 $
 evalmap_samples (p) := (p(z_1), dots, p(z_numsamples)) in FF^numsamples.
 $
@@ -1066,7 +1060,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
   $
   It suffices to use @l:few_bad_points_on_line_0 with the bound $|A_lmap^(sans("pret"))|≤ N$ instead of the bound $|A_lmap^(sans("pret"))|≤ delta dot blockclength +1$ given by @l:few_bad_points_on_line.
   
-  Finally, let $P subset chal times Cplus$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. Since $Cplus$ is $(delta, L)$-list decodable, $|P| ≤ |chal| dot L = |FF|^2 dot L$. Let $(alpha_i, c_i)_(i in [3]) in P^3$ be such that $U((alpha_i, c_i)_(i in [3])) != 0$. Then by definition of $T_vb(z)$ this is a nonzero polynomial of degree at most $codedim + 1$, and hence there are at most $((codedim + 1) \/ |FF|)^numsamples dot |FF|^numsamples$ elements $vb(z) in FF^numsamples$ such that the triple belongs to $T_vb(z)$. Using an argument similar to the proof of @t:main_thm ,  and using $|chal| = FF^2$, we have
+  Finally, let $P subset chal times Cplus$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. Since $Cplus$ is $(delta, L)$-list decodable, $|P| ≤ |chal| dot L = |FF|^2 dot L$. Let $(alpha_i, c_i)_(i in [3]) in P^3$ be such that $U((alpha_i, c_i)_(i in [3])) != 0$. Then by definition of $T_vb(z)$ this is a nonzero polynomial of degree at most $codedim + 1$, and hence there are at most $((codedim + 1) \/ |FF|)^numsamples dot |FF|^numsamples$ elements $vb(z) in FF^numsamples$ such that the triple belongs to $T_vb(z)$. Using an argument similar to the proof of @t:main_thm ,  and using #aiedit[$|chal| = |FF|^2$], we have
   $
     sum_(vb(z) in FF^numsamples) |T_vb(z)| ≤ (|FF|^2 dot L)^3 dot ((codedim + 1) \/ |FF|)^numsamples dot |FF|^numsamples,
   $
@@ -1078,7 +1072,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 #remark[Correlated Agreement with $interleavedcode(2)$ instead of $Cpair$][
   #albert[review] In @d:affine_pretender we ask for Correlated Agreement with $Cpair$, and not with $interleavedcode(2)$, i.e. with pairs of codewords of $cal(C)$ as in Section @s:better_pretenders. The set $Cpair$ strictly contains $interleavedcode(2)$, and so, when a codeword $c in Cplus$ agrees with the $alpha$-fold of two words $u_1, u_2$ on a subset of $[blockclength]$ of size at least $(1-delta) dot blockclength$, and $c$ is not an $alpha$-pretender, we obtain a pair from $Cpair$ that is close to $(u_1, u_2)$, and this pair need not belong to $interleavedcode(2)$. Here and below, we say that a pair of codewords $(c_1, c_2)$ is #emph[close] to a pair of words $(w_1, w_2)$ if there is a subset of $[blockclength]$ of size at least $(1-delta) dot blockclength - 1$  where $w_1$ agrees with $c_1$ and $w_2$ agrees with $c_2$.
 
-  In a bigger protocol, for example when aiming to build an IOR from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$ using affine folds, one would instead prefer to obtain a pair from $cal(R)_(interleavedcode(2))$ instead of $Cpair$. This can be ensured  using the methods described in @CWYZ26[Section 5]. To do so, one can have an initial communication round where the verifier samples an additional challenge $xi in FF$, and replaces the words $u_1$ and $u_2$ by $u'_1:=u_1$  and $u'_2:=u_2 + xi dot u_1$, and then proceeds to perform the DEEP sampling and the affine folding with these two words instead of $u_1$ and $u_2$. One also performs analogous linear changes on the witness and any linear constraints placed on the witness.
+  In a bigger protocol, for example when aiming to build an IOR from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$ using affine folds, one would instead prefer to obtain a pair from #aiedit[$interleavedcode(2)$] instead of $Cpair$. This can be ensured  using the methods described in @CWYZ26[Section 5]. To do so, one can have an initial communication round where the verifier samples an additional challenge $xi in FF$, and replaces the words $u_1$ and $u_2$ by $u'_1:=u_1$  and $u'_2:=u_2 + xi dot u_1$, and then proceeds to perform the DEEP sampling and the affine folding with these two words instead of $u_1$ and $u_2$. One also performs analogous linear changes on the witness and any linear constraints placed on the witness.
 
   The reason this works is the following. Let $Lambda$ be the set of all pairs of codewords of $Cplus$ that are close to the original words $(u_1, u_2)$. Note that $Lambda$ does not depend on $xi$, since $u_1, u_2$ are fixed before $xi$ is sampled. On the other hand, the pairs of codewords of $Cplus$ that are close to the new words $(u'_1, u'_2)$ do depend on $xi$: for each $xi in FF$, they are exactly the pairs $(c_1, c_2 + xi dot c_1)$ with $(c_1, c_2) in Lambda$. 
 
@@ -1183,21 +1177,13 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 
 == Main Theorem (batch version)
 
-- Denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$.
+We start by fixing notation. Let $𝔽$ be a finite field of size $q = abs(𝔽)$. We denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$. We let $ℓ$ be the message length, $n$ the code length, $b$ the folding size and $m$ the check size. Let $𝒞 ⊆ 𝔽^n$ be a code of dimension $ℓ$ that is $(δ, L)$-list decodable and has MCA bound $E$.
 
-- Let $𝔽$ be a finite field of size $q = abs(𝔽)$.
+We use three zero evaders, one for folding, one for checking and one for batching. For folding we use a scalar zero evader $ψ_s ∈ 𝔽^(1 × b)$ with seeds $s ∈ 𝒵_fold$ and error bounds $ε^fold_d$. We abbreviate $N = abs(𝒵_fold)$. For checking we use a zero evader $φ_z ∈ 𝔽^(m × ℓ)$ with seeds $z ∈ cal(Z)_check$ and error bounds $ε^check_d$. We define $hat(φ)_z ∈ 𝔽^(m × n)$ as $φ_z Enc_𝒞^(-1)$, where $Enc_𝒞^(-1)$ is a left inverse of $Enc_𝒞$. For batching we use a scalar zero evader $γ_z ∈ 𝔽^(1 × (m + 1))$ with seeds $z ∈ 𝒵_batch$ and error bounds $ε^batch_d$.
 
-- Let $ℓ$ be the message length, $n$ the code length, $b$ the folding size, $m$ the check size.
+#albert-postponable[seed sounds strange to me, but i think we havent established any name for z yet. we should do that when defining zero evaders. maybe "sample seeds"?]
 
-- Let $𝒞 ⊆ 𝔽^n$ with dimension $ℓ$ be a code that is $(δ, L)$-list decodable and has MCA bound $E$.
-
-- Let $ψ_s ∈ 𝔽^(1 × b)$ be a scalar zero evader  used for folding with seeds #albert[seed sounds strange to me, but i think we havent established any name for z yet. we should do that when defining zero evaders. maybe "sample seeds"?] $s ∈ 𝒵_fold$ and error bounds $ε^fold_d$. Abbreviate $N = abs(𝒵_fold)$.
-
-  #albert[I think having a zero evader for folding may not be worth the generality. The problem I see is that it introduces several symbols that replaces commonly recognized symbols. For example $N=|cal(Z)_(sans("fold"))|$ being an abstraction of $|FF|$ has a relatively high cognitive tax when combined with the rest of the new things happening in this section (at least for me). Maybe keeping $|cal(Z)_(sans("fold"))|$ instead of $N$ would already help]
-
-- Let $φ_z ∈ 𝔽^(m × ℓ)$ be a zero evader used for checking with seeds $z ∈ cal(Z)_check$ and error bounds $ε^check_d$. Define $hat(φ)_z ∈ 𝔽^(m × n)$ as $φ_z Enc_𝒞^(-1)$ where $Enc_𝒞^(-1)$ is a left inverse of $Enc_𝒞$.
-
-- Let $γ_z ∈ 𝔽^(1 × (m + 1))$ be a scalar zero evader used for batching with seeds $z ∈ 𝒵_batch$ and error bounds $ε^batch_d$ used for batching.
+#albert-postponable[I think having a zero evader for folding may not be worth the generality. The problem I see is that it introduces several symbols that replaces commonly recognized symbols. For example $N=|cal(Z)_(sans("fold"))|$ being an abstraction of $|FF|$ has a relatively high cognitive tax when combined with the rest of the new things happening in this section (at least for me). Maybe keeping $|cal(Z)_(sans("fold"))|$ instead of $N$ would already help]
 
 *Setup.* Abstractly, the protocol we are interested in is as follows:
 
@@ -1403,7 +1389,7 @@ If all the $b_j$, $N_j$, $ε^((d))_j$ and $t_j$ are the same (but not necessaril
 #proof[
  We prove @t:beep_soundness. Let $Pi$ denote @c:BEEP. In our formalization of IORs (Section @s:IOR), every round starts with the prover sending a message, and then the verifier replies with a challenge. Since, as described, Rounds 1 and 3 of @c:BEEP start off with a verifier challenge, we modify $Pi$ so that the prover sends  empty messages at the beginning of those rounds. 
 
-It is clear that $Pi$ is perfectly complete #albert[review]?. We prove soundness of $Pi$.  Let $inp=(mu,vb(v))in FF times FF^(2 times codedim)$ and  $oracle=f in FF^(2 times blockclength)$, with $f=(f_(1*), f_(2*))$. Let $tr$ be a partial interaction transcript for $Pi$.
+It is clear that $Pi$ is perfectly complete#albert-postponable[review?]. We prove soundness of $Pi$.  Let $inp=(mu,vb(v))in FF times FF^(2 times codedim)$ and  $oracle=f in FF^(2 times blockclength)$, with $f=(f_(1*), f_(2*))$. Let $tr$ be a partial interaction transcript for $Pi$.
 
 We progressively describe a knowledge state function $kstate$ for $Pi$. For all $kswit$, if  $tr = emptyset$ is the empty transcript, then we set $kstate(inp, oracle, tr, kswit) = 1$ if and only if $(inp, oracle; kswit) in cal(R)_(interleavedcode(2))^delta$. If $tr$ is a transcript where the prover is about to move, then we define $kstate(inp, oracle, tr, provermsg, kswit) = kstate(inp, oracle, tr, kswit)$ for every prover message $provermsg$. If $tr = (provermsg_1, verifiermsg_1, provermsg_2, verifiermsg_2, provermsg_3, verifiermsg_3)$ is a full transcript, then we define $kstate(inp, oracle, tr, kswit) = 1$ if and only if $verifier$ on $tr$ outputs $(inp', oracle')$ such that $(inp', oracle'; kswit) in cal(R)_(cal(C))^delta$.
 
@@ -1437,7 +1423,7 @@ and &  φ_z kswit =  aiedit((1-alpha) dot) 𝐛_(1) + alpha dot 𝐛_(2),
 and & hamming(aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*), Enc_cal(C)(kswit)) ≤ delta 
 ))) //" or " langle kswit, vb(v)  rangle != mu,
 $ 
-We define an extractor $rbrextractor$ for transcripts of the form $(tr, alpha)$ as follows. #albert[Mention somewhere this is similar to the techniques from "linear time accumulation schemes"] The extractor proceeds under the assumption that $Delta(aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*), Enc_cal(C)(kswit))≤delta$. If that is not the case, the extractor may fail and output $bot$.  The extractor computes $Enc_cal(C)(kswit)$ and finds the maximal set $S_alpha subset [blockclength]$ where $Enc_cal(C)(kswit)$ and $aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*)$ agree. If $|S_alpha| < (1-delta) dot blockclength$, the extractor outputs $bot$.
+We define an extractor $rbrextractor$ for transcripts of the form $(tr, alpha)$ as follows. #albert-postponable[Mention somewhere this is similar to the techniques from "linear time accumulation schemes"] The extractor proceeds under the assumption that $Delta(aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*), Enc_cal(C)(kswit))≤delta$. If that is not the case, the extractor may fail and output $bot$.  The extractor computes $Enc_cal(C)(kswit)$ and finds the maximal set $S_alpha subset [blockclength]$ where $Enc_cal(C)(kswit)$ and $aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*)$ agree. If $|S_alpha| < (1-delta) dot blockclength$, the extractor outputs $bot$.
 
 Next, the extractor computes $kswit_(1*), kswit_(2*) in FF^codedim$ such that  $Enc_cal(C)(kswit_(i*))$ agrees with $f_(i*)$ on $S_alpha$ for both $i=1,2$, with the following procedure: let $M_cal(C) in FF^(blockclength times codedim)$ be an encoding matrix for $cal(C)$. The extractor sets up the following system of linear equations  on variables $(kswit_(1*), kswit_(2*))$: 
 $
@@ -1472,7 +1458,7 @@ $
 s_2 ≤ (|B_1| + |B_2|)/(|FF|) ≤ (delta dot blockclength + 1 + 2 dot L_(interleavedcode(2)))/(|FF|) = kappa_2 
 $
 
-To prove the claim, assume $kstate(inp,oracle, tr, alpha, kswit)=1$. Then $aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*)$ and  $Enc_cal(C)(kswit)$ agree on the set $S_alpha subset [blockclength]$ computed by the extractor, with $|S_alpha| ≥ (1-delta) dot blockclength$. Since $alpha in.not B_1$, $alpha$ is not DEEP-MCA-bad with respect to $(z, vb(b)_1, vb(b)_2, f_(1*), f_(2*))$. Now, $(alpha, Enc_cal(C)(kswit))$ must be consistent with $(z, vb(b)_1, vb(b)_2)$ because $phi_z (Enc_cal(C)(kswit)) = phi_z (kswit) = aiedit((1-alpha) dot) vb(b)_(1) + alpha dot vb(b)_(2)$ and $hamming(aiedit((1-alpha) dot) f_(1*)+alpha dot f_(2*), Enc_cal(C)(kswit))≤ delta$ due to  $kstate(inp,oracle, tr, alpha, kswit)=1$. Hence, $Enc_cal(C)(kswit)$ is not an $alpha$-pretender. This means that $f_(1*), f_(2*)$ have correlated agreement with $cal(C)$ over $S_alpha$. By our previous claim, the system of equations @e:system_beep_soundness has a solution $kswit'=(kswit_(1*), kswit_(2*))in FF^(2 times codedim)$, which is output by the extractor. Now, $kstate(inp,oracle, tr, kswit')=1$ if and only if $|A_z|≥ delta dot blockclength +2$ or $(inp, oracle, kswit') in cal(R)_(interleavedcode(2))^delta$.  We assumed the former does not occur, and so we now have to show that $(inp, oracle, kswit') in cal(R)_(interleavedcode(2))^delta$, i.e. we must prove that $langle kswit', vb(v) rangle = mu$ and $hamming_(interleavedcode(2))(f, Enc_(interleavedcode(2))(kswit')) ≤ delta$ . The second holds because $f_(1*), f_(2*)$ agree with with $Enc_cal(C)(kswit_(1*)), Enc_cal(C)(kswit_(2*))$ on $S_alpha$. We now prove the first. We know that $langle kswit, aiedit((1-alpha) dot vb(v)_(1*) + alpha dot vb(v)_(2*))  rangle= h(alpha)$ and that $kswit=(1-alpha) dot kswit_(1*) + alpha dot kswit_(2*)$, and so $h_(kswit')(alpha) = h(alpha)$. Since $kswit' in W$ and  $alpha in.not B_2$, we must have that $h_(kswit')(X) = h(X)$. Since $h(0) + h(1)= mu$, we obtain 
+To prove the claim, assume $kstate(inp,oracle, tr, alpha, kswit)=1$. Then $aiedit((1-alpha) dot) f_(1*) + alpha dot f_(2*)$ and  $Enc_cal(C)(kswit)$ agree on the set $S_alpha subset [blockclength]$ computed by the extractor, with $|S_alpha| ≥ (1-delta) dot blockclength$. Since $alpha in.not B_1$, $alpha$ is not DEEP-MCA-bad with respect to $(z, vb(b)_1, vb(b)_2, f_(1*), f_(2*))$. Now, $(alpha, Enc_cal(C)(kswit))$ must be consistent with $(z, vb(b)_1, vb(b)_2)$ because $phi_z (Enc_cal(C)(kswit)) = phi_z (kswit) = aiedit((1-alpha) dot) vb(b)_(1) + alpha dot vb(b)_(2)$ and $hamming(aiedit((1-alpha) dot) f_(1*)+alpha dot f_(2*), Enc_cal(C)(kswit))≤ delta$ due to  $kstate(inp,oracle, tr, alpha, kswit)=1$. Hence, $Enc_cal(C)(kswit)$ is not an $alpha$-pretender. This means that $f_(1*), f_(2*)$ have correlated agreement with $cal(C)$ over $S_alpha$. By our previous claim, the system of equations @e:system_beep_soundness has a solution $kswit'=(kswit_(1*), kswit_(2*))in FF^(2 times codedim)$, which is output by the extractor. Now, $kstate(inp,oracle, tr, kswit')=1$ if and only if $|A_z|≥ delta dot blockclength +2$ or $(inp, oracle, kswit') in cal(R)_(interleavedcode(2))^delta$.  We assumed the former does not occur, and so we now have to show that $(inp, oracle, kswit') in cal(R)_(interleavedcode(2))^delta$, i.e. we must prove that $langle kswit', vb(v) rangle = mu$ and $hamming_(interleavedcode(2))(f, Enc_(interleavedcode(2))(kswit')) ≤ delta$ . The second holds because $f_(1*), f_(2*)$ agree with $Enc_cal(C)(kswit_(1*)), Enc_cal(C)(kswit_(2*))$ on $S_alpha$. We now prove the first. We know that $langle kswit, aiedit((1-alpha) dot vb(v)_(1*) + alpha dot vb(v)_(2*))  rangle= h(alpha)$ and that $kswit=(1-alpha) dot kswit_(1*) + alpha dot kswit_(2*)$, and so $h_(kswit')(alpha) = h(alpha)$. Since $kswit' in W$ and  $alpha in.not B_2$, we must have that $h_(kswit')(X) = h(X)$. Since $h(0) + h(1)= mu$, we obtain 
 $
 mu = h_(kswit')(0) + h_(kswit')(1) = langle kswit_(1*), vb(v)_(1*) rangle  + aiedit(langle kswit_(2*)\, vb(v)_(2*) rangle) =  langle kswit', vb(v) rangle,
 $
@@ -1503,7 +1489,7 @@ We show that $s_3 ≤ kappa_3 = L_cal(C) \/ |FF|$. Indeed, assume $kstate(inp, o
 $
  vb(gamma) dot (vb(v)_alpha, phi_z)^(sans("T")) dot kswit = vb(gamma) dot (h(alpha),(1-alpha) dot vb(b)_1 + alpha dot vb(b)_2)^(sans("T")).
 $
-By Schwartz-Zippel lemma the probability over $vb(gamma)$ that the above equality holds, for fixed $kswit$ for which one of these claims fails, is  $≤ (1)/(|FF|)$.  Finally, there are at most $L_cal(C)$ tuples $kswit in FF^codedim$ such that such that $(inp',oracle', kswit) in cal(R)_(cal(C))^(delta)$, and so, by a union bound, $s_3 ≤ L \/ |FF|$. 
+By Schwartz-Zippel lemma the probability over $vb(gamma)$ that the above equality holds, for fixed $kswit$ for which one of these claims fails, is  $≤ (1)/(|FF|)$.  Finally, there are at most $L_cal(C)$ tuples $kswit in FF^codedim$ such that $(inp',oracle', kswit) in cal(R)_(cal(C))^(delta)$, and so, by a union bound, $s_3 ≤ aiedit(L_cal(C)) \/ |FF|$. 
 ]
 
 
