@@ -1,0 +1,14 @@
+name: m14-128.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=14 profile=fast bits=128 rates=1,3 variants=split reps=15
+start: 2026-11-17 00:34:58
+power_before: AC Power
+load_before: 2.22 2.57 2.61
+swap_before: total = 2048.00M used = 969.19M free = 1078.81M (encrypted)
+top_before: CPU usage: 15.23% user, 9.93% sys, 74.83% idle  PhysMem: 13G used (2480M wired, 1353M compressor), 9965M unused. 
+end: 2026-11-17 00:34:58
+exit: 0
+power_after: AC Power
+load_after: 2.22 2.57 2.61
+swap_after: total = 2048.00M used = 969.19M free = 1078.81M (encrypted)

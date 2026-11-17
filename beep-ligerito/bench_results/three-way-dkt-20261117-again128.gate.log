@@ -1,0 +1,33 @@
+[bench_gate] beep-dkt-20261117-again128: idle 85% (streak 1/2)
+[bench_gate] beep-dkt-20261117-again128: idle 85% (streak 2/2)
+[bench_gate] beep-dkt-20261117-again128: starting (swap baseline 0.90 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+m14-128.fold (attempt 1): ok
+m14-128.fold-nopow (attempt 1): ok
+m14-128.split (attempt 1): ok
+m14-128.split-nopow (attempt 1): ok
+m16-128.fold (attempt 1): ok
+m16-128.fold-nopow (attempt 1): ok
+m16-128.split (attempt 1): ok
+m16-128.split-nopow (attempt 1): ok
+m18-128.fold (attempt 1): ok
+m18-128.fold-nopow (attempt 1): ok
+m18-128.split (attempt 1): ok
+m18-128.split-nopow (attempt 1): ok
+m20-128.fold (attempt 1): ok
+m20-128.fold-nopow (attempt 1): ok
+m20-128.split (attempt 1): ok
+m20-128.split-nopow (attempt 1): ok
+m22-128.fold (attempt 1): ok
+m22-128.fold-nopow (attempt 1): ok
+m22-128.split (attempt 1): ok
+m22-128.split-nopow (attempt 1): ok
+m24-128.fold (attempt 1): ok
+m24-128.fold-nopow (attempt 1): ok
+m24-128.split (attempt 1): ok
+m24-128.split-nopow (attempt 1): ok
+m26-128.fold (attempt 1): ok
+m26-128.fold-nopow (attempt 1): ok
+m26-128.split (attempt 1): ok
+m26-128.split-nopow (attempt 1): ok
+done: 2026-11-17 01:45:00, failures: 0

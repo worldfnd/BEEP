@@ -1,0 +1,25 @@
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.08s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/BEEP/beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-dkt-20261117-m16-m16-100.fold: idle 91% (streak 1/1)
+m16-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-100.fold-nopow: idle 91% (streak 1/1)
+m16-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-100.split: idle 91% (streak 1/1)
+m16-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-100.split-nopow: idle 94% (streak 1/1)
+m16-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-128.fold: idle 73% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-m16-128.fold: idle 77% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-m16-128.fold: idle 80% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-m16-128.fold: idle 82% (streak 1/1)
+m16-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-128.fold-nopow: idle 93% (streak 1/1)
+m16-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-128.split: idle 92% (streak 1/1)
+m16-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-128.split-nopow: idle 93% (streak 1/1)
+m16-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-m16-128.dkt-nopow: idle 86% (streak 1/1)
+m16-128.dkt-nopow (attempt 1): ok
+done: 2026-11-17 01:12:18, failures: 0

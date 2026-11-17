@@ -1,0 +1,14 @@
+name: m16-128.split
+attempt: 1
+env: 
+args: log_n=16 profile=fast bits=128 rates=1,3 variants=split reps=15
+start: 2026-11-17 00:40:42
+power_before: AC Power
+load_before: 2.85 2.89 2.76
+swap_before: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)
+top_before: CPU usage: 18.7% user, 12.65% sys, 69.27% idle  PhysMem: 23G used (2593M wired, 1270M compressor), 453M unused. 
+end: 2026-11-17 00:40:43
+exit: 0
+power_after: AC Power
+load_after: 3.83 3.09 2.83
+swap_after: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)

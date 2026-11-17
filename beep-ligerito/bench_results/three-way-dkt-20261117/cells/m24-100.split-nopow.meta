@@ -1,0 +1,14 @@
+name: m24-100.split-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=24 profile=fast100 bits=100 rates=1,3,5,7 variants=split reps=15
+start: 2026-11-17 00:56:14
+power_before: AC Power
+load_before: 2.87 2.92 2.75
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 1.34% user, 7.38% sys, 91.27% idle  PhysMem: 20G used (2269M wired, 1139M compressor), 2936M unused. 
+end: 2026-11-17 00:56:17
+exit: 0
+power_after: AC Power
+load_after: 3.52 3.06 2.80
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

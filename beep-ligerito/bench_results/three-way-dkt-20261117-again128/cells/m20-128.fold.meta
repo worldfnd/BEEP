@@ -1,0 +1,14 @@
+name: m20-128.fold
+attempt: 1
+env: 
+args: log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep reps=15
+start: 2026-11-17 01:37:05
+power_before: AC Power
+load_before: 3.27 2.97 2.77
+swap_before: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)
+top_before: CPU usage: 5.38% user, 11.97% sys, 82.63% idle  PhysMem: 16G used (2518M wired, 1368M compressor), 7735M unused. 
+end: 2026-11-17 01:37:07
+exit: 0
+power_after: AC Power
+load_after: 3.09 2.94 2.76
+swap_after: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)

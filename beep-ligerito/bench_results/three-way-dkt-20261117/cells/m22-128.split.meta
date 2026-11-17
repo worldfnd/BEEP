@@ -1,0 +1,14 @@
+name: m22-128.split
+attempt: 1
+env: 
+args: log_n=22 profile=fast bits=128 rates=1,3,5,7 variants=split reps=15
+start: 2026-11-17 00:52:59
+power_before: AC Power
+load_before: 1.95 2.38 2.54
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 17.44% user, 14.76% sys, 67.78% idle  PhysMem: 22G used (2291M wired, 1164M compressor), 943M unused. 
+end: 2026-11-17 00:53:00
+exit: 0
+power_after: AC Power
+load_after: 2.19 2.42 2.55
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

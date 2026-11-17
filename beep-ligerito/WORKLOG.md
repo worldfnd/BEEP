@@ -333,3 +333,236 @@ morning the author had replaced the long Experiments section of the paper by an 
 - The abstract. Its "????" (the saving in proof size) can be filled from the section: 5 to 7 % at 100 bits against Ligerito over GF(2^128), 13 to 28 % at 128 bits against Ligerito (Flock). Its sentence "the cost overhead ... is negligible in prover and verifier time" does not match the measurement at 100 bits: the verifier takes the same time (0.97 to 1.00), and the opening takes 1.11 to 1.36 times as long (1.05 to 1.18 with the commitment), slower at all nine sizes. The author's text; flagged in the reply.
 - From the independent check, not acted on: the selection of `m` minimizes whole bits of grinding and then the number of samples, while the fold challenges are ground against a threshold; at the first level of 2^21 to 2^23 elements at 128 bits, `m = 5` would try 10 to 14 % fewer hashes than the chosen `m = 4` (16.25 against 16.39 to 16.44 bits), for one more sample per round. And Flock's proof-of-work search runs on one thread below 2^13 expected hashes, which makes a search of 2^13 hashes slower than one of 2^14: the cost of a proof of work is not monotone in its difficulty around that point, for every variant.
 - Unchanged: everything listed in the phases before.
+
+## Phase BEEP-DKT-baseline (2026-11-17): the baseline "Ligerito over GF(2^128)" with the MCA bound of DKT26, for 2^14 to 2^26 elements
+
+<!-- [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request; please review] -->
+
+The author's requests, after an audit of the paper found that the baseline of its tables uses an MCA bound that the
+literature has since improved: "Can you run a comparison for 100 and 128 bits at this error bound?", and "we should
+make runs for larger n too. Maybe go from n=14 to n=26 doing only even n's". The bound is Theorem 4.4 of Dao,
+Kominers and Thaler (ePrint 2026/2056, "Quantitative Johnson MCA in every characteristic": any field, any distinct
+evaluation points), with no row union (its Lemma 6.5 and Corollaries 6.6 and 6.7, after Jo, ePrint 2026/891).
+Nothing of `paper/` was changed: the section and its tables still read the runs of November 16.
+
+### What was built
+
+- **`beep.rs`** (additions only): `dkt_exceptional_count(n, dim, agreement)`, the count of the theorem in integer
+  arithmetic (its equations (33), (34), (36), (37), (39), read on the page images of the PDF);
+  `mca_dkt_ladder_at`, which is `mca_ladder_at` with the fold challenge of every round charged `(E + 2L) / |F|` for
+  that count `E` at the agreement `ceil((sqrt(rho) + eta) n)` of the level (one numerator per level: no row union,
+  so every round of a level has the same error); `mca_dkt_ladder_no_first_sample_at`. Two tests.
+- **The bench**: the variant `dkt-<eta>` (`variants=..,dkt`, `dkt_eta=`), which is `mcanf-<eta>` with that bound;
+  and for a size that Flock does not ship (2^14 elements) the split configuration is Flock's derivation of the
+  profile (`split_derived`), where the bench stopped before.
+- **Scripts**: `cells_dkt.txt` (67 processes), `cells_dkt_rerun16.txt` (the nine cells for 2^16 elements again),
+  `dkt_tables.py` (the tables of the run; its output is `bench_results/three-way-dkt-20261117/TABLES.txt`).
+
+### Decisions and deviations
+
+- **Flock's prover and the provers of the BEEP ladder run in separate processes** (`<shape>.split`,
+  `<shape>.fold`). In one process they take five times the memory of the two together (2^24 elements: 9.9 GB against
+  1.8 GB and 2.7 GB; the cells of November 16 have them in one process). The comparison of BEEP-Ligerito with the
+  baselines stays inside one process.
+- **The ladder for 2^26 elements has five levels** (rates 1/2 to 2^-9), by the rule of the minimal section (a new
+  level while the folded message has 2^7 elements or more).
+- **The slacks of the baseline are a grid, not a choice**: 0.02, 0.005, 0.002, 0.001 at 100 bits; 0.02, 0.05, 0.1
+  at 128 bits, where a smaller slack only adds proof of work.
+- **At 128 bits the baseline runs with its proofs of work only where a proof takes under about two seconds of
+  search** (every slack for 2^14 and 2^16 elements, the slack 0.1 for 2^18 and 2^20). Everywhere else its row has
+  the prover without proofs of work and the expected number of hashes over the hash rate of the run. These cells
+  are the last ones of the run.
+- **The nine cells for 2^16 elements were measured twice.** The independent check of the new function ran two long
+  computations on one core during the first measurement (61 to 76 % idle CPU before seven of these cells). The
+  rerun (`three-way-dkt-20261117-m16`, same binary) replaces their rows.
+- **After the run**, three test vectors and a comment were added to the test module of `beep.rs` (from the
+  independent check). The hash of `beep.rs` in `binaries.txt` is that of the file before them; the rebuilt bench
+  gives the 197 configurations of the run.
+
+### Verification (2026-11-17, Apple M5, 24 GB, 10 threads)
+
+- `cargo test --offline --release -p flock-core --lib pcs::ligerito::beep::tests`: 17 passed; `--lib
+  pcs::ligerito`: 101 passed, 1 ignored. The count against eleven values computed from the statement of the theorem
+  with 80-digit decimals and exact fractions.
+- No earlier variant changed: the new bench builds the 144 configurations recorded in the run `-ac3`.
+- Field by field, `dkt-<eta>` differs from `beep-<eta>` in the fold rounds only (points, threshold, numerators,
+  proofs of work, and the bookkeeping of the binding of the first level), and the proof of `beep-<eta>` is that of
+  `dkt-<eta>` plus the fold answers, at every size; `dkt-0.02` differs from `mcanf-0.02` in the fold proofs of work
+  only.
+- **Independent check** (a fresh agent, on the code and the PDF): the formula term by term on the page images, the
+  integer form against direct evaluation in 8,836 cases, the eight test vectors with its own code, the hypotheses
+  (any field, characteristic 2 through the Frobenius pullback, the code is Reed-Solomon of dimension 2^c), the proof
+  of Lemma 6.5 and the round-by-round use of Corollary 6.6, and the charge `E + 2L`: no defect. Not checked by it:
+  Lemmas 4.1, 4.2 and A.3 to A.5 of DKT26 beyond the algebra, and Jo's paper.
+- Run `three-way-dkt-20261117`: 00:32 to 01:07, through `bench_gate.py run --min-idle 80 --hold-seconds 40` with
+  `CAMPAIGN_IDLE_EACH=1 CAMPAIGN_IDLE_HOLD=20`, 67 processes, all `ok` at the first attempt, all on AC power, 15
+  repetitions, cool-down 20 s, binary `a229851e22f56b1f`. Rerun `-m16`: 01:08 to 01:12, nine processes, the same
+  binary. `collect.py`: 85 and 11 rows, no warning. The two processes of Flock's prover for 2^26 elements had part
+  of their memory compressed (10.7 GB of footprint): their rows are disturbed.
+- An untimed pass of every cell before the run (one repetition, no proofs of work) gave the same proof sizes: 224
+  rows compared, none different, and every repetition of a cell has the same proof size.
+
+### Results (TABLES.txt)
+
+- **100 bits, BEEP-Ligerito (slack 0.001) against the baseline over GF(2^128).** With Flock's bound at slack 0.02
+  (`mcanf-0.02`, the baseline of the paper): proofs 6.1 to 6.9 % smaller, prover 1.13 to 1.34 times as long. With
+  the bound of DKT26: at slack 0.005, proofs 0.9 to 1.4 % smaller, prover 1.24 to 1.44; at slack 0.002, proofs
+  within 0.3 % (-0.08 to +0.28 %), prover 1.15 to 1.44 (1.25 to 1.48 without proofs of work, 1.05 to 1.18 with the
+  commitment), verifier 1.01 to 1.09; at slack 0.001 (the queries of BEEP-Ligerito), proofs 0.5 to 0.8 % LARGER
+  (the fold answers), prover 0.89 to 1.43 (slower below 2^18 elements, equal at 2^18 and 2^20, faster from 2^22).
+  The fold proofs of work of the baseline: at most 2^16.3 hashes per proof at slack 0.005 (0.9 ms), 2^20.3 at 0.002
+  (7.2 ms), 2^23.3 at 0.001 (56 ms), all for 2^26 elements.
+- **128 bits, against Ligerito (Flock), fold challenges in GF(2^256).** The bound changes nothing there (Flock has
+  no fold grinding: 208 to 226 bits on that term). Proofs 10.7 to 24.1 % smaller; prover 1.29, 0.93, 1.02, 0.92,
+  0.89, 0.68, 0.65 times as long from 2^14 to 2^26 (the last one against disturbed rows); verifier 0.53 to 0.70.
+- **128 bits, against the baseline with the bound of DKT26 over GF(2^128).** The fold proofs of work of one proof:
+  2^25.7 to 2^38.3 hashes at slack 0.02 (the proofs of BEEP-Ligerito are 6.1 to 6.9 % smaller than its proofs),
+  2^22.1 to 2^34.9 at 0.05 (15.7 to 17.1 % smaller), 2^19.8 to 2^32.3 at 0.1 (32 to 35 % smaller); BEEP-Ligerito:
+  2^14.9 to 2^22.5. Measured provers:
+  302, 25 and 6.3 ms for 2^14 elements at the three slacks and 1427, 91 and 18.6 ms for 2^16, against 2.0 and 2.6
+  ms; 83 and 315 ms at slack 0.1 for 2^18 and 2^20, against 5.8 and 9.3 ms. Computed for the rest: up to 24 s
+  (slack 0.1), 148 s (0.05) and 1667 s (0.02) for 2^26 elements, at 210 million hashes per second.
+
+### Open issues
+
+- The author's decision on the baseline of the paper's tables and on the claims at 100 bits. With the bound of
+  DKT26 the proof-size gain at 100 bits is gone; the result at 128 bits over a field of 2^128 elements stands.
+- Flock's Ligerito at the slack of BEEP-Ligerito (0.001) was not measured: over GF(2^256) its MCA bound allows it,
+  and it would take part of the 11 to 24 % at 128 bits.
+- `beep-ligerito/target/` is still tracked by git (the commit `206c462`), so every build shows as modified files.
+- The README does not describe this run.
+
+## Phase BEEP-128-only (2026-11-17): the section "Instantiation and Experiments" measures 128 bits only
+
+<!-- [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request; please review] -->
+
+After the results of the phase before, the author asked "Let's only measure 128 bits of security then?" and then
+"Ok let's do 128 bits only". This phase changes the paper: the section, the table of the introduction, and the
+script that writes their numbers.
+
+### What was built
+
+- **`paper/scripts/tables128.py`** -> `paper/tables/tables128.json`, in place of `minimal_tables.py` ->
+  `minimal.json` (kept as the record of the section of November 16; `main.typ` no longer reads them). It reads the
+  run `three-way-dkt-20261117`, the rerun `-m16`, and the second measurement `-again128`. Before it writes, it
+  rechecks every level of BEEP-Ligerito that the section uses in integer arithmetic (`beep_params`), computes the
+  count of DKT26 twice (in integers, and from the statement of the theorem with 80-digit decimals and exact
+  fractions) for every level of the baseline and compares the fold numerators and the proofs of work of the bench
+  with it, and checks the shapes, the power source, the memory of the processes and the second measurement.
+- **`paper/main.typ`**: the section (inside `aiedit`, with a marker that lists what changed and four points for
+  the author to check), the figure `tab:measured_0` of the introduction (one table in place of two), and the line
+  that reads the JSON. Nothing else of the paper changed; the abstract was not touched.
+- **`scripts/cells_dkt_again128.txt`** and the run `three-way-dkt-20261117-again128` (28 processes, 01:30 to 01:45,
+  all `ok`, AC power, 15 repetitions): the second measurement of the cells of the table.
+
+### Decisions and deviations
+
+- **The table of errors has the bound of DKT26 with no row union** for the fold of Ligerito, where it had Flock's
+  (BCHKS25 times `k/2`). One sentence keeps Flock's own accounting: 11 to 13 bits less at slack 0.02.
+- **The measured table has BEEP-Ligerito at Flock's slack 0.02 as well as at 0.001**, so that the reader can
+  separate the gain that comes from the slack from the gain of staying over GF(2^128).
+- **A paragraph "Ligerito over GF(2^128)"**: the baseline of the phase before at 128 bits, in three numbers (the
+  hashes of its fold proofs of work, their time on the machine, one measured prover).
+- **A paragraph "Lower security levels"** says that at 100 bits that Ligerito with slack 0.002 has the proof size
+  of BEEP-Ligerito and a faster prover. The author asked for 128 bits only; this paragraph is my proposal, flagged
+  in the marker of the section, so that a reader who knows DKT26 finds the answer in the paper.
+- **A last sentence names the affine fold of CWYZ26** as not compared (it is the other way to keep the fold
+  challenges of Reed-Solomon codes in GF(2^128); the runs of November 14 and 15 have it). Also flagged.
+- **The rows of Flock's prover for 2^26 elements carry a dagger**: its process had part of its memory compressed
+  in both measurements (10.7 GB of footprint on a laptop with 24 GB). The ratios of times of the prose leave that
+  size out; the proof sizes do not.
+- **Rounding** as in `minimal_tables.py`: in a range the lower end is rounded down and the upper end up (so "10 to
+  25 %" for 10.7 to 24.1 %).
+- **The abstract** still has "????" for the saving in proof size and "negligible in prover and verifier time".
+  From this section: 10 to 25 % against Ligerito (Flock) at 128 bits (3 to 19 % at Flock's own slack), a verifier
+  0.52 to 0.74 times as long, and a prover 0.64 to 1.29 times as long. Left to the author.
+
+### Verification (2026-11-17, Apple M5, 24 GB, 10 threads)
+
+- `tables128.py`: 69 levels of BEEP-Ligerito and 115 levels of the baseline rechecked, no failure; 112 numbers,
+  2 tables, 2 warnings (the compressed process of each measurement).
+- Second measurement: the same proof sizes and configurations; over the 17 rows with proofs of 2 ms or more and
+  all their memory, "prove" is 0.97 to 1.09 times that of the first measurement, and the verifier 0.87 to 1.04
+  times (the section says "up to 9 %" and "up to 15 %", the largest move in either direction). Its bench binary
+  (`265600da4d71ce7b`) is a rebuild of the first one (`a229851e22f56b1f`) after the edit of the test module of
+  `beep.rs`; the script checks that every row has the same configuration and proof size.
+- The source of the run of record: `beep.rs` with the sha256 `db324310...` of `binaries.txt` is the file of the
+  tree (`0250a79e...`) minus that edit (three test vectors and the comment above them), checked by undoing the edit
+  on a copy. The run's file was never committed.
+- The paper compiles (42 pages, to a PDF outside the repository), with no "pending" number. The section runs from
+  the top of page 28 to seven lines into page 30 (before: three lines into page 30); without the paragraph "Lower
+  security levels" it is back to three lines.
+- The voice check of the skill `albert-technical-writing` on the section: no tell.
+- **Independent check** (a fresh agent, on the section as first written, from the raw files of the runs and from
+  first principles, with its own count of DKT26 read on the page images): 147 of 147 table cells (77 of the
+  measured table, 70 of the table of errors) and 43 of 43 distinct numbers of the prose, no wrong number; `t` is
+  the least threshold at 92 levels of BEEP-Ligerito, and the fold numerators of 99 levels of the baseline equal
+  its count. Six sentences needed a qualifier, all acted on: (a) Ligerito (Flock) "as it ships" does not hold for
+  2^14 elements, where Flock ships no parameters (now said; that row sets the lower ends 3 % and 10 % of the
+  savings and the upper end 1.29 of the prover ratio); (b) the noise between the two measurements is 8.4 % in the
+  other direction, and the verifier moved by up to 14 % (now "9 %" and "15 %", both directions, and the verifier
+  is in the sentence); (c) "the fewest bits of grinding" holds in whole bits (now "whole bits"); (d) "0.27 seconds"
+  was hashes over the hash rate while the same prover was measured, and the 1426.6 ms of the example was a median
+  of repetitions from 619 to 2511 ms (now the two examples are "prove" at the expected cost of the searches, 303.8
+  and 1196.1 ms, as in the table, and only the 28 minutes for 2^26 elements are an extrapolation: 25 to 34 minutes
+  at the fastest and slowest hash rates of the run); (e) the dagger marks a row of which one of the two processes
+  was compressed (caption reworded); (f) "the gain in proof size comes from the field having no bits to spare"
+  was too general: against Flock's own profile at 100 bits, which keeps GF(2^256), the proofs of BEEP-Ligerito are
+  still 10.8 to 24.0 % smaller (the paragraph now opens with "The situation is different when the field has bits
+  to spare" and compares with Ligerito over GF(2^128) only).
+- Not checked by the agent: the proofs; that the provers implement the configurations (no build); upstream Flock.
+
+### Open issues
+
+- The author's review of the four flagged points of the section, and of the abstract.
+- Flock's Ligerito at slack 0.001, and the affine fold, on this grid of sizes: not measured.
+- A clean measurement of Flock's prover for 2^26 elements needs about 12 GB of unused memory.
+
+## Phase BEEP-compare-script (2026-11-17): one command for Ligerito (Flock) against BEEP-Ligerito
+
+<!-- [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request; please review] -->
+
+The author's request: "I want to compare the original Ligerito from Flock and ours. How can I do that?". The
+comparison was already measured (the variant `split` of every run is Flock's Ligerito, unchanged), but printing
+it took the script of a whole section, and measuring it again took four commands.
+
+### What was built
+
+- **`scripts/compare.py`** (new, standard library, Python 3.9). With no argument it prints Ligerito (Flock)
+  against BEEP-Ligerito at the slack 0.001 from the runs that the paper quotes (`RUN` and `RERUNS` of
+  `../paper/scripts/tables128.py`, read from that file): proof size, "prove" (proofs of work at their expected
+  cost), verify, ours relative to Flock's, and a second table with the prover without proofs of work, their
+  expected time, and the median as measured. It takes other run folders, `--ours <variant>` for another variant
+  of ours, and `--measure <label> --sizes .. [--bits 100] [--gate]`, which takes the lines of
+  `scripts/cells_dkt.txt` for the sizes and runs `run_cells.zsh` and `collect.py` first.
+- **README**: the section "Ligerito (Flock) against BEEP-Ligerito in one command" and a row of the layout.
+
+### Decisions and deviations
+
+- No line of the bench, of `beep.rs`, of the cells or of the paper changed, and no number of the paper moved.
+- "ours" is BEEP-Ligerito at the slack 0.001 by default: my reading of the request. `--ours dkt-0.02` gives the
+  other reading (our Ligerito over GF(2^128) with no samples) on the cells at 100 bits.
+- `--gate` has the settings of the run `three-way-dkt-20261117` (80 % idle CPU for 40 s before the run and for
+  20 s before every process, 20 s between processes, 15 repetitions). Without it the run is a quick look.
+- A row is marked when one of its two processes had part of its memory compressed (the rule of `collect.py`),
+  and the ranges under a table leave such rows out. The paper's table marks the variant, not the row.
+- The commitment is the mean over the processes of the two rows, as in the paper's table.
+
+### Verification (2026-11-17, 07:20 to 07:40, Apple M5, 24 GB, AC power, the machine in use)
+
+- From the paper's runs, the table at 128 bits has the 7 rows of the paper's table (`tables/tables128.json`:
+  commit, the three columns of Ligerito (Flock) and of BEEP-Ligerito at 0.001; with `--ours beep-0.02` the three
+  columns at Flock's slack), and the ranges of its last line are those of the section (prove 0.67 to 1.29,
+  verify 0.52 to 0.70 over the six sizes with all their memory). On the run `three-way-minimal-20261116-ac2` it
+  prints the table at 128 bits of November 16.
+- `--measure` for 2^20 elements, 5 repetitions, no gate (26 s, 45 % idle CPU, 0.2 GB unused): the proof sizes
+  of the paper's row (427.4 and 347.0 KiB), prove 0.93 times Flock's (0.92 in the paper's run).
+- `--measure --gate` twice (2^14 and 2^16 with the gate's first settings; 2^14 with the final ones): all cells
+  `ok`, the proof sizes of the paper's rows, the lock released. These three runs were written outside the
+  repository (`CAMPAIGN_OUT`) and are not kept: they are tests of the script, not measurements.
+
+### Open issues
+
+- Unchanged: Flock's Ligerito at the slack 0.001 is not measured (`--ours beep-0.02` compares at Flock's slack).
+- `--measure` knows the sizes of `scripts/cells_dkt.txt` only (2^14, 2^16, ..., 2^26); the odd sizes of November
+  16 are in `scripts/cells_minimal.txt`, with Flock's prover and ours in one process.

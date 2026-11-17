@@ -1,0 +1,107 @@
+# Cells of the comparison "BEEP-Ligerito against Ligerito under the MCA bound of DKT26" (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request ("Can you run a comparison for 100 and 128 bits
+#  at this error bound?", the bound being Theorem 4.4 of Dao, Kominers and Thaler, ePrint 2026/2056, with no row
+#  union; and "we should make runs for larger n too. Maybe go from n=14 to n=26 doing only even n's"); please review]
+#
+# Format and driver: as scripts/cells.txt (scripts/run_cells.zsh <label> scripts/cells_dkt.txt). A cell
+# `<shape>.<process>` runs with the proofs of work and `<shape>.<process>-nopow` runs the same provers without them;
+# scripts/collect.py files the rows of the processes of a shape under the shape.
+#
+# Instances: messages of 2^14, 2^16, ..., 2^26 elements of GF(2^128), with a first level of rate 1/2. Flock ships
+# the profiles `fast` (128 bits) and `fast100` (100 bits) from 2^15 elements on; for 2^14 the split configuration
+# is Flock's derivation of the profile for that size (`split_derived` in the context of the cell).
+#
+# Flock's prover and the provers of the BEEP ladder run in separate processes: in one process they take five times
+# the memory of the two processes together (2^24 elements: 9.9 GB against 1.8 GB and 2.7 GB).
+#   .split  Flock's Ligerito as it ships (`fast`, or `fast100` at 100 bits): fold challenges in GF(2^256);
+#   .fold   the ladder of scripts/cells_minimal.txt (Flock's rows per level, the rates 1/2, 1/8, 1/32, ..., a new
+#           level while the folded message has 2^7 elements or more), every challenge in GF(2^128), with
+#     beep-<eta>   BEEP-Ligerito at the slacks 0.02 and 0.001;
+#     mcanf-0.02   (100 bits) the baseline of the paper's table: no points in the fold rounds, every fold challenge
+#                  ground for Flock's MCA bound of its round (BCHKS25, Theorem 4.6, times the row union);
+#     dkt-<eta>    (100 bits) the same baseline with the bound of DKT26, Theorem 4.4, and no row union
+#                  (beep::mca_dkt_ladder_no_first_sample_at), at the slacks 0.02, 0.005, 0.002 and 0.001;
+#   .dkt    (128 bits) that baseline at the slacks 0.02, 0.05 and 0.1. Over GF(2^128) at 128 bits it needs a proof
+#           of work of 2^15 to 2^36 hashes per fold challenge. `.dkt-nopow` runs it without proofs of work at every
+#           size, next to BEEP-Ligerito in the same process. `.dkt` runs it with them where a proof takes under
+#           about two seconds of search (every slack for 2^14 and 2^16 elements, the slack 0.1 for 2^18 and 2^20);
+#           for the other sizes the cost of the searches is their expected number of hashes over the measured rate.
+#
+# Order: by size, the largest instance last among the regular cells (its processes take 9 GB and 11 GB), and the
+# cells `.dkt` with their long searches at the very end, so that they heat the machine for no other cell.
+
+
+m14-100.fold log_n=14 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m14-100.fold-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m14-100.split log_n=14 profile=fast100 bits=100 rates=1,3 variants=split
+m14-100.split-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast100 bits=100 rates=1,3 variants=split
+m14-128.fold log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m14-128.fold-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m14-128.split log_n=14 profile=fast bits=128 rates=1,3 variants=split
+m14-128.split-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast bits=128 rates=1,3 variants=split
+m14-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m16-100.fold log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m16-100.fold-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m16-100.split log_n=16 profile=fast100 bits=100 rates=1,3 variants=split
+m16-100.split-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 variants=split
+m16-128.fold log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.fold-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.split log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m16-128.split-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m16-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m18-100.fold log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m18-100.fold-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m18-100.split log_n=18 profile=fast100 bits=100 rates=1,3,5 variants=split
+m18-100.split-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast100 bits=100 rates=1,3,5 variants=split
+m18-128.fold log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m18-128.fold-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m18-128.split log_n=18 profile=fast bits=128 rates=1,3,5 variants=split
+m18-128.split-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 variants=split
+m18-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m20-100.fold log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m20-100.fold-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m20-100.split log_n=20 profile=fast100 bits=100 rates=1,3,5 variants=split
+m20-100.split-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast100 bits=100 rates=1,3,5 variants=split
+m20-128.fold log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m20-128.fold-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m20-128.split log_n=20 profile=fast bits=128 rates=1,3,5 variants=split
+m20-128.split-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 variants=split
+m20-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m22-100.fold log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m22-100.fold-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m22-100.split log_n=22 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+m22-100.split-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+m22-128.fold log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m22-128.fold-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m22-128.split log_n=22 profile=fast bits=128 rates=1,3,5,7 variants=split
+m22-128.split-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 variants=split
+m22-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m24-100.fold log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m24-100.fold-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m24-100.split log_n=24 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+m24-100.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast100 bits=100 rates=1,3,5,7 variants=split
+m24-128.fold log_n=24 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m24-128.fold-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m24-128.split log_n=24 profile=fast bits=128 rates=1,3,5,7 variants=split
+m24-128.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast bits=128 rates=1,3,5,7 variants=split
+m24-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m26-100.fold log_n=26 profile=fast100 bits=100 rates=1,3,5,7,9 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m26-100.fold-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast100 bits=100 rates=1,3,5,7,9 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m26-100.split log_n=26 profile=fast100 bits=100 rates=1,3,5,7,9 variants=split
+m26-100.split-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast100 bits=100 rates=1,3,5,7,9 variants=split
+m26-128.fold log_n=26 profile=fast bits=128 rates=1,3,5,7,9 eta=0.02,0.001 variants=beep
+m26-128.fold-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast bits=128 rates=1,3,5,7,9 eta=0.02,0.001 variants=beep
+m26-128.split log_n=26 profile=fast bits=128 rates=1,3,5,7,9 variants=split
+m26-128.split-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast bits=128 rates=1,3,5,7,9 variants=split
+m26-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast bits=128 rates=1,3,5,7,9 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep
+
+m14-128.dkt log_n=14 profile=fast bits=128 rates=1,3 dkt_eta=0.02,0.05,0.1 variants=dkt
+m16-128.dkt log_n=16 profile=fast bits=128 rates=1,3 dkt_eta=0.02,0.05,0.1 variants=dkt
+m18-128.dkt log_n=18 profile=fast bits=128 rates=1,3,5 dkt_eta=0.1 variants=dkt
+m20-128.dkt log_n=20 profile=fast bits=128 rates=1,3,5 dkt_eta=0.1 variants=dkt

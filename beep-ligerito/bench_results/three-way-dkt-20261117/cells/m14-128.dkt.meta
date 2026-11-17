@@ -1,0 +1,14 @@
+name: m14-128.dkt
+attempt: 1
+env: 
+args: log_n=14 profile=fast bits=128 rates=1,3 dkt_eta=0.02,0.05,0.1 variants=dkt reps=15
+start: 2026-11-17 01:04:46
+power_before: AC Power
+load_before: 4.54 4.40 3.59
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 3.84% user, 8.97% sys, 87.17% idle  PhysMem: 13G used (2259M wired, 1814M compressor), 11G unused. 
+end: 2026-11-17 01:05:00
+exit: 0
+power_after: AC Power
+load_after: 5.77 4.67 3.70
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

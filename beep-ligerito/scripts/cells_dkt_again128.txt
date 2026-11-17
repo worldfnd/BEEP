@@ -1,0 +1,32 @@
+# A second measurement of the cells at 128 bits of scripts/cells_dkt.txt that the paper's table uses (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request ("Ok let's do 128 bits only"): the processes
+#  .fold and .split at 128 bits, with and without proofs of work, for every size; the same lines as in
+#  scripts/cells_dkt.txt. The section quotes how far its prover times are from the first measurement; please review]
+m14-128.fold log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m14-128.fold-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m14-128.split log_n=14 profile=fast bits=128 rates=1,3 variants=split
+m14-128.split-nopow FLOCK_NO_GRIND=1 log_n=14 profile=fast bits=128 rates=1,3 variants=split
+m16-128.fold log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.fold-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.split log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m16-128.split-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m18-128.fold log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m18-128.fold-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m18-128.split log_n=18 profile=fast bits=128 rates=1,3,5 variants=split
+m18-128.split-nopow FLOCK_NO_GRIND=1 log_n=18 profile=fast bits=128 rates=1,3,5 variants=split
+m20-128.fold log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m20-128.fold-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 variants=beep
+m20-128.split log_n=20 profile=fast bits=128 rates=1,3,5 variants=split
+m20-128.split-nopow FLOCK_NO_GRIND=1 log_n=20 profile=fast bits=128 rates=1,3,5 variants=split
+m22-128.fold log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m22-128.fold-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m22-128.split log_n=22 profile=fast bits=128 rates=1,3,5,7 variants=split
+m22-128.split-nopow FLOCK_NO_GRIND=1 log_n=22 profile=fast bits=128 rates=1,3,5,7 variants=split
+m24-128.fold log_n=24 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m24-128.fold-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep
+m24-128.split log_n=24 profile=fast bits=128 rates=1,3,5,7 variants=split
+m24-128.split-nopow FLOCK_NO_GRIND=1 log_n=24 profile=fast bits=128 rates=1,3,5,7 variants=split
+m26-128.fold log_n=26 profile=fast bits=128 rates=1,3,5,7,9 eta=0.02,0.001 variants=beep
+m26-128.fold-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast bits=128 rates=1,3,5,7,9 eta=0.02,0.001 variants=beep
+m26-128.split log_n=26 profile=fast bits=128 rates=1,3,5,7,9 variants=split
+m26-128.split-nopow FLOCK_NO_GRIND=1 log_n=26 profile=fast bits=128 rates=1,3,5,7,9 variants=split

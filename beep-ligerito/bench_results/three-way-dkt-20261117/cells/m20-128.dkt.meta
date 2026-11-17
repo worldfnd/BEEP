@@ -1,0 +1,14 @@
+name: m20-128.dkt
+attempt: 1
+env: 
+args: log_n=20 profile=fast bits=128 rates=1,3,5 dkt_eta=0.1 variants=dkt reps=15
+start: 2026-11-17 01:07:04
+power_before: AC Power
+load_before: 6.54 5.71 4.26
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 3.37% user, 8.10% sys, 88.51% idle  PhysMem: 13G used (2259M wired, 1716M compressor), 10G unused. 
+end: 2026-11-17 01:07:17
+exit: 0
+power_after: AC Power
+load_after: 7.97 6.07 4.41
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

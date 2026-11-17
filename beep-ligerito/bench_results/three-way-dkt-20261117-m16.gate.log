@@ -1,0 +1,14 @@
+[bench_gate] beep-dkt-20261117-m16: idle 90% (streak 1/2)
+[bench_gate] beep-dkt-20261117-m16: idle 90% (streak 2/2)
+[bench_gate] beep-dkt-20261117-m16: starting (swap baseline 0.92 GB, guard +12 GB)
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+m16-100.fold (attempt 1): ok
+m16-100.fold-nopow (attempt 1): ok
+m16-100.split (attempt 1): ok
+m16-100.split-nopow (attempt 1): ok
+m16-128.fold (attempt 1): ok
+m16-128.fold-nopow (attempt 1): ok
+m16-128.split (attempt 1): ok
+m16-128.split-nopow (attempt 1): ok
+m16-128.dkt-nopow (attempt 1): ok
+done: 2026-11-17 01:12:18, failures: 0

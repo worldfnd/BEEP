@@ -1,0 +1,14 @@
+name: m16-128.fold-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep reps=15
+start: 2026-11-17 01:11:13
+power_before: AC Power
+load_before: 2.52 4.04 3.89
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 13.7% user, 14.37% sys, 72.54% idle  PhysMem: 13G used (2185M wired, 1613M compressor), 9958M unused. 
+end: 2026-11-17 01:11:13
+exit: 0
+power_after: AC Power
+load_after: 2.48 4.01 3.88
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

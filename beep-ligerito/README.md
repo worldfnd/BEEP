@@ -7,6 +7,7 @@
 
 <!-- [AI-revised (claude-opus-5-5), 2026-11-16, at the author's request ("Create a new repository called BEEP ... It should contain ... The BEEP-Ligerito variant we worked on"): this folder is copied, as it was in the repository random-domain-ligerito, into the repository BEEP; changed here: the paths to the gate (now `scripts/bench_gate.py`, a copy of the one in `5-implementation/scripts` of that repository), the `cd` lines of "Reproducing", the paragraph on `5-implementation`, and two rows of the layout (`scripts/bench_gate.py`, `WORKLOG.md`); please review] -->
 <!-- [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request ("Let's write the instantiation and experiment section. I want something minimal that fits in two pages"): the note under the title on what the paper quotes now, the section "The minimal run", four rows of the layout, the variants `mca` and `mcanf` in the table of variants, and the numbers of tests in "Reproducing". The other sections are unchanged: they describe the runs of November 13 to 15 and still use the folder names of the repository random-domain-ligerito (`7-beep-ligerito`, `../typst`); please review] -->
+<!-- [AI-revised (claude-fable-5-2), 2026-11-17, at the author's request ("I want to compare the original Ligerito from Flock and ours. How can I do that?"): the section "Ligerito (Flock) against BEEP-Ligerito in one command" and the row `scripts/compare.py` of the layout; nothing else; please review] -->
 
 # 7-beep-ligerito: BEEP-Ligerito on Flock's code
 
@@ -38,12 +39,77 @@ DEEP-Ligerito crate of Notes 3 and 4 of that repository, with its own protocol a
 here changes that crate, and the two do not share code.
 
 **Since November 16, 2026** this folder is `beep-ligerito` of the repository `BEEP`, the paper is
-`../paper/main.typ`, and its section "Instantiation and Experiments" quotes one run only: see "The minimal run"
-right below. Everything after that section describes the runs of November 13 to 15, which an earlier and longer
-Experiments section quoted, with the paths of that time (`7-beep-ligerito`, `../typst/deep+.typ`,
-`../typst/scripts/make_tables.py`).
+`../paper/main.typ`, and its section "Instantiation and Experiments" quotes one run only: see "The run at 128
+bits" right below. Everything after the next two sections describes the runs of November 13 to 15, which an
+earlier and longer Experiments section quoted, with the paths of that time (`7-beep-ligerito`,
+`../typst/deep+.typ`, `../typst/scripts/make_tables.py`).
 
-## The minimal run (November 16, 2026): what the paper quotes now
+## The run at 128 bits with the bound of DKT26 (November 17, 2026): what the paper quotes now
+
+<!-- [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request ("Ok let's do 128 bits only"); please review] -->
+
+On November 17 the section was rewritten to measure 128 bits of security only, for 2^14, 2^16, ..., 2^26 field
+elements. The reason is in the WORKLOG (phases "BEEP-DKT-baseline" and "BEEP-128-only"): with the MCA bound of
+Dao, Kominers and Thaler (ePrint 2026/2056, Theorem 4.4) and no row union, a Ligerito over GF(2^128) has the
+proof size of BEEP-Ligerito at 100 bits, so the gain of the table at 100 bits of November 16 was a gain against
+an older bound. At 128 bits over a field of 2^128 elements that Ligerito needs 2^25.7 to 2^38.4 hashes of proof
+of work per proof on its fold challenges (BEEP-Ligerito: 2^14.9 to 2^22.5).
+
+- **Pipeline.** `scripts/cells_dkt.txt` -> the runs `bench_results/three-way-dkt-20261117` (67 processes),
+  `-m16` (the cells for 2^16 elements, measured again) and `-again128` (a second measurement of the cells of the
+  table) -> `scripts/collect.py` -> `../paper/scripts/tables128.py` -> `../paper/tables/tables128.json` -> the
+  section (`num("key")`, `exptable`) and the table of the introduction. `scripts/dkt_tables.py` prints every
+  variant of the run, the cells at 100 bits included (`bench_results/three-way-dkt-20261117/TABLES.txt`).
+- **Variants.** `split` is Flock's Ligerito (fold challenges in GF(2^256)); `beep-0.02` and `beep-0.001` are
+  BEEP-Ligerito; `dkt-<eta>` is "Ligerito over GF(2^128)": BEEP-Ligerito with no samples, each fold challenge
+  ground for the bound of DKT26 plus `2L/|F|` (`beep::mca_dkt_ladder_no_first_sample_at`); `mcanf-0.02` is the
+  baseline of November 16 (Flock's bound: BCHKS25 times the row union).
+- **Processes.** Flock's prover and the provers of the BEEP ladder run in separate processes (`<shape>.split`,
+  `<shape>.fold`): in one process they take five times the memory. For 2^26 elements they take 9.2 GB and 10.7 GB
+  on a laptop with 24 GB, and the process of Flock's prover had part of its memory compressed in both
+  measurements (the dagger of the paper's table).
+
+## Ligerito (Flock) against BEEP-Ligerito in one command
+
+<!-- [AI-drafted (claude-fable-5-2), 2026-11-17, at the author's request ("I want to compare the original Ligerito from Flock and ours. How can I do that?"); please review] -->
+
+`scripts/compare.py` prints the two side by side (proof size, prove, verify, and ours relative to Flock's), from
+the rows that `scripts/collect.py` wrote. It can measure first.
+
+```sh
+cd ~/BEEP/beep-ligerito
+python3 scripts/compare.py                                 # the runs that the paper quotes; nothing is measured
+python3 scripts/compare.py --measure look1 --sizes 16,20   # measures 2^16 and 2^20 elements first: a quick look
+python3 scripts/compare.py --measure <label> --sizes 14,16,18,20,22,24,26 --gate   # with the settings of the paper's run
+python3 scripts/compare.py bench_results/three-way-<label>                         # prints a run again
+```
+
+- **"Flock"** is the variant `split` of the bench: Flock's prover and verifier, unchanged (`VENDORED.md`), on the
+  parameters that Flock ships for the size (the profile `fast` at 128 bits, `fast100` with `--bits 100`; for 2^14
+  elements, for which Flock ships none, its own derivation of the profile). Its fold challenges are in GF(2^256).
+- **"ours"** is `beep-0.001`, BEEP-Ligerito at the slack 0.001 with every challenge in GF(2^128). `--ours beep-0.02`
+  is BEEP-Ligerito at Flock's slack, and for the cells at 100 bits `--ours dkt-0.02` (or `mcanf-0.02`) is our
+  Ligerito over GF(2^128) with no samples.
+- Both open the same commitment, and every proof is checked by its verifier. "prove" has the proofs of work at
+  their expected cost, as in the paper; a second table has the time without them, their expected time, and the
+  median as measured.
+- `--measure` takes the lines of `scripts/cells_dkt.txt` for the sizes (2^14, 2^16, ..., 2^26 elements; Flock's
+  prover and ours in separate processes, each with and without proofs of work) and runs `scripts/run_cells.zsh`
+  and `scripts/collect.py`. The label is new each time (the driver refuses a folder that exists). Without
+  `--gate`, one size takes half a minute up to 2^20 elements, and the times are for a look only. With `--gate`,
+  the run waits for an idle machine before every process: from a terminal, on AC power. The seven sizes took a
+  quarter of an hour on November 17, once the machine was idle.
+- A row with a `*` had a process with part of its memory compressed, and its times are not to be used. For 2^26
+  elements Flock's prover takes 10.7 GiB and ours 9.2 GiB.
+
+What the comparison does not separate: Ligerito (Flock) differs from BEEP-Ligerito in the field of its fold
+challenges, in its slack (0.02), in its levels, in an out of domain sample on its first commitment, and in its
+prover. `--ours beep-0.02` takes the slack out.
+
+## The minimal run (November 16, 2026): what the paper quoted until November 17
+
+**The paper no longer reads `../paper/tables/minimal.json`.** This section and `../paper/scripts/minimal_tables.py`
+are the record of the section of November 16.
 
 <!-- [AI-drafted (claude-fable-5-2), 2026-11-16, at the author's request ("Let's write the instantiation and experiment section. I want something minimal that fits in two pages"); the part between the two `minimal-run` markers is written by `../paper/scripts/minimal_tables.py --write-readme`; please review] -->
 
@@ -217,6 +283,7 @@ starts short of memory gives disturbed rows for the largest instances (the first
 | `WORKLOG.md` | the phases of the work on this folder, copied from `5-implementation/WORKLOG.md` of the repository `random-domain-ligerito` |
 | `scripts/when_memory_is_free.zsh` | waits for unused memory, then runs a command: for a campaign on a machine that is in use |
 | `scripts/collect.py` | a run's folder → `results.json` (one row per cell and variant, proofs of work at their expected cost) |
+| `scripts/compare.py` | Ligerito (Flock) against BEEP-Ligerito, side by side, from the runs that the paper quotes or from another run; `--measure` runs the cells of some sizes first. See "Ligerito (Flock) against BEEP-Ligerito in one command" |
 | `scripts/beep_params.py` | the exact recheck of every BEEP level of a run and of the fold grinding of its affine ladders, with and without the sample on the first commitment (`--check`), the error of one fold under each analysis (`--print`; the paper's fold tables), the affine ladders with their certificates and their fold grinding without the sample (`--affine-ladder`), and the fold grinding of a BEEP ladder under the error of the affine fold (`--beep-affine-charge`) |
 | `scripts/readme_tables.py` | the tables of this README, from the tables that the paper reads |
 | `affine_certificates/` | the affine ladders that we run: at the slack 0.02 as inputs and outputs of Flock's `affine_fold_params.py` (`*.toml`, `*.txt`), at their least slack as outputs of `beep_params.py --affine-ladder` (`*_least_slack.txt`), the fold grinding of the accounting experiment (`*_beep_affine_charge.txt`), and the cache of the searches (`search_cache.json`) |

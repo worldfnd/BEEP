@@ -77,7 +77,7 @@
   )
 
   // Citation style
-  set cite(style: "alphanumeric")
+  set cite(style: "ieee-alpha.csl")
 
   // Heading stuff
   set heading(numbering: "1.1.1")

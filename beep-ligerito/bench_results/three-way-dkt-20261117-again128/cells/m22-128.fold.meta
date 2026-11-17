@@ -1,0 +1,14 @@
+name: m22-128.fold
+attempt: 1
+env: 
+args: log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 variants=beep reps=15
+start: 2026-11-17 01:38:56
+power_before: AC Power
+load_before: 2.78 2.91 2.77
+swap_before: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)
+top_before: CPU usage: 9.43% user, 15.72% sys, 74.84% idle  PhysMem: 16G used (2666M wired, 1359M compressor), 7750M unused. 
+end: 2026-11-17 01:39:00
+exit: 0
+power_after: AC Power
+load_after: 2.78 2.91 2.77
+swap_after: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)

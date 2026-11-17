@@ -1,0 +1,14 @@
+name: m18-128.dkt-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=18 profile=fast bits=128 rates=1,3,5 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep reps=15
+start: 2026-11-17 00:46:10
+power_before: AC Power
+load_before: 2.65 2.73 2.72
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 3.97% user, 8.60% sys, 87.41% idle  PhysMem: 23G used (2295M wired, 1188M compressor), 253M unused. 
+end: 2026-11-17 00:46:11
+exit: 0
+power_after: AC Power
+load_after: 2.65 2.73 2.72
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

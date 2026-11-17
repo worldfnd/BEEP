@@ -1,0 +1,14 @@
+name: m14-128.fold
+attempt: 1
+env: 
+args: log_n=14 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep reps=15
+start: 2026-11-17 00:33:52
+power_before: AC Power
+load_before: 1.77 2.64 2.65
+swap_before: total = 2048.00M used = 969.19M free = 1078.81M (encrypted)
+top_before: CPU usage: 12.66% user, 11.33% sys, 76.0% idle  PhysMem: 14G used (2484M wired, 1436M compressor), 9820M unused. 
+end: 2026-11-17 00:33:54
+exit: 0
+power_after: AC Power
+load_after: 1.77 2.64 2.65
+swap_after: total = 2048.00M used = 969.19M free = 1078.81M (encrypted)

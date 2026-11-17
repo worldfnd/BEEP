@@ -1,0 +1,13 @@
+# Rerun of the nine cells for 2^16 elements of scripts/cells_dkt.txt (research, unaudited).
+# [AI-drafted (claude-fable-5-2), 2026-11-17: in the run three-way-dkt-20261117 seven of these cells started while a
+#  check of this session's own reviewer held one core (61 to 76 % idle before them, against 82 to 84 % for their
+#  neighbours). Same lines as in scripts/cells_dkt.txt, same bench binary; please review]
+m16-100.fold log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m16-100.fold-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep
+m16-100.split log_n=16 profile=fast100 bits=100 rates=1,3 variants=split
+m16-100.split-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast100 bits=100 rates=1,3 variants=split
+m16-128.fold log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.fold-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 variants=beep
+m16-128.split log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m16-128.split-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 variants=split
+m16-128.dkt-nopow FLOCK_NO_GRIND=1 log_n=16 profile=fast bits=128 rates=1,3 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep

@@ -1,0 +1,14 @@
+name: m18-100.split
+attempt: 1
+env: 
+args: log_n=18 profile=fast100 bits=100 rates=1,3,5 variants=split reps=15
+start: 2026-11-17 00:43:36
+power_before: AC Power
+load_before: 2.53 2.75 2.73
+swap_before: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)
+top_before: CPU usage: 11.18% user, 8.55% sys, 80.26% idle  PhysMem: 23G used (2296M wired, 1196M compressor), 145M unused. 
+end: 2026-11-17 00:43:37
+exit: 0
+power_after: AC Power
+load_after: 2.53 2.75 2.73
+swap_after: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)

@@ -1,0 +1,14 @@
+name: m18-100.fold
+attempt: 1
+env: 
+args: log_n=18 profile=fast100 bits=100 rates=1,3,5 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep reps=15
+start: 2026-11-17 00:41:48
+power_before: AC Power
+load_before: 2.38 2.82 2.75
+swap_before: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)
+top_before: CPU usage: 6.80% user, 9.52% sys, 83.67% idle  PhysMem: 23G used (2275M wired, 1229M compressor), 272M unused. 
+end: 2026-11-17 00:41:49
+exit: 0
+power_after: AC Power
+load_after: 3.07 2.96 2.80
+swap_after: total = 2048.00M used = 945.19M free = 1102.81M (encrypted)

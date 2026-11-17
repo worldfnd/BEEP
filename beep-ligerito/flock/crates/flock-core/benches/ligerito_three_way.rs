@@ -37,6 +37,12 @@
 // [AI-revised (claude-fable-5-2), 2026-11-16, after an independent check: `mca-<eta>` and `mcanf-<eta>` grind every
 // fold round for the error of that round (the library change); their configuration prints the numerators and the
 // grinds per round (`fold_round_numerators`, `grinds.fold_rounds`)]
+// [AI-revised (claude-fable-5-2), 2026-11-17, at the author's request ("Can you run a comparison for 100 and 128 bits
+// at this error bound?", the bound of Theorem 4.4 of DKT26, ePrint 2026/2056, with no row union; "from n=14 to n=26
+// doing only even n's"): the variant `dkt-<eta>` (`variants=..,dkt`, `dkt_eta=`), which is `mcanf-<eta>` with that
+// bound in place of Flock's (`beep::mca_dkt_ladder_no_first_sample_at`); and, for a size for which Flock ships no
+// configuration (2^14 words), the split configuration is Flock's derivation of the profile (`split_derived`), where
+// the bench stopped before. The other variants are unchanged]
 
 //! Three openings of the same Ligerito commitment, on the plain native path
 //! of `benches/affine_vs_f256.rs` (flock-prover): the same witness, dense eq
@@ -100,6 +106,12 @@
 //!                       `beep-<eta>` without its points, and with the fold
 //!                       grinding of `mca-<eta>`. The baseline of the paper's
 //!                       table at 100 bits
+//!   `variants=..,dkt`   `mcanf-<eta>` with the bound of DKT26 (ePrint
+//!                       2026/2056, Theorem 4.4) and no row union in place of
+//!                       Flock's bound (`dkt-<eta>`, at the slacks of
+//!                       `dkt_eta=`, default 0.02;
+//!                       `beep::mca_dkt_ladder_no_first_sample_at`). Every
+//!                       round of a level has the same proof of work
 //!   `variants=..,beepb`  each BEEP ladder with the binding sample that
 //!                       Flock's ladders draw on the first commitment
 //!                       (`beepb-<eta>`): what `beep-<eta>` was before
@@ -147,7 +159,8 @@ use flock_core::{
         beep::{
             BeepConfig, Grind, Ladder, LevelBytes, PowGrinds, ProveTimings, SizeBreakdown,
             TARGET_BITS, affine_ladder_target, affine_level_bytes, affine_size_breakdown, beep_ladder_at,
-            mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches, prove_beep_reference_timed,
+            mca_dkt_ladder_no_first_sample_at, mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches,
+            prove_beep_reference_timed,
             prove_beep_timed, split_level_bytes,
             split_size_breakdown, verify_beep, verify_split_eq_point,
         },
@@ -346,9 +359,13 @@ fn main() {
     // of L0 that Flock does not ship, Flock's derivation of the profile (3
     // folds per level, the rate gain of `derive_profile`) at that rate.
     let l0_rate: Option<usize> = arg("l0_rate=").map(|v| v.parse().expect("l0_rate"));
-    let derived = l0_rate.is_some_and(|r| r != profile.log_inv_rate());
+    // Also for a size that Flock does not ship at the rate of the profile
+    // (below 2^15 words): its derivation of the profile at that rate, which
+    // is `derive_profile` itself.
+    let derived =
+        l0_rate.is_some_and(|r| r != profile.log_inv_rate()) || embedded_initial_k(m, profile).is_none();
     let (split, split_v, initial_k) = if derived {
-        let rate = l0_rate.expect("l0_rate");
+        let rate = l0_rate.unwrap_or_else(|| profile.log_inv_rate());
         // As `derive_profile`: `slim` climbs the rate +2 per level, the
         // other profiles (`slim100` among them) +1.
         let rate_gain = if profile == LigeritoProfile::Slim { 2 } else { 1 };
@@ -505,6 +522,22 @@ fn main() {
     } else {
         Vec::new()
     };
+    // `dkt-<eta>`: `mcanf-<eta>` with the bound of DKT26 and no row union
+    // in place of Flock's bound (`beep::mca_dkt_ladder_no_first_sample_at`).
+    let dkt_etas: Vec<f64> = list("dkt_eta=").unwrap_or_else(|| vec![0.02]);
+    let dkts: Vec<(f64, BeepConfig)> = if want("dkt") {
+        dkt_etas
+            .iter()
+            .map(|&eta| {
+                let cfg =
+                    mca_dkt_ladder_no_first_sample_at(&split, log_n, &rates, &vec![eta; rates.len()], target_bits)
+                        .unwrap_or_else(|e| panic!("MCA ladder with the bound of DKT26 at eta = {eta}: {e}"));
+                (eta, cfg.with_exact_grinding())
+            })
+            .collect()
+    } else {
+        Vec::new()
+    };
 
     // Each BEEP ladder with the fold grinding of `beepaff=` (module docs).
     let beepaff_bits: Vec<(f64, Vec<usize>)> = arg("beepaff=")
@@ -587,6 +620,9 @@ fn main() {
     }
     for (eta, b) in &mcanfs {
         configs[format!("mcanf-{eta}")] = beep_json(b);
+    }
+    for (eta, b) in &dkts {
+        configs[format!("dkt-{eta}")] = beep_json(b);
     }
     if keep_binding {
         for (eta, b) in &bound {
@@ -834,6 +870,9 @@ fn main() {
     for (eta, _) in &mcanfs {
         names.push(format!("mcanf-{eta}"));
     }
+    for (eta, _) in &dkts {
+        names.push(format!("dkt-{eta}"));
+    }
     if keep_binding {
         for (eta, _) in &bound {
             names.push(format!("beepb-{eta}"));
@@ -862,6 +901,7 @@ fn main() {
             .chain(hybrids.iter().map(|(eta, cfg)| (format!("beepaff-{eta}"), cfg)))
             .chain(mcas.iter().map(|(eta, cfg)| (format!("mca-{eta}"), cfg)))
             .chain(mcanfs.iter().map(|(eta, cfg)| (format!("mcanf-{eta}"), cfg)))
+            .chain(dkts.iter().map(|(eta, cfg)| (format!("dkt-{eta}"), cfg)))
             .chain(bound.iter().map(|(eta, cfg)| (format!("beepb-{eta}"), cfg)))
             .chain(in_bits.iter().map(|(eta, cfg)| (format!("beepbits-{eta}"), cfg)))
             .chain(beeps.iter().map(|(eta, cfg)| (format!("beepref-{eta}"), cfg)))

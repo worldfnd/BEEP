@@ -1,0 +1,154 @@
+building the bench binary (target directory /Users/albertgarretafontelles/BEEP/beep-ligerito/target)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.01s
+  Executable benches/ligerito_three_way.rs (/Users/albertgarretafontelles/BEEP/beep-ligerito/target/release/deps/ligerito_three_way-e93fe6fa1d98f987)
+[bench_gate] three-way-dkt-20261117-m14-100.fold: idle 91% (streak 1/1)
+m14-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-100.fold-nopow: idle 91% (streak 1/1)
+m14-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-100.split: idle 91% (streak 1/1)
+m14-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-100.split-nopow: idle 88% (streak 1/1)
+m14-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.fold: idle 93% (streak 1/1)
+m14-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.fold-nopow: idle 91% (streak 1/1)
+m14-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.split: idle 92% (streak 1/1)
+m14-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.split-nopow: idle 90% (streak 1/1)
+m14-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.dkt-nopow: idle 91% (streak 1/1)
+m14-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-100.fold: idle 9% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-100.fold: idle 81% (streak 1/1)
+m16-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-100.fold-nopow: idle 78% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-100.fold-nopow: idle 83% (streak 1/1)
+m16-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-100.split: idle 82% (streak 1/1)
+m16-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-100.split-nopow: idle 76% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-100.split-nopow: idle 80% (streak 1/1)
+m16-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.fold: idle 71% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-128.fold: idle 82% (streak 1/1)
+m16-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.fold-nopow: idle 73% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-128.fold-nopow: idle 78% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-128.fold-nopow: idle 81% (streak 1/1)
+m16-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.split: idle 75% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-128.split: idle 76% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m16-128.split: idle 83% (streak 1/1)
+m16-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.split-nopow: idle 95% (streak 1/1)
+m16-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.dkt-nopow: idle 94% (streak 1/1)
+m16-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-100.fold: idle 87% (streak 1/1)
+m18-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-100.fold-nopow: idle 78% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m18-100.fold-nopow: idle 79% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m18-100.fold-nopow: idle 76% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m18-100.fold-nopow: idle 88% (streak 1/1)
+m18-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-100.split: idle 83% (streak 1/1)
+m18-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-100.split-nopow: idle 85% (streak 1/1)
+m18-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.fold: idle 81% (streak 1/1)
+m18-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.fold-nopow: idle 84% (streak 1/1)
+m18-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.split: idle 45% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m18-128.split: idle 83% (streak 1/1)
+m18-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.split-nopow: idle 93% (streak 1/1)
+m18-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.dkt-nopow: idle 88% (streak 1/1)
+m18-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-100.fold: idle 86% (streak 1/1)
+m20-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-100.fold-nopow: idle 82% (streak 1/1)
+m20-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-100.split: idle 90% (streak 1/1)
+m20-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-100.split-nopow: idle 93% (streak 1/1)
+m20-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.fold: idle 67% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m20-128.fold: idle 82% (streak 1/1)
+m20-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.fold-nopow: idle 88% (streak 1/1)
+m20-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.split: idle 88% (streak 1/1)
+m20-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.split-nopow: idle 85% (streak 1/1)
+m20-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.dkt-nopow: idle 89% (streak 1/1)
+m20-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-100.fold: idle 81% (streak 1/1)
+m22-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-100.fold-nopow: idle 76% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m22-100.fold-nopow: idle 84% (streak 1/1)
+m22-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-100.split: idle 90% (streak 1/1)
+m22-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-100.split-nopow: idle 86% (streak 1/1)
+m22-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-128.fold: idle 85% (streak 1/1)
+m22-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-128.fold-nopow: idle 89% (streak 1/1)
+m22-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-128.split: idle 91% (streak 1/1)
+m22-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-128.split-nopow: idle 82% (streak 1/1)
+m22-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m22-128.dkt-nopow: idle 89% (streak 1/1)
+m22-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-100.fold: idle 86% (streak 1/1)
+m24-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-100.fold-nopow: idle 92% (streak 1/1)
+m24-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-100.split: idle 85% (streak 1/1)
+m24-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-100.split-nopow: idle 79% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m24-100.split-nopow: idle 79% (streak 0/1)
+[bench_gate] three-way-dkt-20261117-m24-100.split-nopow: idle 91% (streak 1/1)
+m24-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-128.fold: idle 92% (streak 1/1)
+m24-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-128.fold-nopow: idle 89% (streak 1/1)
+m24-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-128.split: idle 88% (streak 1/1)
+m24-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-128.split-nopow: idle 90% (streak 1/1)
+m24-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m24-128.dkt-nopow: idle 93% (streak 1/1)
+m24-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-100.fold: idle 91% (streak 1/1)
+m26-100.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-100.fold-nopow: idle 94% (streak 1/1)
+m26-100.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-100.split: idle 92% (streak 1/1)
+m26-100.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-100.split-nopow: idle 89% (streak 1/1)
+m26-100.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-128.fold: idle 93% (streak 1/1)
+m26-128.fold (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-128.fold-nopow: idle 90% (streak 1/1)
+m26-128.fold-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-128.split: idle 86% (streak 1/1)
+m26-128.split (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-128.split-nopow: idle 92% (streak 1/1)
+m26-128.split-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m26-128.dkt-nopow: idle 83% (streak 1/1)
+m26-128.dkt-nopow (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m14-128.dkt: idle 92% (streak 1/1)
+m14-128.dkt (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m16-128.dkt: idle 91% (streak 1/1)
+m16-128.dkt (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m18-128.dkt: idle 87% (streak 1/1)
+m18-128.dkt (attempt 1): ok
+[bench_gate] three-way-dkt-20261117-m20-128.dkt: idle 91% (streak 1/1)
+m20-128.dkt (attempt 1): ok
+done: 2026-11-17 01:07:17, failures: 0

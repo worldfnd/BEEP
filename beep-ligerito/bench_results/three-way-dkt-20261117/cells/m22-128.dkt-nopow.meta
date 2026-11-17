@@ -1,0 +1,14 @@
+name: m22-128.dkt-nopow
+attempt: 1
+env: FLOCK_NO_GRIND=1
+args: log_n=22 profile=fast bits=128 rates=1,3,5,7 eta=0.02,0.001 dkt_eta=0.02,0.05,0.1 variants=dkt,beep reps=15
+start: 2026-11-17 00:53:44
+power_before: AC Power
+load_before: 2.79 2.56 2.60
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 14.56% user, 15.89% sys, 69.53% idle  PhysMem: 22G used (2290M wired, 1158M compressor), 986M unused. 
+end: 2026-11-17 00:53:46
+exit: 0
+power_after: AC Power
+load_after: 3.04 2.62 2.62
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

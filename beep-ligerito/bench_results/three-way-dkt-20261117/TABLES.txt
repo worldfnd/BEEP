@@ -1,0 +1,146 @@
+rows of three-way-dkt-20261117-m16 replace those of three-way-dkt-20261117 for: m16-100.fold, m16-100.split, m16-128.fold, m16-128.split
+run three-way-dkt-20261117: 85 rows, 0 warnings of collect.py; hash rate 210031/ms on every thread, 40872/ms on one (medians over the cells)
+
+=== 100 bits, everything over GF(2^128) except Ligerito (Flock), whose fold challenges are in GF(2^256)
+--- proof size (KiB)
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14         269.4       258.3       258.3       243.6       240.5       239.1       259.6       240.4
+16         311.7       277.1       277.1       261.5       258.1       256.6       278.4       257.9
+18         354.2       311.8       311.8       294.4       290.8       289.2       313.5       291.0
+20         382.9       333.3       333.3       314.7       311.0       309.3       335.0       311.0
+22         334.8       271.1       271.1       256.9       253.8       252.4       273.2       254.5
+24         473.5       392.0       392.0       370.6       366.0       364.0       394.2       366.3
+26         507.2       428.5       428.5       404.9       399.4       397.3       431.3       400.1
+--- prove (ms): no proofs of work + their expected time
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14          0.89        0.36        0.34        0.33        0.34        0.31        0.44        0.45
+16          1.73        0.67        0.59        0.62        0.62        0.66        0.93        0.90
+18          4.27        2.15        1.97        1.98        2.06        2.54        2.53        2.57
+20          8.85        4.61        4.13        4.22        4.44        5.26        5.29        5.22
+22         24.77       14.26       13.40       13.24       14.27       18.53       16.06       16.43
+24         71.52       34.24       31.40       31.62       33.42       44.34       40.37       40.55
+26        297.21      130.05      120.61      128.05      135.86      183.39      169.79      162.38
+--- prove without proofs of work (ms)
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14          0.85        0.34        0.34        0.32        0.33        0.31        0.44        0.45
+16          1.67        0.62        0.59        0.62        0.61        0.62        0.93        0.90
+18          4.17        1.96        1.97        1.97        1.97        1.95        2.53        2.57
+20          8.75        4.13        4.12        4.18        4.04        4.11        5.29        5.22
+22         24.61       13.21       13.39       13.04       13.15       12.97       16.06       16.43
+24         71.29       31.15       31.38       31.16       31.12       31.22       40.37       40.55
+26        296.97      119.45      120.57      127.18      128.69      127.24      169.79      162.38
+--- prove as measured with proofs of work (ms, median)
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14          0.81        0.34        0.31        0.33        0.35        0.32        0.47        0.42
+16          1.68        0.69        0.62        0.62        0.65        0.69        0.89        0.93
+18          4.28        2.15        1.87        1.86        1.98        2.50        2.51        2.46
+20          8.30        4.76        4.03        4.11        4.71        5.27        5.37        5.27
+22         25.18       14.14       12.74       12.95       13.88       18.70       15.68       15.87
+24         73.02       35.59       30.89       31.33       32.50       43.39       40.68       40.54
+26        288.53      126.44      114.63      116.53      122.83      166.70      147.65      150.56
+--- expected time of the proofs of work (ms)
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14         0.036       0.020       0.000       0.008       0.008       0.008       0.000       0.000
+16         0.059       0.052       0.000       0.007       0.015       0.048       0.000       0.000
+18         0.101       0.187       0.000       0.016       0.086       0.596       0.000       0.000
+20         0.106       0.480       0.008       0.043       0.397       1.147       0.000       0.000
+22         0.157       1.045       0.014       0.202       1.123       5.563       0.000       0.000
+24         0.229       3.091       0.019       0.464       2.293      13.116       0.000       0.000
+26         0.244      10.598       0.045       0.866       7.177      56.148       0.000       0.000
+--- verify (ms)
+n          split  mcanf-0.02    dkt-0.02   dkt-0.005   dkt-0.002   dkt-0.001   beep-0.02  beep-0.001
+14         0.592       0.370       0.373       0.353       0.357       0.352       0.381       0.362
+16         0.660       0.442       0.437       0.420       0.418       0.412       0.449       0.427
+18         0.799       0.544       0.530       0.508       0.498       0.505       0.552       0.530
+20         1.118       0.672       0.657       0.633       0.636       0.633       0.710       0.667
+22         1.257       0.666       0.653       0.627       0.646       0.637       0.684       0.653
+24         1.219       0.819       0.814       0.783       0.777       0.770       0.875       0.822
+26         1.625       0.947       0.937       0.905       0.873       0.882       1.005       0.952
+--- commit (ms), shared by every variant
+    2^14: 0.2  2^16: 1.0  2^18: 1.6  2^20: 5.0  2^22: 21.5  2^24: 94.3  2^26: 365.6
+--- BEEP-Ligerito (slack 0.001) relative to each baseline: proof size, prove, prove without proofs of work, prove + commit, verify
+  against mcanf-0.02
+    2^14: size  -6.94%  prove x1.261  no-PoW x1.337  with commit x1.154  verify x0.979  fold PoW of the baseline 2^9.0 hashes = 0.020 ms
+    2^16: size  -6.95%  prove x1.339  no-PoW x1.451  with commit x1.139  verify x0.965  fold PoW of the baseline 2^11.0 hashes = 0.052 ms
+    2^18: size  -6.68%  prove x1.198  no-PoW x1.312  with commit x1.114  verify x0.975  fold PoW of the baseline 2^13.0 hashes = 0.187 ms
+    2^20: size  -6.68%  prove x1.133  no-PoW x1.264  with commit x1.064  verify x0.994  fold PoW of the baseline 2^15.0 hashes = 0.480 ms
+    2^22: size  -6.10%  prove x1.152  no-PoW x1.244  with commit x1.061  verify x0.982  fold PoW of the baseline 2^17.0 hashes = 1.045 ms
+    2^24: size  -6.56%  prove x1.184  no-PoW x1.302  with commit x1.049  verify x1.004  fold PoW of the baseline 2^19.0 hashes = 3.091 ms
+    2^26: size  -6.64%  prove x1.249  no-PoW x1.359  with commit x1.065  verify x1.006  fold PoW of the baseline 2^21.0 hashes = 10.598 ms
+  against dkt-0.02
+    2^14: size  -6.94%  prove x1.321  no-PoW x1.321  with commit x1.186  verify x0.971  fold PoW of the baseline - hashes = 0.000 ms
+    2^16: size  -6.95%  prove x1.521  no-PoW x1.521  with commit x1.197  verify x0.977  fold PoW of the baseline - hashes = 0.000 ms
+    2^18: size  -6.68%  prove x1.304  no-PoW x1.304  with commit x1.169  verify x1.001  fold PoW of the baseline - hashes = 0.000 ms
+    2^20: size  -6.68%  prove x1.265  no-PoW x1.267  with commit x1.120  verify x1.017  fold PoW of the baseline 2^4.2 hashes = 0.008 ms
+    2^22: size  -6.10%  prove x1.226  no-PoW x1.227  with commit x1.087  verify x1.000  fold PoW of the baseline 2^7.1 hashes = 0.014 ms
+    2^24: size  -6.56%  prove x1.291  no-PoW x1.292  with commit x1.073  verify x1.010  fold PoW of the baseline 2^8.3 hashes = 0.019 ms
+    2^26: size  -6.64%  prove x1.346  no-PoW x1.347  with commit x1.086  verify x1.016  fold PoW of the baseline 2^10.3 hashes = 0.045 ms
+  against dkt-0.005
+    2^14: size  -1.35%  prove x1.362  no-PoW x1.395  with commit x1.207  verify x1.025  fold PoW of the baseline 2^2.7 hashes = 0.008 ms
+    2^16: size  -1.37%  prove x1.436  no-PoW x1.453  with commit x1.171  verify x1.017  fold PoW of the baseline 2^5.7 hashes = 0.007 ms
+    2^18: size  -1.16%  prove x1.298  no-PoW x1.309  with commit x1.166  verify x1.045  fold PoW of the baseline 2^8.1 hashes = 0.016 ms
+    2^20: size  -1.18%  prove x1.237  no-PoW x1.249  with commit x1.109  verify x1.054  fold PoW of the baseline 2^10.3 hashes = 0.043 ms
+    2^22: size  -0.90%  prove x1.241  no-PoW x1.260  with commit x1.092  verify x1.043  fold PoW of the baseline 2^13.1 hashes = 0.202 ms
+    2^24: size  -1.18%  prove x1.282  no-PoW x1.301  with commit x1.071  verify x1.050  fold PoW of the baseline 2^14.3 hashes = 0.464 ms
+    2^26: size  -1.18%  prove x1.268  no-PoW x1.277  with commit x1.070  verify x1.052  fold PoW of the baseline 2^16.3 hashes = 0.866 ms
+  against dkt-0.002
+    2^14: size  -0.04%  prove x1.312  no-PoW x1.341  with commit x1.181  verify x1.015  fold PoW of the baseline 2^4.0 hashes = 0.008 ms
+    2^16: size  -0.08%  prove x1.440  no-PoW x1.476  with commit x1.172  verify x1.020  fold PoW of the baseline 2^8.9 hashes = 0.015 ms
+    2^18: size  +0.05%  prove x1.250  no-PoW x1.305  with commit x1.142  verify x1.066  fold PoW of the baseline 2^11.8 hashes = 0.086 ms
+    2^20: size  +0.01%  prove x1.176  no-PoW x1.291  with commit x1.083  verify x1.049  fold PoW of the baseline 2^14.1 hashes = 0.397 ms
+    2^22: size  +0.28%  prove x1.151  no-PoW x1.249  with commit x1.060  verify x1.012  fold PoW of the baseline 2^17.0 hashes = 1.123 ms
+    2^24: size  +0.08%  prove x1.213  no-PoW x1.303  with commit x1.056  verify x1.058  fold PoW of the baseline 2^18.3 hashes = 2.293 ms
+    2^26: size  +0.16%  prove x1.195  no-PoW x1.262  with commit x1.053  verify x1.090  fold PoW of the baseline 2^20.3 hashes = 7.177 ms
+  against dkt-0.001
+    2^14: size  +0.52%  prove x1.433  no-PoW x1.469  with commit x1.241  verify x1.027  fold PoW of the baseline 2^6.1 hashes = 0.008 ms
+    2^16: size  +0.49%  prove x1.352  no-PoW x1.456  with commit x1.143  verify x1.035  fold PoW of the baseline 2^10.8 hashes = 0.048 ms
+    2^18: size  +0.61%  prove x1.013  no-PoW x1.323  with commit x1.008  verify x1.051  fold PoW of the baseline 2^14.7 hashes = 0.596 ms
+    2^20: size  +0.57%  prove x0.993  no-PoW x1.270  with commit x0.996  verify x1.054  fold PoW of the baseline 2^17.0 hashes = 1.147 ms
+    2^22: size  +0.84%  prove x0.886  no-PoW x1.267  with commit x0.947  verify x1.026  fold PoW of the baseline 2^20.0 hashes = 5.563 ms
+    2^24: size  +0.62%  prove x0.915  no-PoW x1.299  with commit x0.973  verify x1.068  fold PoW of the baseline 2^21.3 hashes = 13.116 ms
+    2^26: size  +0.69%  prove x0.885  no-PoW x1.276  with commit x0.962  verify x1.079  fold PoW of the baseline 2^23.3 hashes = 56.148 ms
+
+=== 128 bits
+--- BEEP-Ligerito (slack 0.001, GF(2^128)) against Ligerito (Flock, fold challenges in GF(2^256), slack 0.02)
+    2^14: size   268.4 against   300.7 KiB (-10.73%)  prove     2.04 against     1.59 ms (x1.285)  verify x0.605  BEEP's fold PoW 2^14.9 = 0.69 ms
+    2^16: size   287.9 against   347.6 KiB (-17.17%)  prove     2.62 against     2.83 ms (x0.925)  verify x0.651  BEEP's fold PoW 2^15.1 = 0.74 ms
+    2^18: size   324.6 against   395.3 KiB (-17.86%)  prove     5.82 against     5.72 ms (x1.018)  verify x0.698  BEEP's fold PoW 2^16.4 = 1.45 ms
+    2^20: size   347.0 against   427.4 KiB (-18.82%)  prove     9.28 against    10.06 ms (x0.923)  verify x0.528  BEEP's fold PoW 2^17.2 = 1.52 ms
+    2^22: size   283.3 against   373.4 KiB (-24.14%)  prove    23.90 against    27.02 ms (x0.885)  verify x0.542  BEEP's fold PoW 2^19.6 = 5.22 ms
+    2^24: size   408.1 against   528.8 KiB (-22.82%)  prove    49.79 against    73.42 ms (x0.678)  verify x0.664  BEEP's fold PoW 2^20.6 = 9.11 ms
+    2^26: size   446.1 against   566.5 KiB (-21.24%)  prove   190.11 against   294.77 ms (x0.645)  verify x0.594  BEEP's fold PoW 2^22.5 = 31.40 ms
+--- the MCA baseline with the bound of DKT26 over GF(2^128) at 128 bits, per slack: proof size against BEEP-0.001,
+    its prover without proofs of work (same process as BEEP), the expected hashes of its fold proofs of work,
+    their time (expected hashes over the measured rate), and the measured prover where the cell ran with them
+    2^14 dkt-0.1  : size   412.9 KiB (BEEP -34.99%)  no-PoW prove     0.36 ms (BEEP     0.43, x1.195)  fold PoW 2^19.8 hashes ->      0.00 s; measured prove 6.3 ms (expected 5.7)
+    2^14 dkt-0.05 : size   323.6 KiB (BEEP -17.06%)  no-PoW prove     0.32 ms (BEEP     0.43, x1.332)  fold PoW 2^22.1 hashes ->      0.02 s; measured prove 25.0 ms (expected 24.0)
+    2^14 dkt-0.02 : size   288.2 KiB (BEEP  -6.85%)  no-PoW prove     0.31 ms (BEEP     0.43, x1.361)  fold PoW 2^25.7 hashes ->      0.27 s; measured prove 301.9 ms (expected 303.8)
+    2^14 beep-0.001: prove 2.04 ms with its proofs of work (2^14.9 hashes on the fold challenges, 1.57 ms in all)
+    2^16 dkt-0.1  : size   442.5 KiB (BEEP -34.93%)  no-PoW prove     0.70 ms (BEEP     1.00, x1.419)  fold PoW 2^21.8 hashes ->      0.02 s; measured prove 18.6 ms (expected 19.5)
+    2^16 dkt-0.05 : size   347.3 KiB (BEEP -17.09%)  no-PoW prove     0.68 ms (BEEP     1.00, x1.468)  fold PoW 2^24.2 hashes ->      0.09 s; measured prove 90.6 ms (expected 98.2)
+    2^16 dkt-0.02 : size   309.1 KiB (BEEP  -6.85%)  no-PoW prove     0.65 ms (BEEP     1.00, x1.528)  fold PoW 2^28.3 hashes ->      1.57 s; measured prove 1426.6 ms (expected 1196.1)
+    2^16 beep-0.001: prove 2.62 ms with its proofs of work (2^15.1 hashes on the fold challenges, 1.61 ms in all)
+    2^18 dkt-0.1  : size   494.7 KiB (BEEP -34.38%)  no-PoW prove     1.99 ms (BEEP     2.74, x1.373)  fold PoW 2^24.0 hashes ->      0.08 s; measured prove 83.4 ms (expected 87.6)
+    2^18 dkt-0.05 : size   390.5 KiB (BEEP -16.86%)  no-PoW prove     1.99 ms (BEEP     2.74, x1.376)  fold PoW 2^26.8 hashes ->      0.56 s; not run with proofs of work
+    2^18 dkt-0.02 : size   347.8 KiB (BEEP  -6.65%)  no-PoW prove     1.95 ms (BEEP     2.74, x1.405)  fold PoW 2^30.3 hashes ->      6.45 s; not run with proofs of work
+    2^18 beep-0.001: prove 5.82 ms with its proofs of work (2^16.4 hashes on the fold challenges, 3.01 ms in all)
+    2^20 dkt-0.1  : size   528.2 KiB (BEEP -34.31%)  no-PoW prove     4.12 ms (BEEP     5.58, x1.355)  fold PoW 2^26.0 hashes ->      0.33 s; measured prove 314.7 ms (expected 327.9)
+    2^20 dkt-0.05 : size   417.4 KiB (BEEP -16.88%)  no-PoW prove     4.12 ms (BEEP     5.58, x1.356)  fold PoW 2^28.8 hashes ->      2.23 s; not run with proofs of work
+    2^20 dkt-0.02 : size   371.7 KiB (BEEP  -6.66%)  no-PoW prove     3.98 ms (BEEP     5.58, x1.402)  fold PoW 2^32.3 hashes ->     25.93 s; not run with proofs of work
+    2^20 beep-0.001: prove 9.28 ms with its proofs of work (2^17.2 hashes on the fold challenges, 2.99 ms in all)
+    2^22 dkt-0.1  : size   418.4 KiB (BEEP -32.30%)  no-PoW prove    12.72 ms (BEEP    16.25, x1.277)  fold PoW 2^29.0 hashes ->      2.58 s; not run with proofs of work
+    2^22 dkt-0.05 : size   336.1 KiB (BEEP -15.73%)  no-PoW prove    12.64 ms (BEEP    16.25, x1.286)  fold PoW 2^31.6 hashes ->     15.52 s; not run with proofs of work
+    2^22 dkt-0.02 : size   301.6 KiB (BEEP  -6.07%)  no-PoW prove    12.75 ms (BEEP    16.25, x1.275)  fold PoW 2^35.1 hashes ->    176.05 s; not run with proofs of work
+    2^22 beep-0.001: prove 23.90 ms with its proofs of work (2^19.6 hashes on the fold challenges, 7.56 ms in all)
+    2^24 dkt-0.1  : size   618.3 KiB (BEEP -33.99%)  no-PoW prove    31.45 ms (BEEP    40.60, x1.291)  fold PoW 2^30.2 hashes ->      5.75 s; not run with proofs of work
+    2^24 dkt-0.05 : size   491.0 KiB (BEEP -16.88%)  no-PoW prove    30.94 ms (BEEP    40.60, x1.312)  fold PoW 2^32.8 hashes ->     36.39 s; not run with proofs of work
+    2^24 dkt-0.02 : size   436.8 KiB (BEEP  -6.57%)  no-PoW prove    30.97 ms (BEEP    40.60, x1.311)  fold PoW 2^36.3 hashes ->    416.02 s; not run with proofs of work
+    2^24 beep-0.001: prove 49.79 ms with its proofs of work (2^20.6 hashes on the fold challenges, 11.38 ms in all)
+    2^26 dkt-0.1  : size   674.9 KiB (BEEP -33.89%)  no-PoW prove   123.71 ms (BEEP   159.01, x1.285)  fold PoW 2^32.3 hashes ->     24.44 s; not run with proofs of work
+    2^26 dkt-0.05 : size   536.7 KiB (BEEP -16.87%)  no-PoW prove   121.11 ms (BEEP   159.01, x1.313)  fold PoW 2^34.9 hashes ->    147.79 s; not run with proofs of work
+    2^26 dkt-0.02 : size   477.6 KiB (BEEP  -6.58%)  no-PoW prove   118.38 ms (BEEP   159.01, x1.343)  fold PoW 2^38.3 hashes ->   1667.41 s; not run with proofs of work
+    2^26 beep-0.001: prove 190.11 ms with its proofs of work (2^22.5 hashes on the fold challenges, 34.85 ms in all)
+
+=== memory and disturbances
+  m26-100.split: status ok, rss 9.91 GB, footprint 10.70 GB (part of the memory was compressed)
+  m26-128.split: status ok, rss 10.37 GB, footprint 10.70 GB (part of the memory was compressed)

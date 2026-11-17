@@ -1,0 +1,14 @@
+name: m24-128.split
+attempt: 1
+env: 
+args: log_n=24 profile=fast bits=128 rates=1,3,5,7 variants=split reps=15
+start: 2026-11-17 00:57:31
+power_before: AC Power
+load_before: 2.53 2.87 2.75
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 7.33% user, 13.33% sys, 79.33% idle  PhysMem: 20G used (2268M wired, 1136M compressor), 2985M unused. 
+end: 2026-11-17 00:57:35
+exit: 0
+power_after: AC Power
+load_after: 3.05 2.98 2.79
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

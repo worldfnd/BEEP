@@ -1,0 +1,14 @@
+name: m20-128.split
+attempt: 1
+env: 
+args: log_n=20 profile=fast bits=128 rates=1,3,5 variants=split reps=15
+start: 2026-11-17 01:37:51
+power_before: AC Power
+load_before: 3.13 2.99 2.79
+swap_before: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)
+top_before: CPU usage: 15.0% user, 16.87% sys, 68.12% idle  PhysMem: 16G used (2723M wired, 1362M compressor), 7713M unused. 
+end: 2026-11-17 01:37:52
+exit: 0
+power_after: AC Power
+load_after: 3.13 2.99 2.79
+swap_after: total = 2048.00M used = 921.19M free = 1126.81M (encrypted)

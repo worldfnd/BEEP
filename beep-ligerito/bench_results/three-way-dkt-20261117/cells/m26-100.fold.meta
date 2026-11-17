@@ -1,0 +1,14 @@
+name: m26-100.fold
+attempt: 1
+env: 
+args: log_n=26 profile=fast100 bits=100 rates=1,3,5,7,9 eta=0.02,0.001 mca_eta=0.02 dkt_eta=0.02,0.005,0.002,0.001 variants=mcanf,dkt,beep reps=15
+start: 2026-11-17 00:58:47
+power_before: AC Power
+load_before: 3.13 3.01 2.81
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 1.92% user, 9.61% sys, 88.46% idle  PhysMem: 20G used (2271M wired, 1136M compressor), 3048M unused. 
+end: 2026-11-17 00:59:19
+exit: 0
+power_after: AC Power
+load_after: 4.60 3.40 2.96
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)

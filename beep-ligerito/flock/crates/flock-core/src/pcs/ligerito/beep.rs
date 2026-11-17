@@ -40,6 +40,11 @@
 // `fold_rounds`, `fold_grind`), where they ground every round of a level for its first, worst round, as Flock's
 // convention does: three times the hashes that a level with 2^6 rows needs. The BEEP ladders are unchanged (one
 // numerator per level, `fold_rounds = None`), and so are their proofs]
+// [AI-revised (claude-fable-5-2), 2026-11-17, at the author's request ("Can you run a comparison for 100 and 128 bits
+// at this error bound?", the bound being Theorem 4.4 of Dao, Kominers and Thaler, ePrint 2026/2056, with no row
+// union): `dkt_exceptional_count`, `mca_dkt_ladder_at` and `mca_dkt_ladder_no_first_sample_at`, the baseline
+// "Ligerito over GF(2^128)" with that bound in place of Flock's; two tests. Additions only: no other function of
+// this file changed, so every earlier ladder is built as before. Please review]
 
 //! BEEP folds for the Ligerito ladder.
 //!
@@ -1192,6 +1197,189 @@ pub fn mca_ladder_no_first_sample_at(
     config.verifier.ood_samples[0] = 0;
     if config.min_bits() < target_bits {
         return Err(format!("the MCA ladder reaches only {:.2} bits", config.min_bits()));
+    }
+    Ok(config)
+}
+
+/// The bound of Dao, Kominers and Thaler (ePrint 2026/2056, Theorem 4.4,
+/// "Quantitative Johnson MCA in every characteristic") on the exceptional
+/// challenges of a line of two words, for the Reed–Solomon code of length
+/// `n` and dimension `dim` at the agreement threshold `agreement`. For every
+/// two words `f, g` there is a set of at most this many challenges `z`
+/// outside which every codeword that agrees with `f + z g` on at least
+/// `agreement` positions is `F_0 + z G_0`, for codewords `F_0, G_0` that
+/// agree with `f` and `g` on exactly those positions. The theorem holds
+/// over any field (binary fields included) and for any distinct evaluation
+/// points.
+///
+/// In the notation of the theorem: `D = dim − 1`, `A = agreement` and `η_0 =
+/// A/n − √(D/n)`, which must be positive. Then `m = max(⌈√(D/n) / (2 η_0)⌉,
+/// 3)`, `t = m + 1/2`, `B_jet = ⌈t √(n/D)⌉ − 1`, `B_Z = ⌈t² n / (3D)⌉ − 1`,
+/// `Ψ = 1 + (2D − 1)(2 B_jet − 1) + 2 (B_jet − 2D − 1)_+`, and the count is
+///
+///   `(2 B_jet − 1) B_Z + (n − D)/(A − D) · (B_jet + B_Z Ψ) + (n − D − 1) B_jet`
+///
+/// (its equations (33), (34), (36), (37) and (39), with `L = D + 1` and a
+/// line, `ℓ = 1`), which the theorem also bounds by `(8/3) n t³ / (D/n)`.
+/// Everything is computed in integers: `m` is the least integer `≥ 3` with
+/// `4 m² A² ≥ (2m + 1)² D n`, `B_jet` the largest integer with `4 D B_jet² <
+/// (2m + 1)² n`, `B_Z` the largest one with `12 D B_Z < (2m + 1)² n`, and the
+/// quotient is rounded up.
+pub fn dkt_exceptional_count(n: u64, dim: u64, agreement: u64) -> Result<u128, String> {
+    /// Largest `m` that the search tries: `η_0 n` is then about `√(D n) / 2^21`.
+    const MAX_M: u128 = 1 << 20;
+    let none = || format!("no bound of DKT26 for n = {n}, dimension {dim}, agreement {agreement}");
+    if n > 1 << 32 {
+        return Err(none());
+    }
+    let (n, a) = (u128::from(n), u128::from(agreement));
+    let d = u128::from(dim).checked_sub(1).ok_or_else(none)?;
+    // The theorem needs 1 ≤ D ≤ n − 2 and an agreement above its Johnson
+    // bound, A² > n D (then A > D).
+    if d == 0 || d + 2 > n || a > n || a * a <= n * d {
+        return Err(none());
+    }
+    // 2 m η_0 ≥ √(D/n), i.e. 4 m² A² ≥ (2m + 1)² D n: true from some m on.
+    let enough = |m: u128| 4 * m * m * a * a >= (2 * m + 1) * (2 * m + 1) * d * n;
+    if !enough(MAX_M) {
+        return Err(none());
+    }
+    let m = if enough(3) {
+        3
+    } else {
+        // Invariant: !enough(lo), enough(hi).
+        let (mut lo, mut hi) = (3u128, MAX_M);
+        while hi - lo > 1 {
+            let mid = lo + (hi - lo) / 2;
+            if enough(mid) {
+                hi = mid;
+            } else {
+                lo = mid;
+            }
+        }
+        hi
+    };
+    // (2t)² n, with t = m + 1/2.
+    let t2n = (2 * m + 1) * (2 * m + 1) * n;
+    // The largest j with 4 D j² < (2t)² n: the integer square root of ⌊((2t)² n − 1) / (4D)⌋.
+    let below = (t2n - 1) / (4 * d);
+    let mut b_jet = (below as f64).sqrt() as u128;
+    while b_jet * b_jet > below {
+        b_jet -= 1;
+    }
+    while (b_jet + 1) * (b_jet + 1) <= below {
+        b_jet += 1;
+    }
+    let b_z = (t2n - 1) / (12 * d);
+    let overflow = || "the count of DKT26 does not fit 128 bits".to_string();
+    let psi = (2 * d - 1)
+        .checked_mul(2 * b_jet - 1)
+        .and_then(|x| x.checked_add(1 + 2 * b_jet.saturating_sub(2 * d + 1)))
+        .ok_or_else(overflow)?;
+    let joint = b_z
+        .checked_mul(psi)
+        .and_then(|x| x.checked_add(b_jet))
+        .and_then(|x| x.checked_mul(n - d))
+        .ok_or_else(overflow)?;
+    let off_graphs = joint.div_ceil(a - d);
+    (2 * b_jet - 1)
+        .checked_mul(b_z)
+        .and_then(|x| x.checked_add(off_graphs))
+        .and_then(|x| x.checked_add((n - d - 1) * b_jet))
+        .ok_or_else(overflow)
+}
+
+/// "Ligerito over GF(2^128)" with its folds analyzed with the bound of
+/// DKT26 in place of Flock's: [`mca_ladder_at`] with the fold challenge of
+/// every round charged `(E + 2L) / |F|`, where `E` is
+/// [`dkt_exceptional_count`] for the code of the level at the agreement
+/// `⌈(√ρ + η) n⌉` of the level, and `2L / |F|` is the sumcheck round under
+/// the list, as before. Nothing else differs from [`mca_ladder_at`]: the
+/// shapes, the rates, the queries, the binding samples, the batching and the
+/// prover are those of the BEEP ladder at the same slacks, with no
+/// out-of-domain points in the fold rounds.
+///
+/// Two things change against Flock's bound (BCHKS25, Theorem 4.6, times a
+/// row union):
+///
+/// * the count of exceptional challenges of a fold of two words: about `(8/3)
+///   n (m + 1/2)³ / ρ` in place of `2 (m + 1/2)⁵ n / (3 ρ^(3/2))`, with the
+///   same `m ≈ √ρ / (2η)`, so `η^-3` in place of `η^-5`;
+/// * no row union: an interleaved code has the exceptional count of the
+///   code, at every width (Lemma 6.5 and Corollary 6.6 of DKT26, after Jo,
+///   ePrint 2026/891: one combination of the rows keeps every bad challenge
+///   bad). A round that folds `2^j` pairs of rows is one line of two words
+///   of an interleaved code, so every round of a level has the same
+///   numerator, and `fold_round_numerators` is `None` as in the BEEP ladder.
+///
+/// The analysis fields of the returned levels are those of [`mca_ladder_at`]
+/// (`samples = 0`, `threshold = 0`, `sample_bits = `[`NO_POINTS_BITS`]), with
+/// `fold_numerator = E + ⌈2L⌉` and `fold_bits = −log2((E + ⌈2L⌉) / |F|)`.
+pub fn mca_dkt_ladder_at(
+    split: &ProverConfig,
+    log_n: usize,
+    rates: &[usize],
+    etas: &[f64],
+    target_bits: f64,
+) -> Result<BeepConfig, String> {
+    let mut config = beep_ladder_at(split, log_n, rates, etas, target_bits)?;
+    let slack = LOG_Q - target_bits;
+    for (li, lv) in config.levels.iter_mut().enumerate() {
+        let rho = (-(lv.log_inv_rate as f64)).exp2();
+        let list_real = 1.0 / (2.0 * lv.eta * rho.sqrt());
+        let n = 1u64 << (lv.log_msg_cols + lv.log_inv_rate);
+        let count = dkt_exceptional_count(n, 1u64 << lv.log_msg_cols, lv.agreement)
+            .map_err(|e| format!("level {li}: {e}"))?;
+        let numerator = count + (2.0 * list_real).ceil() as u128;
+        if numerator >= 1 << 63 {
+            return Err(format!("level {li}: the MCA numerator {numerator} is too large"));
+        }
+        let numerator = numerator as u64;
+        let log_num = (numerator as f64).log2();
+        let grind = strict_grinding_bits(log_num - slack);
+        if grind > MAX_FOLD_GRINDING_BITS {
+            return Err(format!(
+                "level {li}: a fold under MCA (DKT26) needs {grind} bits of grinding over GF(2^128) \
+                 (above {MAX_FOLD_GRINDING_BITS})"
+            ));
+        }
+        lv.samples = 0;
+        lv.threshold = 0;
+        lv.sample_bits = NO_POINTS_BITS;
+        lv.fold_bits = LOG_Q - log_num;
+        lv.fold_grinding_bits = grind;
+        lv.fold_numerator = numerator;
+    }
+    config.samples = vec![0; config.levels.len()];
+    let fold: Vec<usize> = config.levels.iter().map(|l| l.fold_grinding_bits).collect();
+    config.prover.fold_grinding_bits = fold.clone();
+    config.verifier.fold_grinding_bits = fold;
+    config.sync_bit_grinding();
+    if config.min_bits() < target_bits {
+        return Err(format!("the MCA ladder (DKT26) reaches only {:.2} bits", config.min_bits()));
+    }
+    Ok(config)
+}
+
+/// [`mca_dkt_ladder_at`] with no out-of-domain sample on the first
+/// commitment, as [`mca_ladder_no_first_sample_at`] is to
+/// [`mca_ladder_at`]: the baseline that differs from the BEEP ladder of the
+/// comparison in its fold rounds only.
+pub fn mca_dkt_ladder_no_first_sample_at(
+    split: &ProverConfig,
+    log_n: usize,
+    rates: &[usize],
+    etas: &[f64],
+    target_bits: f64,
+) -> Result<BeepConfig, String> {
+    let mut config = mca_dkt_ladder_at(split, log_n, rates, etas, target_bits)?;
+    let l0 = &mut config.levels[0];
+    l0.ood_samples = 0;
+    l0.ood_bits = NO_POINTS_BITS;
+    config.prover.ood_samples[0] = 0;
+    config.verifier.ood_samples[0] = 0;
+    if config.min_bits() < target_bits {
+        return Err(format!("the MCA ladder (DKT26) reaches only {:.2} bits", config.min_bits()));
     }
     Ok(config)
 }
@@ -2885,7 +3073,8 @@ mod tests {
     use super::{
         BeepConfig, BeepProof, EqFactors, F128, Ladder, Level, MAX_SAMPLES, TARGET_BITS,
         affine_ladder, affine_ladder_at, affine_ladder_target, beep_ladder, beep_ladder_at,
-        ceil_log2, eq_factors, least_threshold, mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches,
+        ceil_log2, dkt_exceptional_count, eq_factors, least_threshold, mca_dkt_ladder_at,
+        mca_dkt_ladder_no_first_sample_at, mca_ladder_at, mca_ladder_no_first_sample_at, pow_searches,
         prove_beep, sample_bits, verify_beep,
     };
     use crate::{
@@ -3673,6 +3862,196 @@ mod tests {
         assert!(check(&with, &proof_with, target));
         assert!(!check(&nf, &proof_nf, target + F128::ONE));
         assert!(!check(&with, &proof_nf, target));
+    }
+
+    /// [`dkt_exceptional_count`] against values computed from the statement
+    /// of the theorem (real ceilings with 80-digit decimals, the count as an
+    /// exact fraction, rounded up): codes of rates 1/2, 1/4, 1/8 and 2^-9,
+    /// with `m` from 3 to 354, one with `B_jet > 2D + 1`, and the instance
+    /// `(n, D, A) = (1024, 511, 744)` of the theorem's own agreement at `η_0
+    /// = 0.02`. In the last three instances a real quantity under a ceiling
+    /// is a whole number, which pins the strict inequalities of the integer
+    /// form (found by the independent check of this function): for `(64, 9,
+    /// 27)`, `√(D/n) / (2 η_0) = 4`, `t √(n/D) = 12` and `t² n / (3D) = 48`;
+    /// for `(16, 1, 8)`, `t √(n/D) = 14`; for `(48, 4, 20)`, `t² n / (3D) =
+    /// 49`.
+    #[test]
+    fn dkt_exceptional_count_values() {
+        for (n, dim, agreement, count) in [
+            (1024u64, 512u64, 745u64, 21_483_639u128),
+            (1024, 512, 744, 26_164_695),
+            (1 << 18, 1 << 17, 185_889, 6_595_801_891_350),
+            (1 << 16, 1 << 13, 24_482, 707_284_599),
+            (1024, 512, 878, 82_043),
+            (1 << 21, 1 << 20, 1_485_008, 422_558_744_513_390),
+            (1 << 13, 1 << 4, 526, 171_236_999),
+            (8, 2, 4, 2_859),
+            (64, 10, 27, 53_028),
+            (16, 2, 8, 8_242),
+            (48, 5, 20, 23_829),
+        ] {
+            assert_eq!(
+                dkt_exceptional_count(n, dim, agreement),
+                Ok(count),
+                "n = {n}, dimension {dim}, agreement {agreement}"
+            );
+            // The closed form of the theorem, (8/3) n t³ / (D/n): t = m + 1/2
+            // for the least m ≥ 3 with 2 m η_0 ≥ √(D/n).
+            let (nf, df, af) = (n as f64, (dim - 1) as f64, agreement as f64);
+            let m = ((df / nf).sqrt() / (2.0 * (af / nf - (df / nf).sqrt()))).ceil().max(3.0);
+            let closed = 8.0 / 3.0 * nf * (m + 0.5).powi(3) * nf / df;
+            assert!((count as f64) < closed, "n = {n}, dimension {dim}: {count} against {closed}");
+            assert!((count as f64) > closed / 4.0, "n = {n}, dimension {dim}: {count} against {closed}");
+        }
+        // No bound at or below the Johnson agreement of the theorem (723² ≤
+        // 1024 · 511 < 724²), for a constant code, or for the full space.
+        assert!(dkt_exceptional_count(1024, 512, 723).is_err());
+        assert!(dkt_exceptional_count(1024, 512, 724).is_ok());
+        assert!(dkt_exceptional_count(1024, 1, 900).is_err());
+        assert!(dkt_exceptional_count(1024, 1024, 1024).is_err());
+        assert!(dkt_exceptional_count(1024, 512, 1025).is_err());
+    }
+
+    /// [`mca_dkt_ladder_at`] at 100 bits: the ladder of [`beep_ladder_at`]
+    /// at the same slacks with no points, the same queries, binding samples
+    /// and batching, and one fold numerator per level, `E + ⌈2L⌉` for the
+    /// count `E` of DKT26 at the agreement of the level, below Flock's
+    /// numerator of every round. Its proofs of work cover that numerator,
+    /// both provers write the same proof, and a proof of the ladder with no
+    /// first sample verifies.
+    #[test]
+    fn mca_dkt_ladder_at_100_bits() {
+        let target_bits = 100.0;
+        for (log_n, rates) in [(16usize, vec![1usize, 3]), (20, vec![1, 3, 5])] {
+            let split = prover_config_for(log_n, 6, LigeritoProfile::Fast100).expect("split");
+            for eta in [0.02, 0.002] {
+                let etas = vec![eta; rates.len()];
+                let beep = beep_ladder_at(&split, log_n, &rates, &etas, target_bits).expect("BEEP ladder");
+                let dkt = mca_dkt_ladder_at(&split, log_n, &rates, &etas, target_bits)
+                    .unwrap_or_else(|e| panic!("log_n {log_n}, eta {eta}: {e}"));
+                assert!(dkt.min_bits() >= target_bits, "{}", dkt.min_bits());
+                assert!(dkt.samples.iter().all(|&m| m == 0));
+                assert_eq!(dkt.prover.queries, beep.prover.queries);
+                assert_eq!(dkt.prover.ood_samples, beep.prover.ood_samples);
+                assert_eq!(dkt.prover.grinding_bits, beep.prover.grinding_bits);
+                assert_eq!(dkt.prover.claim_batch_grinding_bits, beep.prover.claim_batch_grinding_bits);
+                assert_eq!(
+                    dkt.prover.consistency_batch_grinding_bits,
+                    beep.prover.consistency_batch_grinding_bits
+                );
+                assert!(dkt.fold_round_numerators.is_none() && dkt.fold_rounds.is_none());
+                for (li, lv) in dkt.levels.iter().enumerate() {
+                    assert_eq!(lv.agreement, beep.levels[li].agreement, "level {li}");
+                    let n = 1u64 << (lv.log_msg_cols + lv.log_inv_rate);
+                    let count = dkt_exceptional_count(n, 1 << lv.log_msg_cols, lv.agreement).expect("count");
+                    let rho = (-(lv.log_inv_rate as f64)).exp2();
+                    let two_lists = (2.0 * (1.0 / (2.0 * lv.eta * rho.sqrt()))).ceil() as u128;
+                    assert_eq!(u128::from(lv.fold_numerator), count + two_lists, "level {li}");
+                    // The grinding is the least whole number of bits for the numerator.
+                    let need = (lv.fold_numerator as f64).log2() - 28.0;
+                    assert!(lv.fold_grinding_bits as f64 > need, "level {li}");
+                    assert!((lv.fold_grinding_bits as f64) <= need.max(0.0) + 1.0, "level {li}");
+                    assert_eq!(dkt.prover.fold_grinding_bits[li], lv.fold_grinding_bits);
+                    assert_eq!(dkt.verifier.fold_grinding_bits[li], lv.fold_grinding_bits);
+                }
+                // Below Flock's bound of every round, where that ladder exists
+                // (at a small slack it asks for more grinding than the selection accepts).
+                if let Ok(mca) = mca_ladder_at(&split, log_n, &rates, &etas, target_bits) {
+                    let flock = mca.fold_round_numerators.as_ref().expect("numerators per round");
+                    for (li, lv) in dkt.levels.iter().enumerate() {
+                        let least = *flock[li].iter().min().expect("a round");
+                        assert!(lv.fold_numerator < least, "level {li}: {} against {least}", lv.fold_numerator);
+                    }
+                } else {
+                    assert!(eta < 0.02, "Flock's ladder exists at its own slack");
+                }
+                let exact = dkt.with_exact_grinding();
+                assert!(exact.min_bits() >= target_bits, "{}", exact.min_bits());
+                let grinds = exact.pow_grinds();
+                assert_eq!(grinds.fold.len(), dkt.levels.iter().map(|l| l.folds).sum::<usize>());
+                let mut at = 0;
+                for (li, lv) in dkt.levels.iter().enumerate() {
+                    let grind = super::Grind::exact_at(lv.fold_numerator, target_bits);
+                    // A search tries about numerator / 2^28 hashes.
+                    assert!(grind.work() <= lv.fold_numerator as f64 / 28f64.exp2() * 1.000001 + 1.0, "level {li}");
+                    for j in 0..lv.folds {
+                        assert_eq!(grinds.fold[at], grind, "level {li}, round {j}");
+                        assert_eq!(exact.fold_grind(li, j), grind);
+                        at += 1;
+                    }
+                }
+                let (fast, reference) = prove_both(&exact, log_n);
+                assert_eq!(fast, reference, "2^{log_n} words, eta {eta}, MCA ladder with the bound of DKT26");
+            }
+        }
+
+        // The ladder with no first sample: the same fold rounds, no binding
+        // sample of level 0, and a proof that verifies.
+        let (log_n, rates) = (16usize, [1usize, 3]);
+        let split = prover_config_for(log_n, 6, LigeritoProfile::Fast100).expect("split");
+        let with = mca_dkt_ladder_at(&split, log_n, &rates, &[0.002; 2], target_bits).expect("ladder");
+        let nf = mca_dkt_ladder_no_first_sample_at(&split, log_n, &rates, &[0.002; 2], target_bits).expect("ladder");
+        assert!(with.prover.ood_samples[0] > 0);
+        assert_eq!(nf.prover.ood_samples[0], 0);
+        assert_eq!(nf.verifier.ood_samples, nf.prover.ood_samples);
+        assert_eq!(nf.prover.ood_samples[1..], with.prover.ood_samples[1..]);
+        assert_eq!(nf.prover.queries, with.prover.queries);
+        assert_eq!(nf.prover.fold_grinding_bits, with.prover.fold_grinding_bits);
+        assert_eq!(nf.levels[1..], with.levels[1..]);
+        for (a, b) in nf.levels.iter().zip(&with.levels) {
+            assert_eq!(a.fold_numerator, b.fold_numerator);
+        }
+        let nf = nf.with_exact_grinding();
+        assert!(nf.min_bits() >= target_bits, "{}", nf.min_bits());
+        let mut rng = RandomChallenger::new(0xBEE9_0103);
+        let witness = random_vec(&mut rng, 1 << log_n);
+        let z = random_vec(&mut rng, log_n);
+        let basis = build_eq_table(&z);
+        let target = witness
+            .iter()
+            .zip(&basis)
+            .fold(F128::ZERO, |acc, (&a, &b)| acc + a * b);
+        let k0 = nf.prover.initial_k;
+        let rate = nf.prover.log_inv_rates[0];
+        let ntt = AdditiveNttF128::standard(log_n - k0 + rate);
+        let l0 = ligero_commit(&witness, log_n - k0, k0, rate, &ntt, nf.prover.merkle_hash);
+        let cap = l0.cap(nf.prover.level_zero_cap_depth()).to_vec();
+        let mut ch = FsChallenger::new(b"mca-dkt-100");
+        let proof = prove_beep(&nf, witness, basis.clone(), target, &l0.mat, &l0.tree, &mut ch);
+        assert!(proof.answers.is_empty(), "no points, no answers");
+        let check = |proof: &BeepProof, target: F128| {
+            let mut ch = FsChallenger::new(b"mca-dkt-100");
+            verify_beep(
+                &nf,
+                proof,
+                log_n,
+                target,
+                &cap,
+                |rs, residual_log| {
+                    let out = partial_eval_lsb(&basis, rs);
+                    assert_eq!(out.len(), 1usize << residual_log);
+                    out
+                },
+                &mut ch,
+            )
+        };
+        assert!(check(&proof, target));
+        assert!(!check(&proof, target + F128::ONE));
+        let mut bad = proof.clone();
+        bad.fold_grinding_nonces[0] ^= 1;
+        assert!(!check(&bad, target));
+
+        // At 128 bits over a field of 2^128 elements every fold challenge
+        // needs a proof of work for its whole numerator: at least 2^19
+        // hashes per round for 2^16 words at the slacks 0.02 and 0.1.
+        let split = prover_config_for(log_n, 6, LigeritoProfile::Fast).expect("split");
+        for eta in [0.02, 0.1] {
+            let dkt = mca_dkt_ladder_no_first_sample_at(&split, log_n, &rates, &[eta; 2], TARGET_BITS).expect("ladder");
+            assert!(dkt.min_bits() >= TARGET_BITS, "{}", dkt.min_bits());
+            assert!(dkt.levels[0].fold_grinding_bits >= 19, "eta {eta}: {}", dkt.levels[0].fold_grinding_bits);
+            let work = dkt.with_exact_grinding().pow_grinds().fold[0].work();
+            assert!(work >= dkt.levels[0].fold_numerator as f64 * 0.999, "eta {eta}");
+        }
     }
 
     /// [`affine_ladder_target`] at 128 bits is [`affine_ladder_at`]. At 100

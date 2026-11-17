@@ -1,0 +1,14 @@
+name: m16-100.split
+attempt: 1
+env: 
+args: log_n=16 profile=fast100 bits=100 rates=1,3 variants=split reps=15
+start: 2026-11-17 01:09:03
+power_before: AC Power
+load_before: 3.58 4.92 4.14
+swap_before: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
+top_before: CPU usage: 10.73% user, 12.75% sys, 76.51% idle  PhysMem: 13G used (2259M wired, 1634M compressor), 10G unused. 
+end: 2026-11-17 01:09:03
+exit: 0
+power_after: AC Power
+load_after: 3.58 4.92 4.14
+swap_after: total = 2048.00M used = 937.19M free = 1110.81M (encrypted)
