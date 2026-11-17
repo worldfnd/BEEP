@@ -28,7 +28,7 @@
 
 
 // Define functions:
-#let submission-mode = true 
+#let submission-mode = false 
 
 #let secretsection(body) = if submission-mode {} else {body}
 
@@ -95,13 +95,15 @@
 // Abstract 
 #abstract[
   
-  We present an improved soundness analysis of the DEEP technique @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. We then modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of (Mutual) Correlated Agreement (MCA),  with a folding error bound that is linear on the code dimension and list size, improving upon the standard MCA error in typical instantiations. 
+  We present an improved soundness analysis of the DEEP technique @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. 
+  The modification consists simply in performing $m$ DEEP samples, instead of one. The resulting  DEEP sampling decreases exponentially with $m$, and in practice $2$-$5$ makes it tiny. The subsequent folding error is of $(delta dot n +1)\/|FF|$, for $delta$ a proximity parameter and $n$ the code length.
+   
   
-  The modified DEEP technique consists only in performing $2$-$5$ DEEP samples. As a result the cost overhead of these IOPPs, compared to the original ones (WHIR, Ligerito, etc.), is negligible in prover and verifier time, and leads to ???? #albert[fill in] smaller proof sizes when using Reed-Solomon codes and a proximity parameter $delta$ up to the Johnson bound. 
+  We  modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of MCA, with smaller soundness errors than their counterparts. This potentially allows to use smaller fields, less grinding, and proximity parameters closer to known bound such as the Johnson bound, thus improving proof sizes and, possibly, speed. 
   
-  Further, since it does not rely on MCA for its soundness, this improved DEEP technique allows to use #emph[arbitrary linear codes] in code-based IOPPs with $delta$ up to the Johnson bound. Additionally, this opens the door to using  codes (e.g. Reed-Solomon codes) with $delta$ beyond the Johnson bound, assuming the code is $delta$-list decodable, even if it does not have the $delta$-MCA property.
+  Further, since it does not rely on MCA for its soundness, this improved DEEP technique allows to use #emph[arbitrary linear codes] in code-based IOPPs with $delta$ up to the Johnson bound. Additionally, this opens the door to using  codes (e.g. perhaps Reed-Solomon codes) with $delta$ beyond the Johnson bound, assuming the code is $delta$-list decodable, even if it does not have the $delta$-MCA property.
 
-  Finally, we also provide an #emph[affine] version of the DEEP technique, where folding challenges are affine polynomials instead of field elements, as introduced in @polygero (where challenges are low degree polynomials, not necessarily linear) and @CWYZ26. We provide a simple proof showing that, after the DEEP samples are done, the folding error with affine folding challenges is  $2\/|FF|$. 
+  Finally, we also provide an #emph[affine] version of our improved DEEP analysis, where the folding challenges are affine polynomials instead of field elements, following @polygero@CWYZ26. We provide a simple proof showing that, after the DEEP samples are done, the folding error with affine folding challenges is $2\/|FF|$,  which is smaller than the affine-MCA  errors from @polygero@CWYZ26. 
 ]
 
 // Table of contents
@@ -111,7 +113,7 @@
 // Rest of paper
 
 
-#albert[Todos: Review lean, review experiments, overall pass, remove 7.3, review BEEP-Ligerito implementation, glue text, review references
+#albert[Todos: Review lean, review experiments, overall pass,  glue text, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
 ]
 
 = Introduction
@@ -207,38 +209,49 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 We also provide a variation (@thm:main_batch in @s:high_arity) of @t:affine_main_0 where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:affine_main_0.
 
-#aiedit[
-In @tab:mca_comparison we compare the error $epsilon_(sans("BEEP"),2)$ with known MCA errors. These are the errors of RS codes up to the Johnson bound @DKT26 (and @CWYZ26, for affine folding challenges), and of arbitrary linear codes up to the 1.5 Johnson bound @Zei26. The table also includes the error of the affine version of our result (@t:affine_main_0), which we discuss below.
 
+In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors.We also include the affine version of our result (@t:affine_main_0), which we discuss later.
+
+#show figure.caption: set align(left)
 #figure(
   {
-    set text(size: 9.5pt, hyphenate: false)
+    set text(size: 10pt, hyphenate: false)
     set par(justify: false)
+    // a result: its name, and its source on the line below, indented
+    let res(name, source) = stack(spacing: 0.65em, name, pad(left: 1em, source))
+    let rule = table.hline(stroke: 0.25pt)
     table(
-    columns: (25%, 21%, 27%, 27%),
+    columns: (23%, 17.5%, 20%, 38%),
     stroke: none,
     align: left + horizon,
-    inset: (x: 4pt, y: 4.5pt),
+    inset: (x: 3.5pt, y: 5pt),
     table.hline(stroke: 0.6pt),
-    [Result], [Code], [Proximity parameter $delta$], [Error],
+    [Result], [Code], [$delta$], [Error],
     table.hline(stroke: 0.4pt),
-    [@DKT26[Theorem 4.4]], [RS], [$delta <= 1 - sqrt(rho_-) - eta$], [$approx codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$, see @e:mca_error_dkt],
-    [@CWYZ26[Theorem 1.1]#super[$dagger$]], [RS], [$delta <= 1 - sqrt(rho) - eta$], [$4\/(eta dot |FF|)$ \ $+ thick 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$],
-    table.cell(rowspan: 2)[This work, @t:main_thm_informal], [any linear code], [$delta <= 1 - sqrt(1 - hamming(cal(C))) - eta$], [$(delta dot blockclength + 1)\/|FF|$],
-    [any $(delta, L)$-list \ decodable linear code], [any $delta in (0, hamming(cal(C)))$], [$(delta dot blockclength + 1)\/|FF|$],
-    [This work, @t:affine_main_0#super[$dagger$]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [$2\/|FF|$],
-    [@Zei26#super[$dagger.double$]], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
+    res[MCA][@DKT26[Thm 4.4]], [RS], [$delta <= 1 - sqrt(rho_-) - eta$], [$approx codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$, see @e:mca_error_dkt],
+    rule,
+    res[MCA, affine fold#super[†]][@CWYZ26[Thm 1.1]], [RS], [$delta <= 1 - sqrt(rho) - eta$, \ $text("    ")$ with $blockclength dot eta^2 >= 4\/rho$], [$4\/(eta dot |FF|)+ thick 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$],
+    rule,
+    res[BEEP][This work, @t:main_thm_informal[Thm]], [any linear code], [$delta <= 1 - sqrt(1 - hamming(cal(C))) - eta$], [$epsilon_(sans("BEEP"),1)$: $quad(M dot L)^3 dot epsilon_(sans("evader"))\/(delta dot blockclength + 1)^2$\ $epsilon_(sans("BEEP"),2)$: $quad (delta dot blockclength + 1)\/|FF|$ ],
+    rule,
+    res[BEEP][This work, @t:main_thm_informal[Thm]], [any $(delta, L)$-list \ decodable linear code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3 dot epsilon_(sans("evader"))\/(delta dot blockclength + 1)^2$\ $epsilon_(sans("BEEP"),2)$: $quad (delta dot blockclength + 1)\/|FF|$],
+    rule,
+    res[BEEP, affine fold#super[†]][This work, @t:affine_main_0[Thm]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3\/3 dot ((codedim + 1)\/|FF|)^numsamples$\ $epsilon_(sans("BEEP"),2)$: $quad 2\/|FF|$],
+    rule,
+    res[MCA#super[‡]][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
     table.hline(stroke: 0.6pt),
-    table.cell(colspan: 4, inset: (x: 4pt, top: 5pt, bottom: 0pt), text(size: 8.5pt)[
-      Here $eta > 0$ is a "slack" parameter, and for RS codes $rho$ is the rate and $rho_- := rho - 1\/blockclength$, so that $1 - hamming(cal(C)) = rho_-$. \
-      $dagger$ The folding challenges are affine polynomials, and one position of agreement may be lost. The bound of @CWYZ26 requires $blockclength dot eta^2 >= 4\/rho$, and ours requires $(delta dot blockclength + 2) dot (delta dot blockclength + 1) <= 2 dot |FF|$, with $L$ a list size for the RS code of dimension $codedim + 1$. \
-      $dagger.double$ About $gamma dot blockclength$ positions of agreement may be lost. With no loss ($gamma approx 1\/blockclength$), the error is $O(blockclength\/(eta dot |FF|))$, see @BCGM25.
+    table.cell(colspan: 4, inset: (x: 3.5pt, top: 5pt, bottom: 0pt), text(size: 8pt)[
     ]),
     )
   },
-  caption: [Bounds on the fraction of bad folding challenges when folding two words: known MCA errors, and the error $epsilon_(sans("BEEP"),2)$ of @t:main_thm_informal and of its affine version (@t:affine_main_0). For our results we assume that the first error $epsilon_(sans("BEEP"),1)$ ($kappa_1$ in @t:beep_soundness) is as small as needed, by taking the number $numsamples$ of DEEP samples as large as needed (in practice, between $2$ and $5$).],
+  placement: auto,
+  caption: [
+    Comaprison of known MCA error bounds with the errors from @t:main_thm_informal and its affine version @t:affine_main_0 (discussed below).  $blockclength$ is the code length and $codedim$ its dimension.
+    As long as $L$ is relatively small, the error $epsilon_(sans("BEEP"),1)$ can always be made arbitrarily small by taking a zero evader with $epsilon_(sans("evader"))$ small. For example, when $cal(C)$ is an RS code, the evader can consists on evaluating a codeword on $numsamples$ points, and then $epsilon_(sans("evader")) = ((codedim)/(|FF|))^numsamples$. 
+    $M$ is either $|FF|$ or an MCA bound for the code. In practice $m$ is $4$-$5$ when $M=|FF|$, and $2$ when setting $M$ to the MCA bound of @DKT26[Thm 4.4]. 
+     ]
 ) <tab:mca_comparison>
-]
+
 
 
 #paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, where $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and where for a code $cal(C)'$ of dimension $codedim$ and blocklength $blockclength$ we define
@@ -262,19 +275,20 @@ where $L_(interleavedcode(2))$ is a list size bound at radius $delta$ for $inter
 
 This IOR can then be composed with itself several times so as to obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_cal(C)$, where the output oracle is a linear combination of $k$ oracles. One can then compose this latter IOR with a code-switching IOR (as in WHIR @whir, Ligerito @ligerito, Blaze @blaze, etc.) or a standard spot check step as in Basefold, FRI-binius #aiedit[@basefold @fribinius], so as to replace the linear combination of oracles with a single oracle to a codeword in a new code. This can be repeated in order to obtain a "BEEP variant" of the cited IOPPs. See Section @s:BEEP_WHIR for details.
 
-#albert[Delete?] In Section @? we compare the soundness errors of Ligerito @ligerito and our BEEP version of it, as well as their runtimes and proof sizes. We provide a highlight of the results in #aiedit[@tab:measured_0]. An implementation of BEEP-Ligerito can be found in #link("https://github.com/worldfnd/BEEP"). #albert[Make sure tables are updated]
+
+//#albert[Delete?] In Section @? we compare the soundness errors of Ligerito @ligerito and our BEEP version of it, as well as their runtimes and proof sizes. We provide a highlight of the results in #aiedit[@tab:measured_0]. An implementation of BEEP-Ligerito can be found in #link("https://github.com/worldfnd/BEEP"). #albert[Make sure tables are updated]
 
 
-#figure(
-  exptable(11,
-    (table.cell(colspan: 2)[$lambda = 128$], table.cell(colspan: 3)[Ligerito (Flock)], table.cell(colspan: 3)[BEEP-Ligerito, $eta = #num("eta:lig")$], table.cell(colspan: 3)[BEEP-Ligerito, $eta = #num("eta:beep")$],
-     [size], [commit], [proof], [prove], [verify], [proof], [prove], [verify], [proof], [prove], [verify]),
-    "bits128"),
-  caption: [Proof sizes (KiB) and times (ms) at $128$ bits of security. "Prove" is the opening, without the commitment ("commit"), which all the variants share. $dagger$: a process of this row ran short of memory.],
-) <tab:measured_0>
+//#figure(
+//  exptable(11,
+//    (table.cell(colspan: 2)[$lambda = //128$], table.cell(colspan: 3)//[Ligerito (Flock)], table.cell//(colspan: 3)[BEEP-Ligerito, $eta = //#num("eta:lig")$], table.cell//(colspan: 3)[BEEP-Ligerito, $eta = //#num("eta:beep")$],
+//     [size], [commit], [proof], [prove], //[verify], [proof], [prove], //[verify], [proof], [prove], //[verify]),
+//    "bits128"),
+//  caption: [Proof sizes (KiB) and times //(ms) at $128$ bits of security. //"Prove" is the opening, without the //commitment ("commit"), which all the //variants share. $dagger$: a process of //this row ran short of memory.],
+//) <tab:measured_0>
 
 
-#paragraph[BEEP and affine folding.] #aiedit[The idea of using polynomials instead of field elements as challenges is from Polygero @polygero. There, the verifier combines the rows of a Ligero-like proximity test using, for each row, a random polynomial of degree at most $s$. The analysis of @polygero is an elementary counting argument (formalized in Lean), it uses neither out of domain samples nor list decoding, and it results in an error of about $1\/|FF|$ in the choice of challenge, with up to $s$ positions of agreement lost. It requires however $s$ to grow linearly with the block length, e.g. $s = 74$ for $blockclength = 25724$ over a $128$-bit field @polygero[Remark 2].] 
+#paragraph[BEEP and affine folding.] #aiedit[The idea of using polynomials instead of field elements as challenges is from Polygero @polygero. There, the verifier combines the rows of a Ligero-like proximity test using, for each row, a random polynomial of degree at most $s$. The analysis of @polygero is an elementary counting argument (formalized in Lean), it uses neither out of domain samples nor list decoding, and it results in an error of about $1\/|FF|$ in the choice of challenge, with up to $s$ positions of agreement lost. It requires however $s$ to grow linearly with the block length, e.g. $s = 74$ for $blockclength = 25724$ over a $128$-bit field @polygero[Remark 2].]  #albert[Review]
 
 #aiedit[In @CWYZ26 (where @polygero is referred to as concurrent work), the authors show that affine challenges $alpha(X)= sigma + tau dot X$, for $sigma, tau in FF$, are already enough.] They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for Reed-Solomon codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$ (assuming $blockclength dot eta^2 ≥ 4\/rho$), where one position of agreement may be lost @CWYZ26[Theorem 1.1]].
 
@@ -288,18 +302,21 @@ $
 In contrast to @CWYZ26, our analysis in the affine setting is elementary, amounting to about five pages, with half of them being a simple rephrasing for the affine setting of definitions and arguments already used in Section @s:better_pretenders. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree. In our case, what makes an elementary analysis possible with affine challenges are the out of domain samples and the list decodability of the code. ] #albert[Review] We note that we prove a different result than @CWYZ26 though. Roughly, @CWYZ26 proves that RS codes have MCA with a smaller error when using affine folding (up to the Johnson bound, and with one position of agreement loss). Our result, on the other hand, is the affine-variant of the DEEP technique,  and requires only list-decodability of the code.  
 
 
-#paragraph[Consequences.] We list some implications of our results:
-- *List-decodability is all you need.* One can build efficient code-based IOPPs, with minimal modifications to existing constructions, and derive its soundness from the list decodability of the underlying code. This allows to use codes that have good list decodability bounds, even if that is not (known to be) the case for MCA. \
+#paragraph[Consequences.] We list some implications of our results:\
+\
+ *List-decodability is all you need.* One can build efficient code-based IOPPs, with minimal modifications to existing constructions, and derive its soundness from the list decodability of the underlying code. This allows to use codes that have good list decodability bounds, even if that is not (known to be) the case for MCA. \
   
-  For RS codes in particular, it is enough to obtain good list decodability bounds beyond the Johnson bound.
-- *Code-agnostic IOPPs up to the Johsnon bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.
-- *Folding error bounds which improve upon those obtained solely with MCA* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a substantially smaller error, as shown in #aiedit[@?] #albert[Edit].
+  For RS codes in particular, it is enough to obtain good list decodability bounds beyond the Johnson bound.\
+\
+*Code-agnostic IOPPs up to the Johsnon bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
+\
+*Folding error bounds which improve upon those obtained solely with MCA* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. In practice this is a smaller error than in all prior results we are aware of, as shown in @tab:mca_comparison.
 
 
 == Use of AI and Lean formalization
 Most of this document was written without the use of AI, except for making small refactorings, and light edits. Sections @s:BEEP_WHIR and @s:affine were initially drafted with AI and heavily edited by us afterward.
 
-The novel results in this work were obtained through a long interactive process with an AI . We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently. Similarly, the experiments from Section @? #albert[Edit] were prepared with an AI and reviewed by us #albert[make sure this is the case].
+The novel results in this work were obtained through a long interactive process with an AI . We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
 
 == Acknowledgements
 
@@ -538,7 +555,7 @@ We proceed to prove @t:main_thm. We assume the notation of its hypothesis. // We
 
 //Let $c_1, c_2 in cal(C)$ be two (not necessarily distinct) codewords. The  #emph[line] in $cal(C)$ spanned by  $c_1,c_2$  is the set $cal(C)_(c_1,c_2):={c_1 + alpha dot c_2 | alpha in FF}$.  // Given a MCA-bad $alpha in FF$ and an $alpha$-pretender (w.r.t. $(u_1,u_2)$) $c in cal(C)$, we say $c$ is in the  
 
-The following result is well-known, see for example @?. We include a proof for completeness. 
+The following result is well-known, see for example @? #albert[citation]. We include a proof for completeness. 
 
 
 #lemma[A parameterized line contains few pretenders][
@@ -797,10 +814,14 @@ After the first round, if the state is $0$, we have $|A_z| < delta dot blockclen
 
 == Example PCS: BEEP-WHIR and BEEP-Ligerito<s:BEEP_WHIR>
 
-#albert[Add a BEEP-Basefold version too]
 
 
-For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C)')$, where $cal(C)'$ is a new linear code of the same dimension as $cal(C)$. The oracle part $oracle'$ output of this IOR consists of a single oracle, which is supposdly an oracle to a codewords from $cal(C)'$ (this is in constrast to @c:BEEP, where the output $oracle'$ is a linear combination of other oracles). One can then repeatedly apply this IOR in order to obtain an IOPP (or, more intuiviely, a PCS) for $cal(R)_(interleavedcode(k))$. The resulting IOPP is a ``BEEP variant'' of Ligerito @ligerito, or of WHIR @whir when using Reed-Solomon codes of different rates. One can equally envision BEEP variants of other code-based PCSs.
+For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C)')$, where $cal(C)'$ is a new linear code of the same dimension as $cal(C)$. The oracle part $oracle'$ output of this IOR consists of a single oracle, which is supposdly an oracle to a codewords from $cal(C)'$ (this is in constrast to @c:BEEP, where the output $oracle'$ is a linear combination of other oracles). One can then repeatedly apply this IOR in order to obtain an IOPP (or, more intuiviely, a PCS) for $cal(R)_(interleavedcode(k))$. The resulting IOPP is a ``BEEP variant'' of Ligerito @ligerito, or of WHIR @whir when using Reed-Solomon codes of different rates. 
+
+#remark[BEEP-Basefold and BEEP-FRI-Binius @basefold@fribinius][
+  One can equally envision BEEP variants of other code-based PCSs. For example, instead of performing the codeswitch step mentioned above, we could follow a more traditional approach where the spot checks made after repeatedly folding are verified by the verifier, rather than added as new terms to an ongoing sumcheck claim .  
+]
+
 
 
  We moslty follow the blueprint of the Zook paper @zook[Theorem 9.10] (though we do not consider zk in our case). Concretley, we first compose  @c:BEEP with itself $log k$ times, so as to obtain an IOR from  $cal(R)_(interleavedcode(k))$ to $cal(R)_(cal(C))$, and then we compose this IOR with a  the code-switching IOR from @zook, without zero-knowledge.
@@ -862,54 +883,6 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 ]
 
 
-#secretsection[
-  = Instantiation and Experiments <s:experiments>
-#aiedit[
-We instantiate @c:BEEP_codeswitch with Reed-Solomon codes over $"GF"(2^128)$, and we compare the resulting PCS, "BEEP-Ligerito", with Ligerito @ligerito at $128$ bits of security. Our code (research code, not audited), the raw outputs and the scripts that write every number below are in our repository #albert[ref to repo].
-
-#paragraph[BEEP-Ligerito.] We start from the implementation of Ligerito in Flock @flock. A message of $k dot codedim$ elements from $"GF"(2^128)$ is arranged in $k$ rows, each encoded with a Reed-Solomon code $cal(C)$ of rate $rho = 1\/2$. The rows are folded with $log k$ executions of @c:BEEP, and the folded message is committed with a code of smaller rate and queried, as in @c:BEEP_codeswitch, until the message is short. As zero evader we take $numsamples$ independent samples of the multilinear evader, with error $epsilon_"evader" = (log_2 e \/ |FF|)^numsamples$ on messages with $e$ entries. We take $delta = 1 - sqrt(rho) - eta$ for a small "slack" $eta > 0$, so that $cal(C)$ and its interleavings are $(delta, L)$-list decodable with $L = floor(1 \/ (2 dot eta dot sqrt(rho)))$ (see #albert[fill in]).
-
-#paragraph[The error of a fold.] The proof of @t:beep_soundness goes through with any integer $t >= floor(delta dot blockclength) + 2$ in place of $delta dot blockclength + 2$ (this threshold of @t:main_thm only appears in the analysis, and agreement is counted in positions). The first two rounds of @c:BEEP have errors
-$
-kappa_1(t) = ((|FF| dot L)^3 dot epsilon_"evader") / (t dot (t-1) dot (t - floor(delta dot blockclength) - 1)), quad quad kappa_2(t) = (t - 1 + 2 dot L) / (|FF|).
-$
-We count $g$ bits of proof of work ("grinding") on a challenge as $g$ bits of security, as it is usual in practice @whir @flock. For a target of $lambda$ bits we take, for each $numsamples$, the least $t$ with $kappa_1(t) <= 2^(-lambda)$, and then the least $numsamples$ for which $kappa_2(t)$ needs the fewest whole bits of grinding.
-
-@tab:errors shows these errors for $lambda = 128$, next to the error of a fold round of Ligerito under MCA. For the latter we take the bound of @DKT26[Theorem 4.4] on the number of MCA-bad challenges, which improves that of @BCHKS25[Theorem 4.6] and holds as well for interleaved codes @DKT26[Corollary 6.6], plus the term $2 dot L \/ |FF|$ of $kappa_2$.
-
-#figure(
-  exptable(10,
-    (table.cell(colspan: 3)[first code], table.cell(colspan: 3)[Ligerito (fold with MCA)], table.cell(colspan: 4)[BEEP-Ligerito, $eta = #num("eta:beep")$],
-     [size], [$k$], [$blockclength$], [fold, $eta = #num("eta:lig")$], [fold, $eta = #num("eta:beep")$], [queries, $eta = #num("eta:lig")$], [$numsamples$], [round 1], [round 2], [queries]),
-    "errors"),
-  caption: [Bits of security ($-log_2$ of the error) of the first fold round before grinding, over a field with $2^128$ elements. A message of the given size has $k$ rows, encoded at rate $1\/2$ with block length $blockclength$. "Round 1", "round 2": $kappa_1(t)$, $kappa_2(t)$. "Queries": the least $Q$ with $(1-delta)^Q <= 2^(-112)$ (#num("params:qgrind") bits of grinding).],
-) <tab:errors>
-
-The second round of BEEP has #num("err:beep2") bits, so it reaches $128$ bits with #num("err:beep-grind-1") bits of grinding, and its small $eta$ gives #num("err:q-beep") queries in place of #num("err:q-lig"). With MCA, a fold round has #num("err:lig02") bits at $eta = #num("eta:lig")$ and #num("err:lig001") bits at $eta = #num("eta:beep")$. Reaching $128$ bits at $eta = #num("eta:lig")$ would take #num("err:lig-grind-1") bits of grinding in that round, or a larger field: Flock uses $"GF"(2^256)$. (Flock's own analysis @flock[Appendix C.3] uses the bound of @BCHKS25[Theorem 4.6] times $k\/2$, a union bound over pairs of rows, which gives #num("err:flock-less") bits less at $eta = #num("eta:lig")$.)
-
-#paragraph[Measurements.] We open commitments to messages of #num("sizes:first") to #num("sizes:last") field elements. _Ligerito (Flock)_ is Flock's Ligerito as it ships, with $eta = #num("eta:lig")$ (for #num("sizes:first") elements Flock ships no parameters, and we take the ones that its derivation gives). Its fold challenges are in $"GF"(2^256)$, and it commits to each folded message as two messages over $"GF"(2^128)$. _BEEP-Ligerito_ has all its challenges in $"GF"(2^128)$, and $numsamples$ and $t$ as above. It has Flock's number of rows per level, and #num("ladder:levels") levels of rates $1\/2$, $1\/8$, $1\/32$, etc., so that its codewords are as long as Flock's at every level. We run it with $eta = #num("eta:beep")$, and also with Flock's $eta = #num("eta:lig")$.
-
-@tab:measured has medians of #num("run:reps") repetitions on an #num("run:cpu") laptop (#num("run:memory-gb") GB, #num("run:threads") threads), with proofs of work at their expected cost. Measured again, the prover times moved by up to #num("run:noise-pct")~% and the verifier times by up to #num("run:verify-noise-pct")~%.
-
-#figure(
-  exptable(11,
-    (table.cell(colspan: 2)[$lambda = 128$], table.cell(colspan: 3)[Ligerito (Flock)], table.cell(colspan: 3)[BEEP-Ligerito, $eta = #num("eta:lig")$], table.cell(colspan: 3)[BEEP-Ligerito, $eta = #num("eta:beep")$],
-     [size], [commit], [proof], [prove], [verify], [proof], [prove], [verify], [proof], [prove], [verify]),
-    "bits128"),
-  caption: [Proof sizes (KiB) and times (ms) at $128$ bits of security. "Prove" is the opening, without the commitment ("commit"), which all the variants share. $dagger$: a process of this row ran short of memory.],
-) <tab:measured>
-
-#paragraph[Results.] BEEP-Ligerito stays over $"GF"(2^128)$. With Flock's $eta = #num("eta:lig")$, its proofs are #num("128e:size-saving-pct")~% smaller than those of Ligerito (Flock): it makes fewer queries after the first level (smaller rates), and at #num("128:fewer-levels") of the #num("sizes:count") sizes it has fewer levels. Its prover takes #num("128e:prove-ratio") times as long, and its verifier #num("128e:verify-ratio") times (the ratios of times leave out the row with a $dagger$).
-
-With $eta = #num("eta:beep")$ it makes $numsamples = #num("params:m-128")$ samples per fold round, with #num("128:fold-grind-log2") bits of grinding per fold challenge ($kappa_3$ of @t:beep_soundness included). It also makes fewer queries at the first level, and its proofs are #num("128:size-saving-pct")~% smaller. Its prover takes #num("128:prove-ratio") times as long, with #num("128:fold-pow-share-pct")~% of its time in the grinding of its fold challenges, and its verifier #num("128:verify-ratio") times.
-
-#paragraph[Ligerito over $"GF"(2^128)$.] Ligerito can also keep its fold challenges in $"GF"(2^128)$, with a proof of work on each of them for the MCA error of @tab:errors (we implemented it as BEEP-Ligerito without the samples). At $eta = #num("eta:lig")$ this takes $2^x$ hashes per proof, with $x$ from #num("mca128:0.02:fold-hashes-log2"), against #num("128:fold-hashes-log2") for BEEP-Ligerito. Its prover then takes #num("mca128:0.02:expected-ms:14") ms for $2^(14)$ elements and #num("mca128:0.02:expected-ms:16") ms for $2^(16)$, against #num("128:prove-ms:14") and #num("128:prove-ms:16") ms, and for #num("sizes:last") elements the searches alone would take about #num("mca128:0.02:search-min-last") minutes on our machine. A larger $eta$ needs fewer hashes and more queries: at $eta = 0.1$, $x$ is #num("mca128:0.1:fold-hashes-log2") and the proofs are #num("mca128:0.1:size-more-pct")~% larger than those of BEEP-Ligerito.
-
-#paragraph[Lower security levels.] The situation is different when the field has bits to spare. At $lambda = #num("low:bits")$, Ligerito over $"GF"(2^128)$ with $eta = #num("low:eta")$ needs at most #num("low:fold-hashes-max") hashes per proof on its fold challenges. Its proofs are then as large as those of BEEP-Ligerito (within #num("low:size-diff-pct")~%), and the prover of BEEP-Ligerito takes #num("low:prove-ratio") times as long, because of the samples.
-
-We stress that Ligerito (Flock) differs from BEEP-Ligerito in its levels, in an out of domain sample on its first commitment and in its prover, and it is unclear to us whether the two provers are at a comparable level of optimization. We also do not include in this comparison the affine fold of @CWYZ26, which keeps the fold challenges in $"GF"(2^128)$ as well, for Reed-Solomon codes.
-]
-]
 
 = BEEP with affine folding for Reed-Solomon codes<s:affine>
 
@@ -1116,7 +1089,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 
 
-= Batch version<s:high_arity>
+= High arity BEEP<s:high_arity>
 
 == Zero-evaders
 
@@ -1129,7 +1102,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 
-#albert[it would be good to add an example of how a zero evader would look like for a nontrivial family of subspaces. i think some readers will replace the subspace by a tuple of codewords after staring at the definition]
+#albert-postponable()[it would be good to add an example of how a zero evader would look like for a nontrivial family of subspaces. i think some readers will replace the subspace by a tuple of codewords after staring at the definition]
 
 #remark[
   In a given basis $φ_z$ is a $m × n$ matrix such that $φ_z (𝐯) = φ_z · 𝐯$. When $m=1$ we call it a _scalar zero evader_.
@@ -1143,7 +1116,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 
 ]
 
-#lemma[Few folding vectors lie in a subspace][  #albert[Are Lemma 31, 33, 34 needed here? If not they could be placed after the statement of the main thm]
+#lemma[Few folding vectors lie in a subspace][  #albert-postponable[Are Lemma 31, 33, 34 needed here? If not they could be placed after the statement of the main thm]
   Let $(ψ_z)_(z ∈ 𝒵)$ be a scalar zero evader on $𝔽^n$ with error bounds $ε_d$. 
   For every $j$-dimensional subspace $H ⊂ 𝔽^n$ with $0 ≤ j < n$,
   $
@@ -1151,7 +1124,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 #proof[
- #albert[it was not clear to me what $psi in H$ means] The condition $ψ_s ∈ H$ is equivalent to $H^⟂ ⊆ ker ψ_s$ and $dim H^⟂ = n - j$. The result follows from the definition of $ε_(n - j)$.
+ #albert-postponable[it was not clear to me what $psi in H$ means] The condition $ψ_s ∈ H$ is equivalent to $H^⟂ ⊆ ker ψ_s$ and $dim H^⟂ = n - j$. The result follows from the definition of $ε_(n - j)$.
 ]
 #corollary[
   Given $S ⊆ 𝒵$ such that $abs(S) > abs(𝒵) ε_1$, the family $(ψ_z)_(z ∈ S)$ contains a basis for $𝔽^n$.
@@ -1163,7 +1136,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 #definition[Univariate evader][
   Define the $m$-sample _univariate evader_ with index family $𝒵 ≔ 𝔽^m$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_m)$ as the map given by the $m × n$ Vandermonde matrix on $𝐳$.
 ]
-
+#secretsection[
 #lemma[
   The $m$-sample univariate zero evader has error bounds
   $
@@ -1171,8 +1144,8 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $ 
 ]
 
-#proof[To do.]
-
+#proof[To do.] #albert-postponable[Prove]
+]
 #remark[
   We do not require the $z_i$ to be distinct. When applied to message coordinates, the univariate zero evader matches the $m$-repeated out of domain samples in WHIR @whir, and the codeword queries in the Reed-Solomon instantiation of Ligerito @ligerito, etc.
 ]
@@ -1184,6 +1157,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 
+#secretsection[
 #lemma[
   For $1 ≤ d ≤ n$ let $r = ceil(log_2 n) - floor(log_2 d)$. The multilinear evader
   has error bounds
@@ -1192,8 +1166,8 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 
-#proof[To do.]
-
+#proof[To do.] #albert[prove]
+]
 
 #definition[Product zero evader][
   For $j ∈ [k]$, let $ψ^j_(z_j) : 𝔽^(b_j) → 𝔽$
@@ -1262,10 +1236,10 @@ With the consistency check added, we define bad seeds as those that let pretende
 The main theorem is that for uniform random checking seed $z$, the set of bad folding seeds is bounded.
 
 #theorem[The bad set is likely small][
-  Let $β = ceil(δ n) N ε^fold_1$ then $abs(A_z) ≤ E$ and for any $β < t ≤ E$, #albert[I would only use falling factorial notation inside the proof. Also I'd define $beta$ only inside the proof, no reason to have it in the statement IMO] 
+  Let $β = ceil(δ n) N ε^fold_1$ then $abs(A_z) ≤ E$ and for any $β < t ≤ E$, #albert-postponable[I would only use falling factorial notation inside the proof. Also I'd define $beta$ only inside the proof, no reason to have it in the statement IMO] 
 
   
-  #albert[We should make very clear that we don't necessarily need E to be small, i.e. we can set it to $N$ so we don't need MCA at all]
+  #albert-postponable[We should make very clear that we don't necessarily need E to be small, i.e. we can set it to $N$ so we don't need MCA at all]
   $
     Pr_(z ← 𝒵\ check)[ abs(A_z) ≥ t] ≤ 
         ((E)_(b+1) L^(b+1) ε^check_1) /
