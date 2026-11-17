@@ -208,7 +208,7 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 
 
-We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:affine_main_0 where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:affine_main_0.
+We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:main_thm_informal where we fold more than two words at the same time, with several other generalizations. We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:main_thm_informal.
 
 
 In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors. We also include the affine version of our result (@t:affine_main_0), which we discuss later.
@@ -894,14 +894,12 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 #let Cpair = $cal(C)_theta^(equiv 2)$
 
 
-As we mentioned, in the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. We refer to @s:contributions for more details on @polygero@CWYZ26.
+As we mentioned, in the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. We refer to  Section @s:contributions for more details on @polygero@CWYZ26.
 
-In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0). In practical terms this can, for example, reduce the amount of grinding required, if any, in @c:BEEP and @c:BEEP_codeswitch.
-Our proofs are elementary and essentially only require tweaking the definitions and adapting @l:few_bad_points_on_line to this new setting. This contrasts with the technical complexity in @CWYZ26. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree (see the introduction).] #albert[Review] We emphasize that these techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold.
+In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0). We emphasize that these techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold. 
 
-We stress that in this section we only provide an alternative to the result of @CWYZ26, i.e. a bound on the number of bad challenges of an affine fold, which in our case relies on out of domain samples (@t:affine_main_0). As in @CWYZ26, we do not formally describe a full PCS that uses affine folds, and only discuss some aspects of that in @r:affine_pairs. See #aiedit[@CWYZ26[Section 5]] for more details. #albert[check how many details they give]
-
-We only mention one point to keep in mind when using @t:affine_main_0. As we explain below, for affine folds we consider Correlated Agreement with a set of pairs of codewords $Cpair$, which is slightly larger than the interleaved code $interleavedcode(2)$ of the Reed-Solomon code $cal(C)$ at hand. In @r:affine_pairs we briefly explain how to obtain Correlated Agreement with $interleavedcode(2)$ instead, following @CWYZ26[Section 5].
+In  @r:affine_pairs we briefly outline how an IOPP using @t:affine_main_0 would look like, following  #aiedit[@CWYZ26[Section 5]]. 
+We only mention one point to keep in mind when using @t:affine_main_0. In particular, we address one tehcnical subtlety of @CWYZ26 and our result. This is that both results consider Correlated Agreement with a set of pairs of codewords $Cpair$, which is slightly larger than the interleaved code $interleavedcode(2)$ of the Reed-Solomon code $cal(C)$ at hand.  @r:affine_pairs discusses how to obtain Correlated Agreement with $interleavedcode(2)$, which is a technique presented in @CWYZ26[Section 5].
 
 == Affine pretender codewords and consistency
 
@@ -1188,7 +1186,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 
 We start by fixing notation. Let $𝔽$ be a finite field of size $q = abs(𝔽)$. We denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$. We let $ℓ$ be the message length, $n$ the code length, $b$ the folding size and $m$ the check size. Let $𝒞 ⊆ 𝔽^n$ be a code of dimension $ℓ$ that is $(δ, L)$-list decodable and has MCA bound $E$.
 
-We use three zero evaders, one for folding, one for checking and one for batching. For folding we use a scalar zero evader $ψ_s ∈ 𝔽^(1 × b)$ with seeds $s ∈ 𝒵_fold$ and error bounds $ε^fold_d$. We abbreviate $N = abs(𝒵_fold)$. For checking we use a zero evader $φ_z ∈ 𝔽^(m × ℓ)$ with seeds $z ∈ cal(Z)_check$ and error bounds $ε^check_d$. We define $hat(φ)_z ∈ 𝔽^(m × n)$ as $φ_z Enc_𝒞^(-1)$, where $Enc_𝒞^(-1)$ is a left inverse of $Enc_𝒞$. For batching we use a scalar zero evader $γ_z ∈ 𝔽^(1 × (m + 1))$ with seeds $z ∈ 𝒵_batch$ and error bounds $ε^batch_d$.
+We use two zero evaders, one for folding and one for checking. For folding we use a scalar zero evader $ψ_s ∈ 𝔽^(1 × b)$ with seeds $s ∈ 𝒵_fold$ and error bounds $ε^fold_d$. We abbreviate $N = abs(𝒵_fold)$. For checking we use a zero evader $φ_z ∈ 𝔽^(m × ℓ)$ with seeds $z ∈ cal(Z)_check$ and error bounds $ε^check_d$. We define $hat(φ)_z ∈ 𝔽^(m × n)$ as $φ_z Enc_𝒞^(-1)$, where $Enc_𝒞^(-1)$ is a left inverse of $Enc_𝒞$.
 
 #albert-postponable[seed sounds strange to me, but i think we havent established any name for z yet. we should do that when defining zero evaders. maybe "sample seeds"?]
 
@@ -1236,7 +1234,7 @@ The main theorem is that for uniform random checking seed $z$, the set of bad fo
   
   #albert-postponable[We should make very clear that we don't necessarily need E to be small, i.e. we can set it to $N$ so we don't need MCA at all]
   $
-    Pr_(z ← 𝒵\ check)[ abs(A_z) ≥ t] ≤ 
+    Pr_(z ← 𝒵_check)[ abs(A_z) ≥ t] ≤ 
         ((E)_(b+1) L^(b+1) ε^check_1) /
     ((t - β) product_(d ∈ [b]) (t - N ε^fold_d)).
   $
@@ -1248,7 +1246,7 @@ In particular, for sumcheck folding we obtain a bound cubic in the list size.
   Sumcheck rounds fold using a multilinear evader $ψ_α = (1-α, α)$, so we have $b = 2$, $N = q$, $ε^fold_1 = 1/q$ and $ε^fold_2 = 0$ and hence for $t > ceil(δ n)$,
   
   $
-    Pr_(z ← 𝒵\ check)[ abs(A_z) ≥ t] ≤ 
+    Pr_(z ← 𝒵_check)[ abs(A_z) ≥ t] ≤ 
         ((E)_3 L^3 ε^check_1) /
     (t (t - 1) (t - ceil(δ n))).
   $
@@ -1256,17 +1254,17 @@ In particular, for sumcheck folding we obtain a bound cubic in the list size.
 
 === Proof of @thm:main_batch
 
-We will show that $b$ linearly independent folding vectors #albert[folding zero evaders?], together with their codewords, determine a unique explanation $D$ #albert[not defined?]. An additional codeword can contradict that explanation; any fixed such collection #albert[not sure what such refers to here :)] passes checking with probability at most $ε^check_1$.
+We will show that $b$ linearly independent folding vectors#albert[folding zero evaders?], together with their codewords, determine a unique explanation $D$#albert[not defined?]. An additional codeword can contradict that explanation; any fixed such collection #albert[not sure what such refers to here :)] passes checking with probability at most $ε^check_1$.
 
 #lemma[Explanation][
   Let $ψ_s_1, …, ψ_s_b$ form a basis #albert[why does the set of evader have dimension b?] and let $𝐜_1, …, 𝐜_b ∈ 𝒞$. They determine a unique $D ∈ 𝒞^b$ satisfying $ψ_s_i D = 𝐜_i$. If these pairs each satisfy the checking equation @eq:consistency, then $D hat(φ)_z^⊤ = B(z)$. #albert[I think $psi_s$ and $phi_z$ may look to similar. I'd use $psi^(sans("fold"))_s$ and $psi^(sans("sample"))_z$ or something of the likes]
 ]<thm:explanation>
 #proof[
-  Since $ψ_s_i$ form a basis, the system $ψ_s_i D = 𝐜_i$ for $i ∈ [d]$ has a unique solution $D$. It's rows are linear combinations of $𝐜_i$ so $D ∈ 𝒞^b$. For $i ∈ [b]$ we have $ψ_s_i (D hat(φ)_z^⊤ - B(z)) = 𝟎$ and since $ψ_s_i$ form a basis it follows $D hat(φ)_z^⊤ - B(z) = 𝟎$.
+  Since $ψ_s_i$ form a basis, the system $ψ_s_i D = 𝐜_i$ for $i ∈ [b]$ has a unique solution $D$. Its rows are linear combinations of $𝐜_i$ so $D ∈ 𝒞^b$. For $i ∈ [b]$ we have $ψ_s_i (D hat(φ)_z^⊤ - B(z)) = 𝟎$ and since $ψ_s_i$ form a basis it follows $D hat(φ)_z^⊤ - B(z) = 𝟎$.
 ]
 
 #lemma[Contradiction][
-  Fix the $b$ pairs #albert[it would be good to explicitly refer to the pairs or to say instead "assuming the notation of Lemma 44"] from @thm:explanation and their explanation $D$ , independently of $z$. Fix an additional pair $(s, 𝐜)$ with $𝐜 ∈ 𝒞$ and $𝐜 ≠ ψ_s D$. If all $b+1$ pairs satisfy @eq:consistency, then $(𝐜 - ψ_s D) hat(φ)_z^⊤ = 𝟎$. The probability over $z ← 𝒵_check$ of this event is at most $ε^check_1$.
+  Fix the $b$ pairs #albert[it would be good to explicitly refer to the pairs or to say instead "assuming the notation of Lemma 44"] from @thm:explanation and their explanation $D$, independently of $z$. Fix an additional pair $(s, 𝐜)$ with $𝐜 ∈ 𝒞$ and $𝐜 ≠ ψ_s D$. If all $b+1$ pairs satisfy @eq:consistency, then $(𝐜 - ψ_s D) hat(φ)_z^⊤ = 𝟎$. The probability over $z ← 𝒵_check$ of this event is at most $ε^check_1$.
 ]<thm:contradiction-check>
 #proof[
   If all checking equations hold, the preceding lemma gives $D hat(φ)_z^⊤ = B(z)$. Therefore
@@ -1306,7 +1304,7 @@ We now count collections that contradict their explanation while passing all che
 
 #lemma[Upper bound][
   $
-     limits(𝔼)_(z ← cal(Z)\ check) [M(z)] ≤ (E)_(b+1) L^(b+1) ε^check_1.
+     limits(𝔼)_(z ← cal(Z)_check) [M(z)] ≤ (E)_(b+1) L^(b+1) ε^check_1.
   $
 ]
 #proof[
@@ -1338,7 +1336,7 @@ We now count collections that contradict their explanation while passing all che
   $
   Taking expectations and applying the upper bound lemma gives
   $
-    Pr_(z ← 𝒵\ check)[abs(A_z) ≥ t] (t - β) product_(d ∈ [b]) (t - N ε^fold_d) ≤ (E)_(b+1) L^(b+1) ε^check_1.
+    Pr_(z ← 𝒵_check)[abs(A_z) ≥ t] (t - β) product_(d ∈ [b]) (t - N ε^fold_d) ≤ (E)_(b+1) L^(b+1) ε^check_1.
   $
   The result follows from dividing by the positive left hand factors.
 ]
@@ -1369,7 +1367,7 @@ where $L_j$ is the list size bound of the intermediate interleaved code $C^(≡r
 #theorem[Composition conjecture][
   For $t_j > β_j$, we have
   $
-    Pr_(z ∈ 𝒵\ check)[
+    Pr_(z ∈ 𝒵_check)[
       abs(A_z)/(product_(j ∈ [k]) N_j) ≥ sum_(j ∈ [k]) t_j / N_j
     ] ≤ sum_(j ∈ [k]) p_j (t_j)
   $
@@ -1380,7 +1378,7 @@ If all the $b_j$, $N_j$, $ε^((d))_j$ and $t_j$ are the same (but not necessaril
 #theorem[Homogenous composition conjecture][
   For $t > β$, we have
   $
-    Pr_(z ∈ 𝒵\ check)[
+    Pr_(z ∈ 𝒵_check)[
       abs(A_z)/N^k ≥ (k t) / N
     ] ≤ 1/k sum_(j ∈ [k]) p_j (t)
   $
