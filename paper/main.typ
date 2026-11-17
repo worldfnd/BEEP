@@ -3,7 +3,7 @@
 
 #show: trivial.init
 #show: template.with(
-  title: "BEEP: Better Elimination of Pretenders",
+  title: "BEEP: Folding from List Decoding with Better Elimination of Pretenders",
   authors: (
     (
       name: "Remco Bloemen",
@@ -95,11 +95,11 @@
 // Abstract 
 #abstract[
   
-  We present an improved soundness analysis of the DEEP technique for linear codes @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for all  parameters typically used in practice. 
-  The modification consists simply in performing $m$ DEEP samples, instead of one. The resulting  DEEP sampling decreases exponentially with $m$, and in practice $2$-$5$ makes it tiny. The subsequent folding error is of $(delta dot n +1)\/|FF|$, for $delta$ a proximity parameter and $n$ the code length.
+  We present an improved soundness analysis of the DEEP technique for linear codes @deep (after a minor modification), which, unlike its predecessor, results in negligible error bounds for   parameters typically used in practice. 
+  The modification consists simply in performing $m$ DEEP samples, instead of one. The resulting  DEEP sampling error decreases exponentially with $m$, and in practice $2$-$5$ makes it tiny. The subsequent folding error is of $(delta dot n +1)\/|FF|$, for $delta$ a proximity parameter and $n$ the code length.
    
   
-  We  modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of Mutual Correlated Agreement (MCA), with smaller soundness errors than their counterparts. This potentially allows to use smaller fields, less grinding, and proximity parameters closer to known bound such as the Johnson bound, possibly improving proof sizes and speed. 
+  We  modify typical code-based IOPPs with this technique, such as WHIR, Ligerito, etc. @whir @ligerito. As a result, we obtain code-based IOPPs that only require list decodability of the underlying codes, instead of Mutual Correlated Agreement (MCA), with smaller soundness errors than their counterparts. The latter potentially allows to use smaller fields, less grinding, and proximity parameters closer to known bound such as the Johnson bound, possibly improving proof sizes and speed. 
   
   Further, since it does not rely on MCA for its soundness, this improved DEEP technique allows to use #emph[arbitrary linear codes] in code-based IOPPs with $delta$ up to the Johnson bound. Additionally, this opens the door to using  codes (e.g. perhaps Reed-Solomon codes) with $delta$ beyond the Johnson bound, assuming the code is $delta$-list decodable, even if it does not have the $delta$-MCA property.
 
@@ -118,37 +118,37 @@
 
 = Introduction
 
-The soundness of most modern code-based Polynomial Commitment Schemes (PCSs) and IOPPs requires using codes satisfying the #emph[$delta$-Mutual Correlated Agreement (MCA) property] @whir, for a proximity parameter $delta$ as large as possible. A code $cal(C)$ with blocklength $blockclength$ and dimension $codedim$ is said to satisfy this property if, for any two words $u_1, u_2 in FF^blockclength$, for almost all $alpha in FF$, if $u_1+ alpha dot u_2$ agrees with a codeword $c$ from $cal(C)$ on a large set $S$ (concretely $|S|≥ (1-delta) dot blockclength$), then both $u_1$ and $u_2$ agree as well with codewords from $cal(C)$ on $S$. 
+The soundness of most modern code-based Polynomial Commitment Schemes (PCSs) and IOPPs requires using codes satisfying the #emph[$delta$-Mutual Correlated Agreement (MCA) property] @whir, usually for a proximity parameter $delta$ as large as possible. A code $cal(C)$ with blocklength $blockclength$ and dimension $codedim$ is said to satisfy this property if, for any two words $u_1, u_2 in FF^blockclength$, for almost all $alpha in FF$, if $u_1+ alpha dot u_2$ agrees with a codeword $c$ from $cal(C)$ on a large set $S$ (concretely $|S|≥ (1-delta) dot blockclength$), then both $u_1$ and $u_2$ agree as well with codewords from $cal(C)$ on $S$. 
 
-A related property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative Hamming distance $≤ delta$ from $u$.  There are examples of codes having good list decodability bounds, but not good MCA bounds, see  @Man26[Theorem 3], @KTZ26,  @deep[Lemma 22]. Conversely, @Man26[Theorem 4] provides examples of codes with good MCA bounds but superpolynomially large lists.
+A related property is that of list decodability. The code $cal(C)$ is #emph[$(delta, L)$-list decodable] if for any word $u in FF^blockclength$ there are at most $L$ codewords from $cal(C)$ at relative Hamming distance $≤ delta$ from $u$.  There are examples of codes having good list decodability bounds, but not good MCA bounds, see  @Man26[Theorem 3], @KTZ26,  @deep[Lemma 22]. Conversely, @Man26[Theorem 4] provides examples of codes with good MCA bounds but superpolynomially large lists #albert-postponable[wow check this].
 
 
 
-It is often easier to prove that a code $cal(C)$ is list decodable than that it has MCA. Indeed, it is known that all codes are $(delta, L)$-list decodable for $delta$ approaching the #emph[Johnson bound]. Concretely, for $delta = 1-sqrt(1 - hamming(cal(C))) - eta$, where $hamming(cal(C))$ is the relative minimum distance of $cal(C)$ and $eta >0$ is small, any linear code $cal(C)$ is $(delta, L)$-list decodable with $L = 1\/(2dot eta dot sqrt(1 - hamming(cal(C))))$ #aiedit[@Joh62 (see e.g. @deep[Theorem 20]).] 
+It is often easier to prove that a code $cal(C)$ is list decodable than that it has MCA. Indeed, it is known that all codes are $(delta, L)$-list decodable for $delta$ approaching the #emph[Johnson bound]. Precisely, for $delta = 1-sqrt(1 - hamming(cal(C))) - eta$, where $hamming(cal(C))$ is the relative minimum distance of $cal(C)$ and $eta >0$ is small, any linear code $cal(C)$ is $(delta, L)$-list decodable with $L = 1\/(2dot eta dot sqrt(1 - hamming(cal(C))))$ #aiedit[@Joh62 (see e.g. @deep[Theorem 20]).] 
 
-On the other hand,  linear codes in general are only known to have MCA up to the so-called 1.5 Johnson bound $1-(1-hamming(cal(C)))^(1\/3)$ @GKL24 @Zei26 @BCGM25, and this is known to be a tight bound #aiedit[@KTZ26 (see also @deep[Lemma 22])]. In contrast, Reed-Solomon (RS) codes are known to achieve MCA up to the Johnson bound #aiedit[@BCIKS20 @Hab25 @BCHKS25], and, it was shown recently, in some cases (for fields of large characteristic), MCA is attained  above such bound to some extent, on fields of large characteristic #aiedit[@DKT26 @Jer26]. The problem of whether RS codes achieve MCA (and list decodability) above Johnson bound, potentially all the way up to capacity, has recently received a great amount of attention and has undergone rapid development due to its practical and theoretical relevance#aiedit[, see the Proximity Prize @proximityprize (and #link("https://better.codes")[better.codes]), the survey @ABF26, and for example @CS25 @DG25 @BCHKS25 @GG25 @BCPZZ26 @Jer26 @Gab26 @DKT26 @DKTZ26 @Jo26].
+On the other hand,  linear codes in general are only known to have MCA up to the so-called 1.5 Johnson bound $1-(1-hamming(cal(C)))^(1\/3)$ @GKL24 @Zei26 @BCGM25, and this is known to be a tight bound #aiedit[@KTZ26 (see also @deep[Lemma 22])]. In contrast, Reed-Solomon (RS) codes are known to achieve MCA up to the Johnson bound #aiedit[@BCIKS20 @Hab25 @BCHKS25]. It was shown recently that in fields of large characteristic and for adequate prameters, RS codes attain  MCA  above the Johsnon  bound  #aiedit[@DKT26 @Jer26]. The problem of whether RS codes achieve MCA (and list decodability) above Johnson bound, potentially all the way up to capacity, has recently received a great amount of attention and has undergone rapid development due to its practical and theoretical relevance#aiedit[, see the Proximity Prize @proximityprize (and #link("https://better.codes")[better.codes]), the survey @ABF26, and for example @CS25 @DG25 @BCHKS25 @GG25 @BCPZZ26 @Jer26 @Gab26 @DKT26 @DKTZ26 @Jo26].
 
 
 As we mentioned, modern code-based IOPPs rely on the MCA (or the weaker CA#footnote[The notion of MCA was introduced relatively recently in @whir. Before that, researchers and practitioners used the weaker notion of Correlated Agreement (CA).] property #aiedit[@BCIKS20]) of their underlying codes in order to achieve soundness. Prior to that, before good enough MCA or plain CA results were known to hold, @deep proposed a technique called DEEP  (Domain Extending for Eliminating Pretenders), by which FRI #aiedit[@fri] (the seminal code-based IOPP) achieved soundness without needing CA or MCA to hold. Instead, @deep only asked for the underlying code (an RS code), to have good list decodability bounds, which, as we mentioned, all codes satisfy up to the Johnson bound. 
 
-#paragraph[The DEEP technique.] We explain the DEEP technique briefly. We focus on Reed-Solomon codes because they allow concretizing some otherwise slightly abstract concepts (namely, that of #emph[zero evader]). We note that the DEEP technique also applies to arbitrary linear codes, and so does our work. For the sake of intuition, we describe the DEEP technique as  an interactive protocol between a prover and a verifier, even though the actual relevant results establish a property of the code $cal(C)$, independently of any protocol built around it.
+#paragraph[The DEEP technique and MCA.] We explain the DEEP technique briefly. We focus on Reed-Solomon codes because they allow concretizing some otherwise slightly abstract concepts (namely, that of #emph[zero evader]). We note that the DEEP technique also applies to arbitrary linear codes, and so does our work. For the sake of intuition, we describe the DEEP technique as  an interactive protocol between a prover and a verifier, even though the actual relevant results establish a property of the code $cal(C)$, independently of any protocol built around it.
 
 
 
 Similarly as above, the DEEP technique also analyses the number of elements $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword $c in cal(C)$ on a large set $S$, while $u_1, u_2$ do not. The element $alpha in FF$ is called a #emph[folding challenge], and in practice it is sent by a verifier. We say $alpha$ is MCA-bad if the previous scenario holds ($u_1+ alpha dot u_2$ agrees on a large set $S$ but $u_1, u_2$ not), and then we call $c$ an #emph[$alpha$-pretender]. Additionally, before $alpha$ is sampled, in the DEEP technique, the verifier sends a so-called   #emph[DEEP sample point] $z in FF$, to which the prover replies with $b_1, b_2 in FF$, supposedly the evaluations at $z$ of codewords $c_1, c_2$ (which we think of polynomials) that are $delta$-close to $u_1, u_2$, respectively.  
 
-One can show (see @deep and Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$, there are negligibly many $alpha in FF$  such that 1) $alpha$ is MCA-bad; and 2) there is an $alpha$-pretender $c$ that, evaluated at $z$, equals $b_1 + alpha dot b_2$.  In @deep and in the present work, such bounds are obtained by  using only the list decodability of $cal(C)$, and not its MCA or CA (which may in any case not hold). We are not aware of any other results of this kind, even though plenty of prior work uses evauations at random points (called #emph[Out Of Domain (OOD)] samples) to pin  words to a single close codeword, but yet rely on CA or MCA to obtain soundness of their folding step, see e.g. @stir@whir@BCFW25@zook etc. #aiedit[DeepFold @deepfold adds a DEEP sample to each folding round of Basefold @basefold, and relies on the analysis of @deep for the soundness of its folds.] #albert[Review Deepfold]
+One can show (see @deep and Section @s:BEEP_fold) that in a typical IOPP including this DEEP sampling step,   soundness (more precisely, round-by-round knowledge soundness) follows by showing that, for most $z in FF$, there are negligibly many $alpha in FF$  such that: 1) $alpha$ is MCA-bad; and 2) there is an $alpha$-pretender $c$ that, evaluated at $z$, equals $b_1 + alpha dot b_2$.  In @deep and in the present work, such bounds are obtained by  using only the list decodability of $cal(C)$, and not its MCA or CA (which may in any case not hold). We are not aware of any other results of this kind, even though plenty of prior work uses evauations at random points (called #emph[Out Of Domain (OOD)] samples) to pin  words to a single close codeword. Even so, these works rely on CA or MCA to obtain soundness of their folding step, see e.g. @stir@whir@BCFW25@zook etc. #aiedit[DeepFold @deepfold adds a DEEP sample to each folding round of Basefold @basefold, and relies on the analysis of @deep for the soundness of its folds.] #albert[Review Deepfold]
 
 #remark[DEEP evaluations and OOD evaluations][
-  Above, we deliberately distinguished between DEEP sampling and OOD sampling. We understand the latter as the technique by which a word is pinned to a single close codeword by means of evaluating the word at a random point. The former is, informally, a technique by which evaluations of the two halves of a word are used to obtain an MCA-like property when folding these two halves.
-]
+  Above, we deliberately distinguished between DEEP sampling and OOD sampling. As we mentioned, we understand the latter as the technique by which a word is pinned to a single close codeword by means of evaluating the word at a random point. By DEEP sampling we refer to a technique by which evaluations of the two halves $u_1, u_2$ of a word $u$ are used to obtain an MCA-like property when folding these two halves.
+]<r:deep_ood>
 
 
-To the best of our understanding, the reason DEEP is not used in practice in folding  is because the soundness error bound $epsilon_(sans("DEEP"))$  obtained in @deep is too large for practical parameters. Concretely, @deep[Theorem 3] shows the following. Assume that $u_1, u_2$ do not agree with two codewords of $cal(C)$ on a common set of size $(1-delta-epsilon) dot blockclength$. Then the probability, over both $z$ and $alpha$, that some codeword $c$ at relative distance less than $delta$ from $u_1 + alpha dot u_2$ satisfies $c(z) = b_1 + alpha dot b_2$, is less than
+To the best of our understanding, the reason DEEP (in the sense of @r:deep_ood) is not used in practice  is because the soundness error bound $epsilon_(sans("DEEP"))$  obtained in @deep is too large for practical parameters. Concretely, @deep[Theorem 3] shows the following. Assume that $u_1, u_2$ do not agree with two codewords of $cal(C)$ on a common set of size $(1-delta-epsilon) dot blockclength$. Then the probability, over both $z$ and $alpha$, that some codeword $c$ at relative distance less than $delta$ from $u_1 + alpha dot u_2$ satisfies $c(z) = b_1 + alpha dot b_2$, is less than
 $
 epsilon_(sans("DEEP"))= max(2 dot L dot lr(( (codedim)/(|FF|) + epsilon  ))^(1/3), (4)/(epsilon^2 dot |FF|))
 $<e:original_deep_error>
-where $0<epsilon<1/3$ is a tunable parameter, and $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $codedim$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be well above $2^800$, which for practical purposes is far from the standard $128$-$256$ bit fields. Indeed, from #aiedit[$4\/(epsilon^2 dot |FF|) ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130\/epsilon^2$], and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so #aiedit[$|FF| ≥ 2^130\/epsilon^2 ≥ 2^(904) dot L^6$]. Further, in a wider protocol, $L$ appears as a linear factor in other error terms, which further limits the size $L$ one is able to tolerate.  
+where $0<epsilon<1/3$ is a tunable parameter, and $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $codedim$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be well above $2^800$, which for practical purposes is far from the standard $128$-$256$ bit fields. Indeed, from #aiedit[$4\/(epsilon^2 dot |FF|) ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130\/epsilon^2$], and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so #aiedit[$|FF| ≥ 2^130\/epsilon^2 ≥ 2^(904) dot L^6$]. 
 
 
 
@@ -161,14 +161,14 @@ On the other hand, today we have practical MCA results for Reed-Solomon codes up
 #aiedit[$
 epsilon'_(sans("RS-MCA")) := 1/(|FF|) dot (8 dot (r_- + 1\/2)^3)/(3 dot rho_-) dot blockclength,
 $<e:mca_error>]
-#aiedit[where $r_- := max(ceil(sqrt(rho_-)\/(2 dot eta)), 3)$. For practical rates (rangine from, say $1\/2$ to $1\/64$) and a small $eta$ (say $eta$ between $0.01$ and $0.001$) this is roughly $codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$ when $eta$ is small. ] 
+#aiedit[where $r_- := max(ceil(sqrt(rho_-)\/(2 dot eta)), 3)$. For practical rates (rangine from, say $1\/2$ to $1\/64$) and a small $eta$ (say $eta$ between $0.01$ and $0.001$) this is roughly $codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$. ] 
 
 
 == Our contributions<s:contributions>
 
 We describe the main results of this work.
 
-#paragraph[BEEP, an improvement to DEEP.] In this work we provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Concretely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. 
+#paragraph[BEEP, an improvement to DEEP.] We provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Concretely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. 
 
 We state our main result next, but before we generalize the notion of "an evaluation of a codeword" to arbitrary linear codes $cal(C)$, and not to just RS codes. 
 
@@ -252,10 +252,8 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
 ) <tab:mca_comparison>
 
 
-#remark[High arity BEEP][We also provide a variation (@thm:main_batch in Section @s:high_arity) of @t:main_thm_informal where we fold more than two words at the same time, with several other generalizations.  We present a proof based exclusively on the language of linear algebra, which provides an alternative and generalization to that of @t:main_thm_informal. 
+In Section @s:high_arity we provide a generalization and alternative proof of @t:main_thm_informal which relies solely on linear algebra. 
 
-However, we emphasize that this variant with higher arity is not used in our constructions, as it ultimately requires making more DEEP samples than repeatedly applying @t:main_thm_informal (as done in Section @s:BEEP_fold). 
-]
 
 #paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, where $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and where for a code $cal(C)'$ of dimension $codedim$ and blocklength $blockclength$ we define
   $ cal(R)_(cal(C)') := lr({
@@ -278,6 +276,7 @@ where $L_(interleavedcode(2))$ is a list size bound at radius $delta$ for $inter
 
 This IOR can then be composed with itself several times so as to obtain an IOR from $cal(R)_(interleavedcode(k))$ to $cal(R)_cal(C)$, where the output oracle is a linear combination of $k$ oracles. One can then compose this latter IOR with a code-switching IOR (as in WHIR @whir, Ligerito @ligerito, Blaze @blaze, etc.) or a standard spot check step as in Basefold, FRI-binius #aiedit[@basefold @fribinius], so as to replace the linear combination of oracles with a single oracle to a codeword in a new code. This can be repeated in order to obtain a "BEEP variant" of the cited IOPPs. See Section @s:BEEP_WHIR for details.
 
+We note that, following @BCFW25, the codes used in this IOPP need not have an efficient decoding algorithm. 
 
 //#albert[Delete?] In Section @? we compare the soundness errors of Ligerito @ligerito and our BEEP version of it, as well as their runtimes and proof sizes. We provide a highlight of the results in #aiedit[@tab:measured_0]. An implementation of BEEP-Ligerito can be found in #link("https://github.com/worldfnd/BEEP"). #albert[Make sure tables are updated]
 
@@ -295,7 +294,7 @@ This IOR can then be composed with itself several times so as to obtain an IOR f
 
 In Section @s:affine, we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial, for RS codes. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $epsilon_(sans("BEEP"),1)$ #aiedit[becomes $(|FF| dot L)^3\/3 dot ((codedim+1)\/|FF|)^numsamples$ (the factor $1\/(delta dot blockclength +1)^2$ is replaced by $1\/3$, and $L$ is a list size for the Reed-Solomon code of dimension $codedim+1$)], while the folding error $epsilon_(sans("BEEP"),2)$ becomes, in most settings,
 $
-epsilon_(sans("affine-BEEP"),2) = 2\/|FF|,
+epsilon_(sans("affine-BEEP"),2) = 2\/|FF|.
 $
 #aiedit[As in @CWYZ26@polygero, one position of agreement may be lost.]
 
@@ -320,7 +319,7 @@ We do not describe an IOPP using the affine-BEEP technique, and leave that for f
 == Use of AI and Lean formalization
 This document was initially written without the use of AI, except for sections @s:BEEP_WHIR and @s:affine, which were initially drafted with AI and were substantially edited by us afterward. In the final stages, we used AI to edit and polish the text.  We chose this approach with the intention of creating a text which is as amenable to human readers as reasonably possible.
 
-The novel results in this work were obtained through a long interactive process with an AI. We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
+The novel results in this work were obtained through an interactive process with an AI. We had an AI formalize our main results (@t:main_thm and @t:affine_main_0) in Lean (see #link("https://github.com/worldfnd/BEEP")), and the corresponding Lean statements were reviewed by us subsequently.
 
 == Acknowledgements
 
@@ -1088,13 +1087,13 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 
 
-= High arity BEEP via linear algebra<s:high_arity>
+= An alternative and more general proof of t:main_thm via linear algebra<s:high_arity>
 
-<<<<<<< HEAD
-In this section we present the BEEP proof in an alternative way where folding is an arbitrary random linear map, structured as a zero-evader.
-=======
-We emphasize that the result obtained in this Section is not used in the IOR and IOPP  constructions from Section @s:BEEP_fold. This is because, as it stands, applying the BEEP IOR (@c:BEEP) at every sumcheck round requires less DEEP samples than having one big DEEP sampling step before every full sumcheck. 
->>>>>>> ad45590 (paper and lean)
+
+In this section we present the  proof of @t:main_thm in an alternative way where folding is an arbitrary random linear map, structured as a zero-evader.
+
+//We emphasize that the higher arity instantiation of this result  is  not used in the IOR and IOPP  constructions from Section @s:BEEP_fold. This is because, as it stands, applying the BEEP IOR (@c:BEEP) at every sumcheck round requires less DEEP samples than having one big DEEP sampling step before every full sumcheck. 
+
 
 == Zero-evaders
 
@@ -1107,7 +1106,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   $
 ]
 
-#albert-postponable()[it would be good to add an example of how a zero evader would look like for a nontrivial family of subspaces. i think some readers will replace the subspace by a tuple of codewords after staring at the definition]
+#albert-postponable[it would be good to add an example of how a zero evader would look like for a nontrivial family of subspaces. i think some readers will replace the subspace by a tuple of codewords after staring at the definition]
 
 #remark[
   In a given basis $φ_z$ is a $m × n$ matrix such that $φ_z (𝐯) = φ_z · 𝐯$. When $m=1$ we call it a _scalar zero evader_.
@@ -1137,6 +1136,7 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 ] <thm:ze-basis>
 #proof[
   If their span had dimension $j < n$ we would have a contradiction $abs(S) ≤ abs(𝒵) ε_(n - j) ≤ abs(𝒵) ε_1$.
+]
 ]
 
 #definition[Univariate evader][
