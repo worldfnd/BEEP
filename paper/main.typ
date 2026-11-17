@@ -28,7 +28,7 @@
 
 
 // Define functions:
-#let submission-mode = false 
+#let submission-mode = true 
 
 #let secretsection(body) = if submission-mode {} else {body}
 
@@ -313,8 +313,7 @@ We do not describe an IOPP using the affine-BEEP technique, and leave that for f
 \
 *Code-agnostic IOPPs up to the Johnson bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
 \
-*Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. #aiedit[For scalar folds that keep all the agreement, $epsilon_(sans("BEEP"),2)$ is as small as an MCA error can be: for Reed-Solomon codes, there are words for which the MCA error of such folds is at least $(delta dot blockclength + 1)\/|FF|$ @CWYZ26[Proposition 6.1]. MCA errors that do not grow with $blockclength$ are obtained by giving up some agreement: a constant fraction of it for scalar folds (see @Zei26 and @CWYZ26[Proposition 6.1]), or one position for affine folds @CWYZ26[Theorem 1.1]. With affine folds, which also give up one position, our error $epsilon_(sans("affine-BEEP"),2)$ $= 2\/|FF|$ is smaller than that of @CWYZ26[Theorem 1.1]. The price, in both cases, is the DEEP sampling error $epsilon_(sans("BEEP"),1)$, which can be made negligible with a few DEEP samples (see @tab:mca_comparison).] #albert[Review]
-
+*Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling in an IOPP (@c:BEEP), the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. This error is smaller than known plain MCA errors, as discussed in @s:contributions. When using affine folding, our folding error is $2\/|FF|$ which again is smaller than the affine-MCA error from @CWYZ26.
 
 == Use of AI and Lean formalization
 Most of this document was written without the use of AI, except for making small refactorings, and light edits. Sections @s:BEEP_WHIR and @s:affine were initially drafted with AI and heavily edited by us afterward.
@@ -1087,7 +1086,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 
 
-= High arity BEEP<s:high_arity>
+= High arity BEEP via linear algebra<s:high_arity>
 
 
 
