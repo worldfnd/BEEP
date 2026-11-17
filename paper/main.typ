@@ -113,7 +113,7 @@
 // Rest of paper
 
 
-#albert[Todos: Review lean,  overall pass, review references, High arity section review,  Affine and Polygero, Review last steps of affine proof
+#albert[Todos: Review lean,  overall pass, review references, High arity section review,   Review last steps of affine proof
 ]
 
 = Introduction
@@ -164,8 +164,9 @@ $<e:mca_error>]
 #aiedit[where $r_- := max(ceil(sqrt(rho_-)\/(2 dot eta)), 3)$. For practical rates (rangine from, say $1\/2$ to $1\/64$) and a small $eta$ (say $eta$ between $0.01$ and $0.001$) this is roughly $codedim\/(3 dot sqrt(rho) dot eta^3 dot |FF|)$ when $eta$ is small. ] 
 
 
-== Our contributions
+== Our contributions<s:contributions>
 
+We describe the main results of this work.
 
 #paragraph[BEEP, an improvement to DEEP.] In this work we provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Concretely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. 
 
@@ -288,18 +289,20 @@ This IOR can then be composed with itself several times so as to obtain an IOR f
 //) <tab:measured_0>
 
 
-#paragraph[BEEP and affine folding.] #aiedit[The idea of using polynomials instead of field elements as challenges is from Polygero @polygero. There, the verifier combines the rows of a Ligero-like proximity test using, for each row, a random polynomial of degree at most $s$. The analysis of @polygero is an elementary counting argument (formalized in Lean), it uses neither out of domain samples nor list decoding, and it results in an error of about $1\/|FF|$ in the choice of challenge, with up to $s$ positions of agreement lost. It requires however $s$ to grow linearly with the block length, e.g. $s = 74$ for $blockclength = 25724$ over a $128$-bit field @polygero[Remark 2].]  #albert[Review]
+#paragraph[BEEP and affine folding.] In @polygero, the authors propose to use, as folding challenges $alpha$ for RS codes,  polynomials of degree $s$, instead of field elements. The soundness error from @polygero is of about $1\/|FF|$, with up to $s$ positions of agreement lost after the fold. It requires however $s$ to grow linearly with the block length, e.g. $s = 74$ for $blockclength = 25724$ over a $128$-bit field @polygero[Remark 2]. In  @CWYZ26 (concurrent to @polygero), the authors show that affine challenges, i.e. $s=1$, suffice. They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for RS codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$, assuming $blockclength dot eta^2 ≥ 4\/rho$ @CWYZ26[Theorem 1.1]. As in @polygero, onw position of agreement may be lost after the folding].
 
-#aiedit[In @CWYZ26 (where @polygero is referred to as concurrent work), the authors show that affine challenges $alpha(X)= sigma + tau dot X$, for $sigma, tau in FF$, are already enough.] They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for Reed-Solomon codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$ (assuming $blockclength dot eta^2 ≥ 4\/rho$), where one position of agreement may be lost @CWYZ26[Theorem 1.1]].
-
-In Section @s:affine, we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial, for Reed-Solomon codes. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $epsilon_(sans("BEEP"),1)$ #aiedit[becomes $(|FF| dot L)^3\/3 dot ((codedim+1)\/|FF|)^numsamples$ (the factor $1\/(delta dot blockclength +1)^2$ is replaced by $1\/3$, and $L$ is a list size for the Reed-Solomon code of dimension $codedim+1$)], while the folding error $epsilon_(sans("BEEP"),2)$ becomes, in most settings,
+In Section @s:affine, we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial, for RS codes. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $epsilon_(sans("BEEP"),1)$ #aiedit[becomes $(|FF| dot L)^3\/3 dot ((codedim+1)\/|FF|)^numsamples$ (the factor $1\/(delta dot blockclength +1)^2$ is replaced by $1\/3$, and $L$ is a list size for the Reed-Solomon code of dimension $codedim+1$)], while the folding error $epsilon_(sans("BEEP"),2)$ becomes, in most settings,
 $
-epsilon_(sans("affine-BEEP"),2) = frac(2,|FF|),
+epsilon_(sans("affine-BEEP"),2) = 2\/|FF|,
 $
-#aiedit[as a fraction of the $|FF|^2$ affine folding challenges. As in @CWYZ26, one position of agreement may be lost. We only bound the number of bad folding challenges, and we do not describe an IOPP that uses affine folds.]
+#aiedit[As in @CWYZ26@polygero, one position of agreement may be lost.]
 
 
-In contrast to @CWYZ26, our analysis in the affine setting is elementary, amounting to about five pages, with half of them being a simple rephrasing for the affine setting of definitions and arguments already used in Section @s:better_pretenders. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree. In our case, what makes an elementary analysis possible with affine challenges are the out of domain samples and the list decodability of the code. ] #albert[Review] We note that we prove a different result than @CWYZ26 though. Roughly, @CWYZ26 proves that RS codes have MCA with a smaller error when using affine folding (up to the Johnson bound, and with one position of agreement loss). Our result, on the other hand, is the affine-variant of the DEEP technique,  and requires only list-decodability of the code.  
+
+In contrast to @CWYZ26, our analysis in the affine setting is elementary, amounting to about five pages, with half of them being a simple rephrasing for the affine setting of definitions and arguments already used in Section @s:better_pretenders.  We note that we prove a different result than @CWYZ26@polygero though. Roughly, @CWYZ26 proves that RS codes have MCA with a smaller error when using affine folding (up to the Johnson bound, and with one position of agreement loss). Our result, on the other hand, is the affine-variant of the DEEP technique,  and requires only list-decodability of the code.  
+
+
+We do not describe an IOPP using the affine-BEEP technique, and leave that for future work.
 
 
 #paragraph[Consequences.] We list some implications of our results:\
@@ -310,7 +313,6 @@ In contrast to @CWYZ26, our analysis in the affine setting is elementary, amount
 \
 *Code-agnostic IOPPs up to the Johnson bound.* It is now possible to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.\
 \
-
 *Folding error bounds which improve upon those obtained solely with MCA.* When using DEEP sampling, the error $epsilon_(sans("BEEP"),2)$ (or the affine error $epsilon_(sans("affine-BEEP"),2)$ if using affine folds @CWYZ26), effectively replaces the MCA error bound from @e:mca_error. #aiedit[For scalar folds that keep all the agreement, $epsilon_(sans("BEEP"),2)$ is as small as an MCA error can be: for Reed-Solomon codes, there are words for which the MCA error of such folds is at least $(delta dot blockclength + 1)\/|FF|$ @CWYZ26[Proposition 6.1]. MCA errors that do not grow with $blockclength$ are obtained by giving up some agreement: a constant fraction of it for scalar folds (see @Zei26 and @CWYZ26[Proposition 6.1]), or one position for affine folds @CWYZ26[Theorem 1.1]. With affine folds, which also give up one position, our error $epsilon_(sans("affine-BEEP"),2)$ $= 2\/|FF|$ is smaller than that of @CWYZ26[Theorem 1.1]. The price, in both cases, is the DEEP sampling error $epsilon_(sans("BEEP"),1)$, which can be made negligible with a few DEEP samples (see @tab:mca_comparison).] #albert[Review]
 
 
@@ -892,7 +894,7 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 #let Cpair = $cal(C)_theta^(equiv 2)$
 
 
-In the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. As shown in #aiedit[@CWYZ26[Theorem 1.1], for Reed-Solomon codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$], doing so results in #aiedit[an MCA error of $4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ (assuming $blockclength dot eta^2 ≥ 4\/rho$, and with one position of agreement loss)] instead of the usual $O(sans("poly")(blockclength)\/|F|)$.
+As we mentioned, in the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. We refer to @s:contributions for more details on @polygero@CWYZ26.
 
 In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0). In practical terms this can, for example, reduce the amount of grinding required, if any, in @c:BEEP and @c:BEEP_codeswitch.
 Our proofs are elementary and essentially only require tweaking the definitions and adapting @l:few_bad_points_on_line to this new setting. This contrasts with the technical complexity in @CWYZ26. #aiedit[The analysis of @polygero is elementary as well, but its error bound is only meaningful for challenges of large degree (see the introduction).] #albert[Review] We emphasize that these techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold.
@@ -925,7 +927,7 @@ $<e:poly_times_word>
 $
 theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2 in FF^blockclength.
 $
-Note that  if $c_1, c_2 in cal(C)$, then the folded word $theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. We are interested in pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
+Note that  if $c_1, c_2 in cal(C)$, then the folded word $theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. We are interested in pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert-postponable[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
 $
 Cpair := {(c_1, c_2) in Cplus times Cplus | d_1 dot c_1 + d_2 dot c_2 in cal(C)}.
 $
