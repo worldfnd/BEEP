@@ -1088,14 +1088,14 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 = High arity BEEP via linear algebra<s:high_arity>
 
-
+In this section we present the BEEP proof in an alternative way where folding is an arbitrary random linear map, structured as a zero-evader.
 
 == Zero-evaders
 
-We use the notion of a zero evader from @BCFW25, expressed as an indexed family of linear maps with vector-valued outputs.
+We use the notion of a zero evader from @BCFW25, expressed as an indexed family of linear maps with vector-valued outputs and error bounds for subspaces. This allows stronger bounds when testing several vectors to be zero simultaneously as they all map to zero exactly when their span does. We bound the probability of this event for any fixed subspace in a given family.
 
 #definition[Zero evader][
-  A _zero evader_ is a family of linear maps $φ_z : 𝔽^n → 𝔽^m$ indexed by a finite non-empty set $𝒵$. For a nonempty family $𝒲$ of linear subspaces of $𝔽^n$, we call $ε_𝒲 ∈ [0,1]$ an _error bound_ if
+  A _zero evader_ is a family of linear maps $φ_z : 𝔽^n → 𝔽^m$ indexed by a finite non-empty set $𝒵$, called the _seeds_. For a nonempty family $𝒲$ of linear subspaces of $𝔽^n$, we call $ε_𝒲 ∈ [0,1]$ an _error bound_ if
   $
     max_(W ∈ 𝒲) thick Pr_(z ← 𝒵) thick [W ⊆ ker φ_z] ≤ ε_𝒲.
   $
@@ -1137,18 +1137,18 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   Define the $m$-sample _univariate evader_ with index family $𝒵 ≔ 𝔽^m$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_m)$ as the map given by the $m × n$ Vandermonde matrix on $𝐳$.
 ]
 #secretsection[
-#lemma[
-  The $m$-sample univariate zero evader has error bounds
-  $
-    ε_d = min(1, ((n - d) / q)^m).
-  $ 
+  #lemma[
+    The $m$-sample univariate zero evader has error bounds
+    $
+      ε_d = min(1, ((n - d) / q)^m).
+    $ 
+  ]
+  #proof[To do.]
+  #albert-postponable[Prove]
 ]
 
-#proof[To do.] #albert-postponable[Prove]
-]
 #remark[
   We do not require the $z_i$ to be distinct. When applied to message coordinates, the univariate zero evader matches the $m$-repeated out of domain samples in WHIR @whir, and the codeword queries in the Reed-Solomon instantiation of Ligerito @ligerito, etc.
-]
 
 #definition[Multilinear evader][
   Let $k = ceil(log_2 n)$ and fix a basis. We define the scalar _multilinear evader_ with index family $𝒵 ≔ 𝔽^k$ and $φ_𝐳$ for $𝐳 = (z_1, …, z_k)$ as the first $n$ values of the MLE tensor product
@@ -1158,15 +1158,15 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 ]
 
 #secretsection[
-#lemma[
-  For $1 ≤ d ≤ n$ let $r = ceil(log_2 n) - floor(log_2 d)$. The multilinear evader
-  has error bounds
-  $
-    ε_d = 1-(1-1/q)^r ≤ min(1, r/ q).
-  $
-]
-
-#proof[To do.] #albert[prove]
+  #lemma[
+    For $1 ≤ d ≤ n$ let $r = ceil(log_2 n) - floor(log_2 d)$. The multilinear evader
+    has error bounds
+    $
+      ε_d = 1-(1-1/q)^r ≤ min(1, r/ q).
+    $
+  ]
+  #proof[To do.]
+  #albert[prove]
 ]
 
 #definition[Product zero evader][
