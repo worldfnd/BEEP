@@ -239,7 +239,7 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
     rule,
     res[BEEP, affine fold][This work, @t:affine_main_0[Thm]], [any $(delta, L)$-list \ decodable RS code], [any $delta in (0, hamming(cal(C)))$], [ $epsilon_(sans("BEEP"),1)$: $quad (M dot L)^3\/3 dot ((codedim + 1)\/|FF|)^numsamples$\ $epsilon_(sans("BEEP"),2)$: $quad 2\/|FF|$],
     rule,
-    res[Katham][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
+    res[Khatam#footnote[#aiedit[The result of @Zei26 has an agreement loss of $gamma dot blockclength$ positions, instead of at most one position as in the other rows. Concretely, its error bounds the fraction of $alpha in FF$ for which $u_1 + alpha dot u_2$ agrees with a codeword on a set $S$ of at least $(1 - delta) dot blockclength$ positions, while there is no subset of $S$ of at least $(1 - delta - gamma) dot blockclength$ positions where both $u_1$ and $u_2$ agree with codewords. Since agreement sets have integer size, one can remove the loss by taking $gamma$ slightly smaller than $1\/blockclength$. In that case the condition becomes $delta <= 1 - root(3, 1 - hamming(cal(C)) + eta) - 1\/blockclength$, and the error is roughly $3 dot blockclength\/(eta dot |FF|)$.]]][@Zei26], [any linear code], [$delta < 1 - root(3, 1 - hamming(cal(C)) + eta) - gamma$], [$3\/(eta dot gamma dot |FF|)$],
     table.hline(stroke: 0.6pt),
     table.cell(colspan: 4, inset: (x: 3.5pt, top: 5pt, bottom: 0pt), text(size: 8pt)[
     ]),
