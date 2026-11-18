@@ -574,15 +574,13 @@ $
 #remark[Using @t:main_thm to replace the MCA error with the list decodability size in code-based PCS][Looking ahead, we will use this result as follows: before performing the fold of two words during a code-based PCS, we have the verifier sample an element $z in cal(Z)$, and the prover replies with $vb(b)_1, vb(b)_2 in FF^numsamples$, supposedly the evaluations on $evalmap_z$ of the two words (which are supposedly codewords). Now, due to @t:main_thm, with high probability over $z$, there are very few folding challenges $alpha in FF$ that result in a failure of the MCA property and which are consistent with $(z, vb(b)_1, vb(b)_2)$. Hence, at this point we can fold as usual, and obtain knowledge soundness even if  the code $cal(C)$ is not known to possess (or is known to not possess) MCA at the proximity parameter $delta$ used by the PCS. We formalize this intuition in Section @s:BEEP_fold.]<r:using_main_thm>
 
 
-\
-
 We proceed to prove @t:main_thm. We assume the notation of its hypothesis. // We fix $vb(b)_1, vb(b)_2 in FF^numsamples$ and show that $Pr_(z <- cal(Z)) sans("Pr")[ |A_(z,vb(b)_1, vb(b)_2)|≥ t ]$ is at most the right-hand side of @e:beep_bound. This implies that $Pr_(z <- cal(Z)) sans("Pr")[ max_(vb(b)_1, vb(b)_2 in FF^numsamples) |A_(z,vb(b)_1, vb(b)_2)| ≥ t ]$ satisfies the same bound.
 
 #let lmap = $theta$
 #let linfuns = $cal(L)^(1)[FF arrow cal(C)]$
 #let im = math.sans("Graph")
 
-\
+
 
 #definition[Parameterized lines][We let $linfuns$ be the set of all linear maps $lmap: FF arrow cal(C)$, so that $lmap(alpha) = c_(theta,1) + alpha dot c_(theta,2)$ for some codewords $c_(theta,1), c_(theta,2) in cal(C)$.  Given $lmap in linfuns$, we let $im(lmap)= {(alpha, theta(alpha)) | alpha in FF} subset FF times cal(C)$ and we call $im(lmap)$ a #emph[parameterized line in $cal(C)$].]
 
@@ -764,7 +762,7 @@ where here we index the entries of the $2 times codedim$ matrices $vb(f)$ and $v
 
 
 #construction[BEEP, an IOR from $cal(R)_(interleavedcode(2))$ to $cal(R)_(cal(C))$][
-  The prover and verifier receive as input  $bb(x)=(mu, vb(v)) in FF times FF^(2 dot codedim)$. The verifier also receives $bb(y)=f in FF^blockclength$, and the prover  receives $bb(w)=vb(f)in FF^(2 dot codedim)$ such that $(bb(x), bb(y), bb(w)) in cal(R)_(interleavedcode(2))$.\
+  The prover and verifier receive as input  $bb(x)=(mu, vb(v)) in FF times FF^(2 dot codedim)$. The verifier also receives $bb(y)=f in FF^blockclength$, and the prover  receives $bb(w)=vb(f)in FF^(2 dot codedim)$ such that $(bb(x), bb(y), bb(w)) in cal(R)_(interleavedcode(2))$.
   \
   *Round 1 (DEEP sampling).* The verifier samples and sends uniformly at random $z ∈ 𝒵$. The prover replies with two vectors $𝐛_1, 𝐛_2 ∈ 𝔽^m$, supposedly 
     $
@@ -788,14 +786,12 @@ where here we index the entries of the $2 times codedim$ matrices $vb(f)$ and $v
       φ_z (𝐠) &= φ_z ((1-alpha) dot vb(f)_(1*)+alpha dot vb(f)_(2*)) = (1-alpha) dot 𝐛_1 + alpha dot 𝐛_2 .
     $<BEEP_new_lin_claims>
 
-    #remco[This uses $1,α$ instead of $1-α,α$ from above def of $𝐠$. But I really want to rewrite it as some $α_z upright(F)$ for interleaving matrix $upright(F)$ and some multilinear evader $α_z$.]\
-  \
+    #remco[This uses $1,α$ instead of $1-α,α$ from above def of $𝐠$. But I really want to rewrite it as some $α_z upright(F)$ for interleaving matrix $upright(F)$ and some multilinear evader $α_z$.]
   *Round 3 (Batching of linear claims).* The verifier uniformly samples $vb(γ) ∈ 𝔽^(m + 1)$ to batch the linear claims from @BEEP_new_lin_claims, so that the claims are reduced to the single claim
     $
       vb(gamma) dot mat(vb(v)_alpha; φ_z) dot vb(g) =
       vb(gamma) dot mat(h(alpha); aiedit((1-alpha) dot) 𝐛_1 + alpha dot 𝐛_2)
-    $\
-  \
+    $
   *Output.*  The prover and verifier output
     $
       bb(x)' := (mu', vb(v)'), quad
@@ -1119,7 +1115,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 
 
-= An alternative and more general proof of t:main_thm via linear algebra<s:high_arity>
+= An alternative and more general proof of @t:main_thm via linear algebra<s:high_arity>
 
 
 In this section we present the  proof of @t:main_thm in an alternative way where folding is an arbitrary random linear map, structured as a zero-evader.
@@ -1154,9 +1150,8 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
 
 #lemma[Few folding vectors lie in a subspace][  #albert-postponable[Are Lemma 31, 33, 34 needed here? If not they could be placed after the statement of the main thm]
   Let $(ψ_z)_(z ∈ 𝒵)$ be a scalar zero evader on $𝔽^n$ with error bounds $ε_d$. 
-  For every $j$-dimensional subspace $H ⊂ 𝔽^n$ with $0 ≤ j < n$,
-  $
-    abs({z | ψ_z ∈ H}) &≤ abs(𝒵) ε_(n - j).
+  For every $j$-dimensional subspace $H ⊂ 𝔽^n$ with $0 ≤ j < n$, we have
+  $abs({z | ψ_z ∈ H}) &≤ abs(𝒵) ε_(n - j).
   $
 ]
 #proof[
@@ -1212,13 +1207,12 @@ We use the notion of a zero evader from @BCFW25, expressed as an indexed family 
   error bounds $ε^(j)_d$.
   Their _product zero evader_ has domain $𝔽^b$,
   where $b = product_(j ∈ [k]) b_j$, index set  and maps
-  $
-    𝒵 &= 𝒵_1 × ⋯ × 𝒵_k, &quad
+  $𝒵 &= 𝒵_1 × ⋯ × 𝒵_k, &quad
     ψ_𝐬 &= ψ^(k)_(s_k) ⊗ ⋯ ⊗ ψ^(1)_(s_1).
   $
 ]
 ]
-== The high arity version of @t:main_thm
+== Few bad seeds via linear algebra 
 
 We start by fixing notation. Let $𝔽$ be a finite field of size $q = abs(𝔽)$. We denote with $(q)_(n+1)$ the falling factorial $q(q-1)⋯(q-n)$. We let $ℓ$ be the message length, $n$ the code length, $b$ the folding size and $m$ the check size. Let $𝒞 ⊆ 𝔽^n$ be a code of dimension $ℓ$ that is $(δ, L)$-list decodable and has MCA bound $E$.
 
@@ -1226,8 +1220,7 @@ We use two zero evaders, one for folding and one for checking. For folding we us
 
 #albert-postponable[seed sounds strange to me, but i think we havent established any name for z yet. we should do that when defining zero evaders. maybe "sample seeds"?]
 
-#albert-postponable[I think having a zero evader for folding may not be worth the generality. The problem I see is that it introduces several symbols that replaces commonly recognized symbols. For example $N=|cal(Z)_(sans("fold"))|$ being an abstraction of $|FF|$ has a relatively high cognitive tax when combined with the rest of the new things happening in this section (at least for me). Maybe keeping $|cal(Z)_(sans("fold"))|$ instead of $N$ would already help]
-
+#albert-postponable[I think having a zero evader for folding may not be worth the generality. The problem I see is that it introduces several symbols that replaces commonly recognized symbols. For example $N=|cal(Z)_(sans("fold"))|$ being an abstraction of $|FF|$ has a relatively high cognitive tax when combined with the rest of the new things happening in this section (at least for me). Maybe keeping $|cal(Z)_(sans("fold"))|$ instead of $N$ would already help]\
 *Setup.* Abstractly, the protocol we are interested in is as follows:
 
 #[
@@ -1329,9 +1322,8 @@ with a single explanation $D$.
 #proof[
   Fix $D ∈ 𝒞^b$, let $I &= {i ∈ [n] : U_(*i) ≠ D_(*i) }$ and choose a set $J ⊆ I$ such that $abs(J) = min(ceil(δ n), abs(I))$. Every witnessing agreement set $S$ for a pretender $ψ_s D$ intersects $J$. If $J=I$, disjointness would mean $D_S=U_S$, contradicting pretenderhood. Otherwise, $abs(J) = ceil(δ n)$, while $S$ omits fewer than $δ n ≤ ceil(δ n)$ columns.
 
-  At an intersecting column $i$ we have $ψ_s (U_(*i) - D_(*i)) =  𝟎$. Each discrepancy is fixed and nonzero. A union bound therefore gives
-  $
-    abs({s ∈ 𝒵_fold | ψ_s D ∈ 𝒫_s}) ≤ abs(J) N ε^fold_1 ≤ ceil(δ n) N ε^fold_1.
+  At an intersecting column $i$ we have $ψ_s (U_(*i) - D_(*i)) =  𝟎$. Each discrepancy is fixed and nonzero. A union bound then gives
+  $abs({s ∈ 𝒵_fold | ψ_s D ∈ 𝒫_s}) ≤ abs(J) N ε^fold_1 ≤ ceil(δ n) N ε^fold_1.
   $
 ]
 
@@ -1358,8 +1350,7 @@ We now count collections that contradict their explanation while passing all che
   For each $s ∈ A_z$, fix a pretender $𝐜_s$ such that $𝐜_s hat(φ)_z^⊤ = ψ_s B(z)$. Membership in $A_z$ guarantees such a choice.
   
   After choosing $j < b$ independent folding vectors, their span contains at most $N ε^fold_(b -j)$ seeds. Thus there are at least
-  $
-    product_(d ∈ [b]) (a - N ε^fold_d)
+  $product_(d ∈ [b]) (a - N ε^fold_d)
   $
   ordered choices for the first $b$ pairs.
 
