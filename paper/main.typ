@@ -924,7 +924,7 @@ For completeness, we now obtain an IOR from $cal(R)_(interleavedcode(k))$ to $ca
 
 As we mentioned, in the context of Reed-Solomon codes, in @polygero and @CWYZ26, the authors propose, instead of sampling challenges $alpha$ in $FF$, to sample low degree polynomials. @CWYZ26 specifically samples $alpha$ in the set of linear polynomials $chal$, so that $alpha=alpha(X)= sigma + tau dot X$ for some random $sigma, tau in FF$. We refer to  Section @s:contributions for more details on @polygero@CWYZ26.
 
-In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result, for most samples, the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0). We emphasize that these techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold. 
+In this section we adapt the results from Section @s:better_pretenders to the same setting as @CWYZ26, i.e. we sample folding challenges $alpha$ in $chal$ instead of in $FF$. As a result,  the fraction of folding challenges that are DEEP-MCA-bad goes from $(delta dot blockclength + 1)\/|FF|$ (@t:main_thm) to #aiedit[$2\/|FF|$] (@t:affine_main_0).These techniques apply specifically to Reed-Solomon codes, and not to any linear codes as those of Sections @s:better_pretenders and @s:BEEP_fold. 
 
 In  @r:affine_pairs we briefly outline how an IOPP using @t:affine_main_0 would look like, following  #aiedit[@CWYZ26[Section 5]]. 
 We only mention one point to keep in mind when using @t:affine_main_0. In particular, we address one technical subtlety of @CWYZ26 and our result. This is that both results consider Correlated Agreement with a set of pairs of codewords $Cpair$, which is slightly larger than the interleaved code $interleavedcode(2)$ of the Reed-Solomon code $cal(C)$ at hand.  @r:affine_pairs discusses how to obtain Correlated Agreement with $interleavedcode(2)$, which is a technique presented in @CWYZ26[Section 5].
@@ -949,16 +949,17 @@ $<e:poly_times_word>
 
 
 
- Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps $theta_i (Y):= a_i + d_i dot Y$, $i=1,2$, with, as in #aiedit[Section] @s:better_pretenders, $a_1 dot d_2 != a_2 dot d_1$. Looking ahead, given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, the $alpha$-fold of $u_1, u_2$ is the word (recall our notation convention from @e:poly_times_word)
+ Let $chal := {sigma + tau dot X | sigma, tau in FF} subset FF[X]$ be the set of linear polynomials on $FF$. As in Section @s:better_pretenders, fix two linear maps $theta_i (Y):= a_i + d_i dot Y$, $i=1,2$, with[Section] @s:better_pretenders, $a_1 dot d_2 != a_2 dot d_1$. Given two words $u_1, u_2in FF^blockclength$ and a folding challenge $alpha in chal$, we define the $alpha$-fold of $u_1, u_2$ as the word (recall our notation convention from @e:poly_times_word)
 $
 theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2 in FF^blockclength.
 $
-Note that  if $c_1, c_2 in cal(C)$, then the folded word $theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. We are interested in pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert-postponable[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
+Note that  if $c_1, c_2 in cal(C)$, then the folded word $theta_1(alpha) dot c_1 + theta_2(alpha) dot c_2$ belongs to $Cplus$ for all $alpha in chal$. 
+
+For technical reasons, we will need to work with pairs of codewords $c_1, c_2 in Cplus$ whose fold belongs to $Cplus$ for all $alpha in chal$ #albert-postponable[Explain why. Overall, I need a good intutive explanation of the role of the degree differences in the affine fold]. These are precisely those in
 $
 Cpair := {(c_1, c_2) in Cplus times Cplus | d_1 dot c_1 + d_2 dot c_2 in cal(C)}.
 $
 
-\
 \
 Let $u_1, u_2 in FF^blockclength$ be two words and let $delta in (0,1)$. Given $S subset [blockclength]$, we say that $(u_1, u_2)$ has #emph[Correlated Agreement with $Cpair$ over $S$ up to one position] if there exist a pair $(c_1, c_2) in Cpair$ and a set $S' subset S$ with $|S'| ≥ |S| - 1$ such that $u_1$ agrees with $c_1$ on $S'$ and $u_2$ agrees with $c_2$ on $S'$.
 
@@ -971,14 +972,14 @@ Let $u_1, u_2 in FF^blockclength$ be two words and let $delta in (0,1)$. Given $
 #let evalmap = $vb(phi)$
 #let samples = $vb(z)$
 
-\
+
 Let $numsamples≥ 1$ be a parameter. Given $samples=(z_1, dots, z_numsamples) in FF^numsamples$, let $evalmap_vb(z): FF[X] -> FF^numsamples$ consist of evaluating a polynomial at the entries of $samples$, i.e.
 $
 evalmap_samples (p) := (p(z_1), dots, p(z_numsamples)) in FF^numsamples.
 $
 This will be our zero evader, and is precisely the univariate evader from Section @s:zero_evaders  applied to the coefficients of $p$. 
 
-Given $vb(b), vb(b)' in FF^numsamples$ we write $vb(b) emul vb(b)' in FF^numsamples$ for their entrywise product. Notice that for any two $p,p' in FF[X]$ we have $evalmap_samples (p dot p') = evalmap_vb(z) (p) emul evalmap_vb(z) (p')$.
+Given $vb(b), vb(b)' in FF^numsamples$ we write $vb(b) emul vb(b)' in FF^numsamples$ for the  entrywise product of $vb(b)$ and $vb(b)'$. For any two $p,p' in FF[X]$ we have $evalmap_samples (p dot p') = evalmap_vb(z) (p) emul evalmap_vb(z) (p')$.
 
 #definition[Consistency of MCA-bad elements $alpha in chal$ with $samples in FF^numsamples$][
   Let $alpha in chal$ and $c in Cplus$. Given $vb(z) in FF^numsamples$ and $vb(b)_1, vb(b)_2 in FF^numsamples$, we say that $(alpha, c)$ is _consistent_ with $(vb(z), vb(b)_1, vb(b)_2)$ if
@@ -988,7 +989,7 @@ Given $vb(b), vb(b)' in FF^numsamples$ we write $vb(b) emul vb(b)' in FF^numsamp
   When $alpha$ is MCA-bad and there exists an $alpha$-pretender $c in Cplus$ such that $(alpha, c)$ is consistent with $(vb(z), vb(b)_1, vb(b)_2)$, we say that $alpha$ is a _DEEP-MCA-bad challenge_ with respect to $vb(z), vb(b)_1, vb(b)_2$ and $u_1, u_2$.
 ]<d:affine_consistency>
 
-For intuition, for an honest prover $vb(b)_1, vb(b)_2$ will be the values $evalmap_vb(z) (c_1), evalmap_vb(z) (c_2)$, where $(c_1, c_2) in interleavedcode(2)$  are $delta$-close to $u_1$ and $u_2$. 
+For intuition, for an honest prover $vb(b)_1, vb(b)_2$ will be  values $evalmap_vb(z) (c_1), evalmap_vb(z) (c_2)$, where $(c_1, c_2) in interleavedcode(2)$  are $delta$-close to $u_1$ and $u_2$. 
 
 
 == The affine version of @t:main_thm
@@ -1046,7 +1047,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
   Similarly as in @l:few_bad_points_on_line, define $
     D := {i in [blockclength] | u_1(i) != F_1(x_i) " or " u_2(i) != F_2(x_i)} subset [blockclength].
   $
-  \
+
   Looking ahead, from here on the proof is analogous to that of @l:few_bad_points_on_line, except that the sets $S_alpha inter D$ (for $alpha in A_lmap^(sans("pret"))$) contain at least $2$ elements instead of $1$, and, for $alpha != alpha'$, these sets pairwise intersect on at most one element, instead of being pairwise disjoint.
   
    Let $alpha in A_lmap^(sans("pret"))$. Since $lmap(alpha)$ is an $alpha$-pretender, there is a set $S_alpha subset [blockclength]$ where $lmap(alpha)$ and $theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$ agree, with $|S_alpha| ≥ (1-delta) dot blockclength$ and such that $(u_1, u_2)$ does not have Correlated Agreement with $Cpair$ over $S_alpha$ up to one position. We argue that $|S_alpha inter D| ≥ 2$. Indeed, assume towards contradiction that $|S_alpha inter D| ≤ 1$, and let $S_alpha ' := S_alpha \\ D$. Then $S_alpha ' subset S_alpha$ is a set of size $≥ |S_alpha| -1$ over which $u_1,u_2$ agree with $F_1, F_2$, respectively (by definition of $D$). Since $(F_1, F_2) in Cpair$, this means that $(u_1, u_2)$ has Correlated Agreement with $Cpair$ over $S_alpha$ up to one position, a contradiction. Hence $|S_alpha inter D| ≥ 2$ for all $alpha in A_lmap^(sans("pret"))$.
@@ -1072,7 +1073,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
 
 \
 #proof[Proof of @t:affine_main_0, outline][
-  We follow the proof of @t:main_thm, instantiated with $cal(C)$ a Reed-Solomon code, taking challenges $alpha in chal$ instead of in $FF$, and using the parameterized lines $ratlines$ instead of $linfuns$. We go through such proof and explain in what ways it is the same as that of @t:main_thm and, when it is not, we explain how to modify the proof to our setting.
+  We follow the proof of @t:main_thm, instantiated with $cal(C)$ a Reed-Solomon code, taking challenges $alpha in chal$ instead of in $FF$, and using the parameterized lines $ratlines$ instead of $linfuns$. We go through such proof and explain in what ways it is the same as that of @t:main_thm and, when it is not, we explain how to modify the proof to our setting. 
   
   First, let $(alpha_i, v_i)_(i in [3]) in (chal times Cplus)^3$ with $alpha_1, alpha_2, alpha_3$ pairwise distinct, and let
   $
