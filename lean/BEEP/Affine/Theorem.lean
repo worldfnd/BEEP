@@ -9,6 +9,9 @@
 -- without change; each proof is now one line, and the proof that was here is in
 -- `BEEP/Affine/Proof.lean`. The namespace `BEEP` is now `BEEP.Affine`. Please review the
 -- statements against the paper.]
+-- [AI-revised (claude-fable-5-2), 2026-11-17, later, at the author's remark: `fold_challenge_le`
+-- is stated for every pair `b = (b₁, b₂)` (it was stated for a function from `z` to such pairs).
+-- The other statements are unchanged. Please review.]
 
 -- A line starting with `--` is a comment, which Lean ignores. The reading guide of
 -- `BEEP/Affine/Defs.lean` explains the notation.
@@ -51,7 +54,7 @@ to read `BEEP/Affine/Proof.lean` to know what they say.
   samples in a protocol that uses Theorem 5.3 (no such protocol is formalized here).
 
 In all of them `|A_z|` is `R.maxHits u₁ u₂ s z`, the largest number of DEEP-MCA-bad challenges at
-`z` over all answers `b₁, b₂`.
+`z` over all `b₁, b₂ ∈ F^m`.
 
 ## How the statements are written
 
@@ -133,16 +136,15 @@ end WithDelta
 
 section Counting
 
--- The words, the threshold, the number `m` of samples, and the prover's answers `B`: for every
--- `z ∈ F^m` a pair `B z = (b₁, b₂)`. The answers may depend on `z` in any way. Theorem 5.3 takes
--- the answers that maximize the number of DEEP-MCA-bad challenges (`maxHits` of `Defs.lean`).
-variable (u₁ u₂ : ι → F) (s : ℕ) {m : ℕ} (B : (Fin m → F) → (Fin m → F) × (Fin m → F))
+-- In this section `u₁ u₂` are the words, `s` is the agreement threshold and `m` is the number of
+-- samples.
+variable (u₁ u₂ : ι → F) (s : ℕ) {m : ℕ}
 
 /-- **Theorem 5.3, with the agreement threshold `s`.** Let `N = max(q, (n - s + 2)(n - s + 1)/2)`,
 and let `C⁺` be list decodable with list size `L` at agreement `s`. Then for every integer
 `t ≥ N + 1` and `z` uniform in `F^m`,
 `Pr[|A_z| ≥ t] ≤ (q² L)³ ((ℓ + 1)/q)^m / (t (t - 1) (t - N))`, where `|A_z|` is the largest number
-of DEEP-MCA-bad challenges at `z` over all answers `b₁, b₂`. -/
+of DEEP-MCA-bad challenges at `z` over all `b₁, b₂ ∈ F^m`. -/
 theorem affine_main (L t : ℕ) (hL : R.ListDecodable s L)
     (ht : max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2) + 1 ≤
       t) :
@@ -157,7 +159,7 @@ theorem affine_main (L t : ℕ) (hL : R.ListDecodable s L)
 /-- **Theorem 5.3, counting form.** For every `t`,
 `t (t - 1) (t - N) · #{z ∈ F^m | |A_z| ≥ t} ≤ (q² L)³ (ℓ + 1)^m`, where
 `N = max(q, (n - s + 2)(n - s + 1)/2)` and `|A_z|` is the largest number of DEEP-MCA-bad
-challenges at `z` over all answers. The subtractions are those of `ℕ`, so for `t ≤ N` the
+challenges at `z` over all `b₁, b₂`. The subtractions are those of `ℕ`, so for `t ≤ N` the
 left-hand side is `0`. -/
 theorem affine_main_nat (L t : ℕ) (hL : R.ListDecodable s L) :
     t * (t - 1) *
@@ -166,13 +168,15 @@ theorem affine_main_nat (L t : ℕ) (hL : R.ListDecodable s L) :
       (Fintype.card F ^ 2 * L) ^ 3 * (R.ℓ + 1) ^ m :=
   R.affine_main_nat_proof u₁ u₂ s L t hL
 
-/-- **How Theorem 5.3 is used (the fold challenge).** If `|A_z| < t`, then whatever the answers `B`
-to `z`, a uniform challenge `α ∈ F × F` is DEEP-MCA-bad with probability at most `(t - 1)/q²`. This
-is the error of the fold challenge that follows the samples in a protocol that uses Theorem 5.3. -/
-theorem fold_challenge_le (z : Fin m → F) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
-    ((univ.filter fun α : F × F => R.DeepBad u₁ u₂ s z (B z) α).card : ℝ) /
+/-- **How Theorem 5.3 is used (the fold challenge).** If `|A_z| < t`, then for every
+`b = (b₁, b₂)`, a uniform challenge `α ∈ F × F` is DEEP-MCA-bad with respect to `z, b₁, b₂` with
+probability at most `(t - 1)/q²`. This is the error of the fold challenge that follows the samples
+in a protocol that uses Theorem 5.3. -/
+theorem fold_challenge_le (z : Fin m → F) (b : (Fin m → F) × (Fin m → F)) (t : ℕ)
+    (hz : R.maxHits u₁ u₂ s z < t) :
+    ((univ.filter fun α : F × F => R.DeepBad u₁ u₂ s z b α).card : ℝ) /
         (Fintype.card (F × F) : ℝ) ≤ ((t : ℝ) - 1) / (Fintype.card F : ℝ) ^ 2 :=
-  R.fold_challenge_le_proof u₁ u₂ s B z t hz
+  R.fold_challenge_le_proof u₁ u₂ s z b t hz
 
 end Counting
 

@@ -10,6 +10,7 @@
 # compiles them in the order of their imports. The examples are the same, in the namespaces BEEP.Scalar and
 # BEEP.Affine. New: steps 1 and 5, and the script now stops with an error if a theorem depends on an axiom other
 # than the three standard ones; please review]
+# [AI-revised (claude-fable-5-2), 2026-11-17, later: in the examples, `hits` takes the pair `(b₁, b₂)`]
 # Checks the Lean formalizations of the BEEP paper (paper/main.typ) with the Mathlib build of ~/math in lean
 # (Mathlib v4.30.0), in about a minute on an idle machine. Every `lean` call passes the options of
 # lakefile.toml, `-DautoImplicit=false -DrelaxedAutoImplicit=false`, so that an undeclared name in a statement is
@@ -324,10 +325,10 @@ theorem zero_isPretender : setupOneAlpha.IsPretender w₁ w₂ 3 1 0 := by
     have h10 : (1 : ZMod 5) = 0 := by linear_combination h2 - 2 * h1 + h0
     exact absurd h10 (by decide)
 
--- Hence `α = 1` is a DEEP-MCA-bad element at every `z`, for the answers `b₁ = b₂ = 0`:
+-- Hence `α = 1` is a DEEP-MCA-bad element with respect to every `z` and `b₁ = b₂ = 0`:
 -- `φ_z(0) = 0 = λ₁(1) · 0 + λ₂(1) · 0`. In particular `|A_z| ≥ 1` for every `z`.
 theorem one_mem_hits (z : ZMod 5) :
-    (1 : ZMod 5) ∈ setupOneAlpha.hits w₁ w₂ 3 (fun _ => (0, 0)) z := by
+    (1 : ZMod 5) ∈ setupOneAlpha.hits w₁ w₂ 3 z (0, 0) := by
   simp only [Setup.hits, mem_filter, mem_univ, true_and]
   refine ⟨(setupOneAlpha.mcaBad_iff_exists_pretender w₁ w₂ 3 1).mpr ⟨0, zero_isPretender⟩,
     0, zero_isPretender, ?_⟩
@@ -335,7 +336,7 @@ theorem one_mem_hits (z : ZMod 5) :
 
 example (z : ZMod 5) : 1 ≤ setupOneAlpha.maxHits w₁ w₂ 3 z :=
   (card_pos.mpr ⟨1, one_mem_hits z⟩).trans_le
-    (setupOneAlpha.card_hits_le_maxHits w₁ w₂ 3 (fun _ => (0, 0)) z)
+    (setupOneAlpha.card_hits_le_maxHits w₁ w₂ 3 z (0, 0))
 
 end BEEP.Scalar
 EOF

@@ -9,6 +9,9 @@
 -- without change, except that the four theorems that `BEEP/Affine/Theorem.lean` states are called
 -- `x_proof` here (`affine_main_proof` for `affine_main`, and so on). The namespace `BEEP` is now
 -- `BEEP.Affine`, and the comments are adapted to the three files.]
+-- [AI-revised (claude-fable-5-2), 2026-11-17, later, at the author's remark: `hits` takes a pair
+-- `b = (b₁, b₂)` (see `BEEP/Affine/Defs.lean`), so the proof writes `hits z (B z)` where it had
+-- `hits B z`; `card_hits_le_maxHits` and `fold_challenge_le_proof` are stated for every `b`.]
 
 -- A line starting with `--` is a comment, which Lean ignores. In this file each comment explains
 -- the line, or the few lines, directly below it. The reading guide after the module documentation
@@ -731,9 +734,11 @@ theorem eval_defect_eq_zero {m : ℕ} {z : Fin m → F} {b : (Fin m → F) × (F
 
 section Counting
 
--- The words, the threshold, the number `m` of samples, and the prover's answers `B`: for every
--- `z ∈ F^m` a pair `B z = (b₁, b₂)`. The answers may depend on `z` in any way. Theorem 5.3 takes
--- the answers that maximize the number of DEEP-MCA-bad challenges (`maxHits` of `Defs.lean`).
+-- The words, the threshold, the number `m` of samples, and a choice `B` of the vectors `b₁, b₂`
+-- for every `z ∈ F^m`: `B z = (b₁, b₂)`. We call `b₁, b₂` the answers, since in a protocol they
+-- are the prover's answers to the samples `z`; here `B` is any function. Theorem 5.3 is about
+-- `|A_z|`, the largest `|A_{z, b₁, b₂}|` (`maxHits` of `Defs.lean`), and it follows from the case
+-- of a `B` that attains this maximum at every `z` (`exists_worst_answers` below).
 variable (u₁ u₂ : ι → F) (s : ℕ) {m : ℕ} (B : (Fin m → F) → (Fin m → F) × (Fin m → F))
 
 /-- A chosen consistent pretender at the challenge `α` (junk if there is none): the paper's
@@ -744,7 +749,7 @@ def pt (z : Fin m → F) (α : F × F) : F[X] :=
   if h : ∃ c, R.IsPretender u₁ u₂ s α c ∧ R.Consistent z (B z) α c then h.choose else 0
 
 /-- At a DEEP-MCA-bad challenge, the chosen point is a consistent pretender. -/
-theorem pt_spec {z : Fin m → F} {α : F × F} (hα : α ∈ R.hits u₁ u₂ s B z) :
+theorem pt_spec {z : Fin m → F} {α : F × F} (hα : α ∈ R.hits u₁ u₂ s z (B z)) :
     R.IsPretender u₁ u₂ s α (R.pt u₁ u₂ s B z α) ∧
       R.Consistent z (B z) α (R.pt u₁ u₂ s B z α) := by
   -- `α ∈ hits` unfolds to `DeepBad`, whose second part is the `∃ c, ...` that we need.
@@ -757,16 +762,16 @@ theorem pt_spec {z : Fin m → F} {α : F × F} (hα : α ∈ R.hits u₁ u₂ s
 /-- **The third step of the proof of Theorem 5.3, Lemma 5.5 part.** For two DEEP-MCA-bad challenges
 `a ≠ b`, at most `N - 2` further ones have their chosen point on the parameterized line through the
 chosen points at `a` and `b` (that is, `U = 0`), where `N = max(q, (n - s + 2)(n - s + 1)/2)`. -/
-theorem card_collinear_le {z : Fin m → F} {a b : F × F} (ha : a ∈ R.hits u₁ u₂ s B z)
-    (hb : b ∈ R.hits u₁ u₂ s B z) (hab : a ≠ b) :
-    ((((R.hits u₁ u₂ s B z).erase a).erase b).filter fun c =>
+theorem card_collinear_le {z : Fin m → F} {a b : F × F} (ha : a ∈ R.hits u₁ u₂ s z (B z))
+    (hb : b ∈ R.hits u₁ u₂ s z (B z)) (hab : a ≠ b) :
+    ((((R.hits u₁ u₂ s z (B z)).erase a).erase b).filter fun c =>
         defect a (R.pt u₁ u₂ s B z a) b (R.pt u₁ u₂ s B z b) c (R.pt u₁ u₂ s B z c) = 0).card +
         2 ≤
       max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2) := by
   -- Idea: `a`, `b` and these challenges are counted by Lemma 5.5 for the line through the chosen
   -- points at `a` and `b`. Abbreviations: `p` for the choice of points, `Col` for the set counted.
   set p := R.pt u₁ u₂ s B z with hp
-  set Col := (((R.hits u₁ u₂ s B z).erase a).erase b).filter fun c =>
+  set Col := (((R.hits u₁ u₂ s z (B z)).erase a).erase b).filter fun c =>
     defect a (p a) b (p b) c (p c) = 0 with hCol
   -- The chosen points at `a` and `b` are consistent pretenders.
   have hpa := R.pt_spec u₁ u₂ s B ha
@@ -790,7 +795,7 @@ theorem card_collinear_le {z : Fin m → F} {a b : F × F} (ha : a ∈ R.hits u�
     · -- `α ∈ Col`: `α` is DEEP-MCA-bad, and `U = 0` puts `p α` on the line
       -- (`onLine_of_defect_eq_zero`).
       rw [hCol, mem_filter] at hα
-      have hαH : α ∈ R.hits u₁ u₂ s B z := mem_of_mem_erase (mem_of_mem_erase hα.1)
+      have hαH : α ∈ R.hits u₁ u₂ s z (B z) := mem_of_mem_erase (mem_of_mem_erase hα.1)
       exact ⟨p α, (R.pt_spec u₁ u₂ s B hαH).1, onLine_of_defect_eq_zero hα.2⟩
   -- `b ∉ Col` and `a ∉ {b} ∪ Col`, since `Col ⊆ (H \ {a}) \ {b}` (`notMem_erase`).
   have hbC : b ∉ Col := fun h => by
@@ -809,7 +814,7 @@ theorem card_collinear_le {z : Fin m → F} {a b : F × F} (ha : a ∈ R.hits u�
 
 /-- Ordered triples of distinct DEEP-MCA-bad challenges whose chosen points have `U ≠ 0`. -/
 def goodTriples (z : Fin m → F) : Finset ((F × F) × (F × F) × (F × F)) :=
-  (R.hits u₁ u₂ s B z ×ˢ R.hits u₁ u₂ s B z ×ˢ R.hits u₁ u₂ s B z).filter fun t =>
+  (R.hits u₁ u₂ s z (B z) ×ˢ R.hits u₁ u₂ s z (B z) ×ˢ R.hits u₁ u₂ s z (B z)).filter fun t =>
     t.1 ≠ t.2.1 ∧ t.1 ≠ t.2.2 ∧ t.2.1 ≠ t.2.2 ∧
       defect t.1 (R.pt u₁ u₂ s B z t.1) t.2.1 (R.pt u₁ u₂ s B z t.2.1) t.2.2
         (R.pt u₁ u₂ s B z t.2.2) ≠ 0
@@ -821,12 +826,12 @@ there are at least `h (h - 1) (h - N)` ordered triples of distinct ones whose ch
 -- triples are mapped into `T_z` by `card_goodTriples_le` below. The proof is that of Claim 3 of
 -- `Lemma1.lean`.)
 theorem card_goodTriples (z : Fin m → F) :
-    (R.hits u₁ u₂ s B z).card * ((R.hits u₁ u₂ s B z).card - 1) *
-        ((R.hits u₁ u₂ s B z).card -
+    (R.hits u₁ u₂ s z (B z)).card * ((R.hits u₁ u₂ s z (B z)).card - 1) *
+        ((R.hits u₁ u₂ s z (B z)).card -
           max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)) ≤
       (R.goodTriples u₁ u₂ s B z).card := by
   -- The abbreviations `H`, `p`, `N` and `h`.
-  set H := R.hits u₁ u₂ s B z with hH
+  set H := R.hits u₁ u₂ s z (B z) with hH
   set p := R.pt u₁ u₂ s B z with hp
   set N := max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)
     with hN
@@ -1039,7 +1044,7 @@ answers `B`, the number `K` of `z ∈ F^m` with at least `t` DEEP-MCA-bad challe
 theorem affine_main_gen_nat (L t : ℕ) (hL : R.ListDecodable s L) :
     t * (t - 1) *
         (t - max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)) *
-        (univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s B z).card).card ≤
+        (univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s z (B z)).card).card ≤
       (Fintype.card F ^ 2 * L) ^ 3 * (R.ℓ + 1) ^ m := by
   -- The proof of Theorem 5.3: a `z` with at least `t` DEEP-MCA-bad challenges has
   -- `|T_z| ≥ f(t)`, and `∑_z |T_z| ≤ (q² L)³ (ℓ + 1)^m`. Abbreviations `N` and `Zt` (the `z` with
@@ -1047,15 +1052,15 @@ theorem affine_main_gen_nat (L t : ℕ) (hL : R.ListDecodable s L) :
   set N := max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)
     with hN
   set Zt := (univ : Finset (Fin m → F)).filter fun z =>
-    t ≤ (R.hits u₁ u₂ s B z).card with hZt
+    t ≤ (R.hits u₁ u₂ s z (B z)).card with hZt
   -- For `z ∈ Zt`: `f(t) ≤ |T_z|`.
   have hz : ∀ z ∈ Zt, t * (t - 1) * (t - N) ≤ (R.consTriples u₁ u₂ s B z).card := by
     intro z hz
     simp only [hZt, mem_filter, mem_univ, true_and] at hz
     -- `f(t) ≤ f(|A_z|)` (`cubic_mono`) `≤ #goodTriples` (third step) `≤ |T_z|` (injection).
     calc t * (t - 1) * (t - N)
-        ≤ (R.hits u₁ u₂ s B z).card * ((R.hits u₁ u₂ s B z).card - 1) *
-            ((R.hits u₁ u₂ s B z).card - N) := cubic_mono hz
+        ≤ (R.hits u₁ u₂ s z (B z)).card * ((R.hits u₁ u₂ s z (B z)).card - 1) *
+            ((R.hits u₁ u₂ s z (B z)).card - N) := cubic_mono hz
       _ ≤ (R.goodTriples u₁ u₂ s B z).card := R.card_goodTriples u₁ u₂ s B z
       _ ≤ (R.consTriples u₁ u₂ s B z).card := R.card_goodTriples_le u₁ u₂ s B z
   -- Sum over `Zt` and bound the total by the double count.
@@ -1080,7 +1085,7 @@ probability is written as the number of such `z` divided by `q^m`, and the denom
 theorem affine_main_gen (L t : ℕ) (hL : R.ListDecodable s L)
     (ht : max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2) + 1 ≤
       t) :
-    ((univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s B z).card).card : ℝ) /
+    ((univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s z (B z)).card).card : ℝ) /
         (Fintype.card F : ℝ) ^ m ≤
       ((Fintype.card F : ℝ) ^ 2 * L) ^ 3 * (((R.ℓ : ℝ) + 1) / Fintype.card F) ^ m /
         ((t : ℝ) * ((t : ℝ) - 1) * ((t : ℝ) -
@@ -1091,7 +1096,7 @@ theorem affine_main_gen (L t : ℕ) (hL : R.ListDecodable s L)
   -- `N`, and `K`: the number of `z` with at least `t` DEEP-MCA-bad challenges.
   set N := max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)
     with hN
-  set K : ℕ := (univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s B z).card).card with hK
+  set K : ℕ := (univ.filter fun z : Fin m → F => t ≤ (R.hits u₁ u₂ s z (B z)).card).card with hK
   -- `q > 0` and `q^m > 0`.
   have hq : (0 : ℝ) < Fintype.card F := Nat.cast_pos.mpr Fintype.card_pos
   have hW : (0 : ℝ) < (Fintype.card F : ℝ) ^ m := pow_pos hq m
@@ -1125,30 +1130,30 @@ theorem affine_main_gen (L t : ℕ) (hL : R.ListDecodable s L)
           (((R.ℓ : ℝ) + 1) ^ m / (Fintype.card F : ℝ) ^ m) * (Fintype.card F : ℝ) ^ m := by
         field_simp
 
-/-! #### Theorem 5.3, with the answers that maximize `|A_{z,b₁,b₂}|` -/
+/-! #### Theorem 5.3, with the vectors `b₁, b₂` that maximize `|A_{z,b₁,b₂}|` -/
 
--- The DEEP-MCA-bad challenges of `z` only depend on the answers `B z` to `z`, so
--- `|A_{z, B z}| ≤ |A_z|` for every strategy `B`.
-theorem card_hits_le_maxHits (z : Fin m → F) :
-    (R.hits u₁ u₂ s B z).card ≤ R.maxHits u₁ u₂ s z :=
-  -- `le_sup : b ∈ U → f b ≤ U.sup f`, for the answer `b = B z`.
-  le_sup (f := fun b : (Fin m → F) × (Fin m → F) => (R.hits u₁ u₂ s (fun _ => b) z).card)
-    (mem_univ (B z))
+-- `|A_{z, b₁, b₂}| ≤ |A_z|` for every `b = (b₁, b₂)`: `|A_z|` is the largest of these numbers.
+theorem card_hits_le_maxHits (z : Fin m → F) (b : (Fin m → F) × (Fin m → F)) :
+    (R.hits u₁ u₂ s z b).card ≤ R.maxHits u₁ u₂ s z :=
+  -- `le_sup : b ∈ U → f b ≤ U.sup f`.
+  le_sup (f := fun b : (Fin m → F) × (Fin m → F) => (R.hits u₁ u₂ s z b).card)
+    (mem_univ b)
 
--- The maximum is attained: some answer `b` to `z` has exactly `|A_z|` DEEP-MCA-bad challenges
+-- The maximum is attained: some `b = (b₁, b₂)` has exactly `|A_z|` DEEP-MCA-bad challenges at `z`
 -- (the paper's `b₁*, b₂*`).
 theorem exists_eq_maxHits (z : Fin m → F) :
     ∃ b : (Fin m → F) × (Fin m → F),
-      (R.hits u₁ u₂ s (fun _ => b) z).card = R.maxHits u₁ u₂ s z := by
+      (R.hits u₁ u₂ s z b).card = R.maxHits u₁ u₂ s z := by
   -- `exists_mem_eq_sup : U.Nonempty → ∃ i ∈ U, U.sup f = f i`, with `U = univ` (nonempty).
   obtain ⟨b, -, hb⟩ := exists_mem_eq_sup (univ : Finset ((Fin m → F) × (Fin m → F)))
-    univ_nonempty fun b => (R.hits u₁ u₂ s (fun _ => b) z).card
+    univ_nonempty fun b => (R.hits u₁ u₂ s z b).card
   exact ⟨b, hb.symm⟩
 
--- A worst-case strategy: a single `B'` that attains `|A_z|` at every `z` at once.
+-- A choice of such a pair for every `z`: a function `B'` such that `B' z` attains `|A_z|`. (In the
+-- paper, `b₁*, b₂*` depend on `z` in the same way.)
 theorem exists_worst_answers :
     ∃ B' : (Fin m → F) → (Fin m → F) × (Fin m → F),
-      ∀ z, (R.hits u₁ u₂ s B' z).card = R.maxHits u₁ u₂ s z := by
+      ∀ z, (R.hits u₁ u₂ s z (B' z)).card = R.maxHits u₁ u₂ s z := by
   -- The axiom of choice (`Classical.axiom_of_choice`) applied to `exists_eq_maxHits`.
   obtain ⟨b, hb⟩ := Classical.axiom_of_choice (R.exists_eq_maxHits u₁ u₂ s (m := m))
   exact ⟨b, hb⟩
@@ -1160,11 +1165,11 @@ theorem affine_main_nat_proof (L t : ℕ) (hL : R.ListDecodable s L) :
         (t - max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2)) *
         (univ.filter fun z : Fin m → F => t ≤ R.maxHits u₁ u₂ s z).card ≤
       (Fintype.card F ^ 2 * L) ^ 3 * (R.ℓ + 1) ^ m := by
-  -- A worst-case strategy `B'`, with `hB' : ∀ z, |A_{z, B' z}| = |A_z|`.
+  -- A worst-case choice `B'`, with `hB' : ∀ z, |A_{z, B' z}| = |A_z|`.
   obtain ⟨B', hB'⟩ := R.exists_worst_answers u₁ u₂ s (m := m)
   -- Replace `|A_z|` by `|A_{z, B' z}|` in the goal (`hB'` from right to left).
   simp only [← hB']
-  -- This is `affine_main_gen_nat` for the strategy `B'`.
+  -- This is `affine_main_gen_nat` for the choice `B'`.
   exact R.affine_main_gen_nat u₁ u₂ s B' L t hL
 
 /-- **Proof of `affine_main`** (Theorem 5.3 with the integer agreement threshold `s`).
@@ -1179,29 +1184,30 @@ theorem affine_main_proof (L t : ℕ) (hL : R.ListDecodable s L)
         ((t : ℝ) * ((t : ℝ) - 1) * ((t : ℝ) -
           ((max (Fintype.card F) ((Fintype.card ι - s + 2) * (Fintype.card ι - s + 1) / 2) :
             ℕ) : ℝ))) := by
-  -- A worst-case strategy `B'`, as in `affine_main_nat`.
+  -- A worst-case choice `B'`, as in `affine_main_nat`.
   obtain ⟨B', hB'⟩ := R.exists_worst_answers u₁ u₂ s (m := m)
   simp only [← hB']
-  -- This is `affine_main_gen` for the strategy `B'`.
+  -- This is `affine_main_gen` for the choice `B'`.
   exact R.affine_main_gen u₁ u₂ s B' L t hL ht
 
 /-- **Proof of `fold_challenge_le`** (how Theorem 5.3 is used: the fold challenge).
 `BEEP/Affine/Theorem.lean` states this theorem again, under the name `fold_challenge_le`, and
 explains it. -/
-theorem fold_challenge_le_proof (z : Fin m → F) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
-    ((univ.filter fun α : F × F => R.DeepBad u₁ u₂ s z (B z) α).card : ℝ) /
+theorem fold_challenge_le_proof (z : Fin m → F) (b : (Fin m → F) × (Fin m → F)) (t : ℕ)
+    (hz : R.maxHits u₁ u₂ s z < t) :
+    ((univ.filter fun α : F × F => R.DeepBad u₁ u₂ s z b α).card : ℝ) /
         (Fintype.card (F × F) : ℝ) ≤ ((t : ℝ) - 1) / (Fintype.card F : ℝ) ^ 2 := by
-  -- In `ℕ`: `|A_{z, B z}| ≤ |A_z| < t`, so `|A_{z, B z}| + 1 ≤ t`.
-  have h : (R.hits u₁ u₂ s B z).card + 1 ≤ t := by
-    have := R.card_hits_le_maxHits u₁ u₂ s B z
+  -- In `ℕ`: `|A_{z, b}| ≤ |A_z| < t`, so `|A_{z, b}| + 1 ≤ t`.
+  have h : (R.hits u₁ u₂ s z b).card + 1 ≤ t := by
+    have := R.card_hits_le_maxHits u₁ u₂ s z b
     omega
   -- The same in `ℝ`.
-  have h' : ((R.hits u₁ u₂ s B z).card : ℝ) + 1 ≤ t := by exact_mod_cast h
+  have h' : ((R.hits u₁ u₂ s z b).card : ℝ) + 1 ≤ t := by exact_mod_cast h
   -- `#(F × F) = q · q = q²`.
   rw [Fintype.card_prod, Nat.cast_mul, ← sq]
-  -- The filter is `A_{z, B z}` by definition (`hits`), ...
-  change ((R.hits u₁ u₂ s B z).card : ℝ) / _ ≤ _
-  -- ... both sides are divided by `q² ≥ 0` (`gcongr`), and `|A_{z, B z}| ≤ t - 1` (`linarith`).
+  -- The filter is `A_{z, b}` by definition (`hits`), ...
+  change ((R.hits u₁ u₂ s z b).card : ℝ) / _ ≤ _
+  -- ... both sides are divided by `q² ≥ 0` (`gcongr`), and `|A_{z, b}| ≤ t - 1` (`linarith`).
   gcongr
   linarith
 

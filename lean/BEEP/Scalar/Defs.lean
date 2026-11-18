@@ -7,6 +7,10 @@
 -- namespace `BEEP.Main` is now `BEEP.Scalar`, the comments are adapted to the three files, and
 -- the paper's numbers are those of November 17 (the zero evader is now Definition 2.2). Please
 -- review the definitions against the paper; the dictionary is in the module documentation.]
+-- [AI-revised (claude-fable-5-2), 2026-11-17, later, at the author's remark that `hits` took a
+-- "strategy": `hits` now takes the pair `b = (b₁, b₂)` (it took a function from `z` to such
+-- pairs), so that `hits z b` is the paper's `A_{z, b₁, b₂}`. `maxHits` is written with it and is
+-- the same function as before. Please review these two definitions.]
 
 -- A line starting with `--` is a comment, which Lean ignores. In this file each comment explains
 -- the line, or the few lines, directly below it. The reading guide after the module documentation
@@ -84,7 +88,7 @@ change when the numbers do.
 | Definition 3.2, `c` is an `α`-pretender | `R.IsPretender u₁ u₂ s α c` |
 | the zero evader `(φ_z)_{z ∈ Z}` (Definition 2.2); `ε` is an error bound | `R.φ`; `R.IsErrorBound ε` |
 | Definition 3.3 (consistency); DEEP-MCA-bad element | `R.Consistent z b α c`; `R.DeepBad u₁ u₂ s z b α` |
-| `A_{z, b₁, b₂}`; `|A_z|` (maximal over `b₁, b₂`) | `R.hits u₁ u₂ s (fun _ => b) z`; `R.maxHits u₁ u₂ s z` |
+| `A_{z, b₁, b₂}`; `|A_z|` (maximal over `b₁, b₂`) | `R.hits u₁ u₂ s z b`; `R.maxHits u₁ u₂ s z` |
 | `C` is `(δ, L)`-list decodable | `R.ListDecodable s L` (or the hypothesis `hL` of `main_thm_delta`) |
 
 The objects that only the proof uses (parameterized lines, the vector `U`, the sets `P` and
@@ -297,20 +301,19 @@ end Defs
 
 section Hits
 
--- The words, the threshold, and the prover's answers `B`: for every `z ∈ Z` a pair
--- `B z = (b₁, b₂)` of vectors of `F^m`. The answers may depend on `z` in any way. Theorem 3.4
--- takes the answers that maximize the number of DEEP-MCA-bad elements (`maxHits` below).
-variable (u₁ u₂ : ι → F) (s : ℕ) (B : Z → (Fin R.m → F) × (Fin R.m → F))
+-- The two words and the agreement threshold, as in the section `Defs`.
+variable (u₁ u₂ : ι → F) (s : ℕ)
 
-/-- The set `A_{z, b₁, b₂}` of DEEP-MCA-bad elements at `z`, with the answers `(b₁, b₂) = B z`. -/
-def hits (z : Z) : Finset F :=
-  univ.filter fun α => R.DeepBad u₁ u₂ s z (B z) α
+/-- The set `A_{z, b₁, b₂}` of Theorem 3.4: the DEEP-MCA-bad elements with respect to `z` and
+`b = (b₁, b₂)`, two vectors of `F^m`. -/
+def hits (z : Z) (b : (Fin R.m → F) × (Fin R.m → F)) : Finset F :=
+  univ.filter fun α => R.DeepBad u₁ u₂ s z b α
 
-/-- `|A_z|`: the largest number of DEEP-MCA-bad elements at `z` over all answers `(b₁, b₂)`. -/
--- `fun _ => b` is the strategy that answers `b` to every `z`, and `univ.sup f` is the largest value
--- of `f b` over all `b` (Mathlib's `Finset.sup`).
+/-- `|A_z|` of Theorem 3.4: the largest `|A_{z, b₁, b₂}|` over all `(b₁, b₂)`, for a fixed `z`.
+(The paper lets `b₁*, b₂*` be such that `|A_{z, b₁*, b₂*}|` is maximal, and `A_z` is that set.) -/
+-- `univ.sup f` is the largest value of `f b` over all `b` (Mathlib's `Finset.sup`).
 def maxHits (z : Z) : ℕ :=
-  univ.sup fun b : (Fin R.m → F) × (Fin R.m → F) => (R.hits u₁ u₂ s (fun _ => b) z).card
+  univ.sup fun b : (Fin R.m → F) × (Fin R.m → F) => (R.hits u₁ u₂ s z b).card
 
 end Hits
 

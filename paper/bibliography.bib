@@ -1,17 +1,18 @@
 % [AI-added (claude-opus-5-5), 2026-11-17, at the author's request (citations showed as [Bun+26] instead of the initials of the authors): the field "abstract" of each entry holds its citation label, e.g. BCHKS25, which the style ieee-alpha.csl prints. Typst computes its own labels and ignores "label" and "shorthand", so the label goes in "abstract". After adding or editing an entry, run: python3 paper/scripts/bib_labels.py]
+% [AI-edited (claude-fable-5-2), 2026-11-17, at the author's request (check of all citations): the ePrint and ECCC entries are now @techreport with the archive and number in "type" (as @misc with "howpublished", Typst printed neither the archive nor the year, only the URL); publication notes added to BCFW25 (TCC 2025, ePrint page), BCGM25 (CCC 2026, ePrint page), BCHKS25 (STOC 2026, Crossref 10.1145/3798129.3800827), DG25 (CRYPTO 2026, ePrint page) and blaze (EUROCRYPT 2025, Crossref 10.1007/978-3-031-91134-7_5). Please review]
 
-@misc{BGKS19,
-      abstract = {BGKS19},
+@techreport{BGKS19,
+      abstract = {BGK+19},
       author = {Eli Ben-Sasson and Lior Goldberg and Swastik Kopparty and Shubhangi Saraf},
       title = {{DEEP}-{FRI}: Sampling Outside the Box Improves Soundness},
-      howpublished = {Cryptology {ePrint} Archive, Paper 2019/336},
+      type         = {Cryptology {ePrint} Archive, Paper 2019/336},
       year = {2019},
       url = {https://eprint.iacr.org/2019/336}
 }
 
 
 @inproceedings{whir,
-  abstract = {ACFY25},
+  abstract = {ACF+25},
   author       = {Gal Arnon and
                   Alessandro Chiesa and
                   Giacomo Fenzi and
@@ -35,114 +36,114 @@
 }
 
 
-@misc{ligerito,
+@techreport{ligerito,
   abstract = {NA25},
   author = {Andrija Novakovic and Guillermo Angeris},
   title = {Ligerito: A Small and Concretely Fast Polynomial Commitment Scheme},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/1187},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/1187},
   year = {2025},
   url = {https://eprint.iacr.org/2025/1187}
 }
 
-@misc{BCFW25,
-  abstract = {BCFW25},
+@techreport{BCFW25,
+  abstract = {BCF+25},
   author       = {Benedikt Bünz and Alessandro Chiesa and Giacomo Fenzi and William Wang},
   title        = {Linear-Time Accumulation Schemes},
-  howpublished = {Cryptology ePrint Archive, Paper 2025/753},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/753 (a version appears at {TCC} 2025)},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/753}
 }
 
-@misc{zook,
+@techreport{zook,
       abstract = {CFW26},
       author = {Alessandro Chiesa and Giacomo Fenzi and Guy Weissenberg},
       title = {Zero-Knowledge {IOPPs} for Constrained Interleaved Codes},
-      howpublished = {Cryptology {ePrint} Archive, Paper 2026/391},
+      type         = {Cryptology {ePrint} Archive, Paper 2026/391},
       year = {2026},
       url = {https://eprint.iacr.org/2026/391}
 }
 
 % [AI-added (claude-fable-5-2), 2026-11-12, review pass at the author's request: the four entries below. BCHKS25 and Man26 are cited for the line count (the same references as in Note 2 of the repository); Gru24 and BDDT25 are cited in the sumcheck footnote of the BEEP construction. In the entry above for DEEP-FRI, the key BGKS29 was renamed BGKS19 (it is not cited yet). Please review]
 
-@misc{BCHKS25,
-  abstract = {BCHK+25},
+@techreport{BCHKS25,
+  abstract = {BCH+25},
   author       = {Eli Ben-Sasson and Dan Carmon and Ulrich Haböck and Swastik Kopparty and Shubhangi Saraf},
   title        = {On Proximity Gaps for {Reed}-{Solomon} Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2055},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2055 (a version appears at {STOC} 2026)},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2055}
 }
 
-@misc{Man26,
+@techreport{Man26,
   abstract = {Man26},
   author       = {Ignacio Manzur},
   title        = {Mutual Correlated Agreement and List-Decoding: Improvements and Separations},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2617},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2617},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2617}
 }
 
-@misc{Gru24,
+@techreport{Gru24,
   abstract = {Gru24},
   author       = {Angus Gruen},
   title        = {Some Improvements for the {PIOP} for {ZeroCheck}},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2024/108},
+  type         = {Cryptology {ePrint} Archive, Paper 2024/108},
   year         = {2024},
   url          = {https://eprint.iacr.org/2024/108}
 }
 
-@misc{BDDT25,
-  abstract = {BDDT25},
+@techreport{BDDT25,
+  abstract = {BDD+25},
   author       = {Suyash Bagad and Quang Dao and Yuval Domb and Justin Thaler},
   title        = {Speeding Up Sum-Check Proving},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/1117},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/1117},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/1117}
 }
 
 % [AI-added (claude-fable-5-2), 2026-11-13, with the Experiments section, at the author's request: the three entries below. flock and DKT26 are the entries of Note 3 of the repository (there under the keys flock and DKT); CWYZ26 is the affine-combiners paper, from the title page of its PDF dated November 11, 2026 (no ePrint number on it). Please review]
 
-@misc{flock,
+@techreport{flock,
   abstract = {BRW26},
   author       = {Benedikt Bünz and Ron D. Rothblum and William Wang},
   title        = {Flock: Fast Proving for Batch {Boolean} Computations},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/1329},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/1329},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/1329}
 }
 
-@misc{DKT26,
+@techreport{DKT26,
   abstract = {DKT26},
   author       = {Quang Dao and Scott Duke Kominers and Justin Thaler},
   title        = {{Reed}-{Solomon} Codes Beyond {Johnson}: Efficient Decoding and Smaller Cryptographic Proofs},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2056},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2056},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2056}
 }
 
 
-@misc{CWYZ26,
-  abstract = {CWYZ26},
+@techreport{CWYZ26,
+  abstract = {CWY+26},
   author       = {Alessandro Chiesa and Guy Weissenberg and Eylon Yogev and Kai Zhe Zheng},
   title        = {Affine Combiners for {Reed}-{Solomon} Proximity Gaps},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2863},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2863},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2863}
 }
 
 
-@misc{blaze,
-      abstract = {BCFR+24},
+@techreport{blaze,
+      abstract = {BCF+24},
       author = {Martijn Brehm and Binyi Chen and Ben Fisch and Nicolas Resch and Ron D. Rothblum and Hadas Zeilberger},
       title = {Blaze: Fast {SNARKs} from Interleaved {RAA} Codes},
-      howpublished = {Cryptology {ePrint} Archive, Paper 2024/1609},
+      type         = {Cryptology {ePrint} Archive, Paper 2024/1609 (a version appears at {EUROCRYPT} 2025)},
       year = {2024},
       url = {https://eprint.iacr.org/2024/1609}
 }
 
 
 @InProceedings{deep,
-  abstract = {BGKS20},
+  abstract = {BGK+20},
   author =	{Ben-Sasson, Eli and Goldberg, Lior and Kopparty, Swastik and Saraf, Shubhangi},
   title =	{{DEEP-FRI: Sampling Outside the Box Improves Soundness}},
   booktitle =	{11th Innovations in Theoretical Computer Science Conference (ITCS 2020)},
@@ -175,7 +176,7 @@
 % [AI-added (claude-fable-5-2), 2026-11-16, at the author's request (the "cite" comments of the introduction): the 18 entries below. Each one was checked against at least one of: the title page of the local copy of the paper, its ePrint or ECCC page, and the reference lists of ABF26 (ePrint 2026/680), Man26 (ePrint 2026/2617) and DKT26 (ePrint 2026/2056). Zei26 is Khatam, which earlier papers cite under its former title "Khatam: Reducing the Communication Complexity of Code-Based SNARKs"; its ePrint page now has the title below and says it is a minor revision of a CRYPTO 2026 publication. The year of proximityprize is the one that other papers give for the announcement. Please review]
 
 @inproceedings{fri,
-  abstract = {BBHR18},
+  abstract = {BBH+18},
   author    = {Eli Ben-Sasson and Iddo Bentov and Yinon Horesh and Michael Riabzev},
   title     = {Fast {Reed}-{Solomon} Interactive Oracle Proofs of Proximity},
   booktitle = {45th International Colloquium on Automata, Languages, and Programming ({ICALP} 2018)},
@@ -186,7 +187,7 @@
 }
 
 @inproceedings{BCIKS20,
-  abstract = {BCIK+20},
+  abstract = {BCI+20},
   author    = {Eli Ben-Sasson and Dan Carmon and Yuval Ishai and Swastik Kopparty and Shubhangi Saraf},
   title     = {Proximity Gaps for {Reed}-{Solomon} Codes},
   booktitle = {61st Annual {IEEE} Symposium on Foundations of Computer Science ({FOCS} 2020)},
@@ -205,83 +206,83 @@
   year    = {1962}
 }
 
-@misc{GKL24,
+@techreport{GKL24,
   abstract = {GKL24},
   author       = {Yiwen Gao and Haibin Kan and Yuan Li},
   title        = {Linear Proximity Gap for Linear Codes within the 1.5 {Johnson} Bound},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2024/1810},
+  type         = {Cryptology {ePrint} Archive, Paper 2024/1810},
   year         = {2024},
   url          = {https://eprint.iacr.org/2024/1810}
 }
 
-@misc{Zei26,
+@techreport{Zei26,
   abstract = {Zei26},
   author       = {Hadas Zeilberger},
   title        = {Khatam: Proximity Gaps for Multilinear Evaluation for All Linear Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2024/1843 (a version appears at {CRYPTO} 2026)},
+  type         = {Cryptology {ePrint} Archive, Paper 2024/1843 (a version appears at {CRYPTO} 2026)},
   year         = {2026},
   url          = {https://eprint.iacr.org/2024/1843}
 }
 
-@misc{BCGM25,
-  abstract = {BCGM25},
+@techreport{BCGM25,
+  abstract = {BCG+25},
   author       = {Sarah Bordage and Alessandro Chiesa and Ziyi Guan and Ignacio Manzur},
   title        = {All Polynomial Generators Preserve Distance with Mutual Correlated Agreement},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2051},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2051 (a version appears at {CCC} 2026)},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2051}
 }
 
-@misc{Hab25,
+@techreport{Hab25,
   abstract = {Hab25},
   author       = {Ulrich Haböck},
   title        = {A Note on Mutual Correlated Agreement for {Reed}-{Solomon} Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2110},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2110},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2110}
 }
 
-@misc{KTZ26,
+@techreport{KTZ26,
   abstract = {KTZ26},
   author       = {Scott Duke Kominers and Justin Thaler and Kai Zhe Zheng},
   title        = {The One-and-a-Half {Johnson} Bound Is Tight for Proximity Gaps of General Linear Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/1894},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/1894},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/1894}
 }
 
-@misc{CS25,
+@techreport{CS25,
   abstract = {CS25},
   author       = {Elizabeth Crites and Alistair Stewart},
   title        = {On {Reed}-{Solomon} Proximity Gaps Conjectures},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2046},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2046},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2046}
 }
 
-@misc{DG25,
+@techreport{DG25,
   abstract = {DG25},
   author       = {Benjamin E. Diamond and Angus Gruen},
   title        = {On the Distribution of the Distances of Random Words},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2010},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2010 (a version appears at {CRYPTO} 2026)},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2010}
 }
 
-@misc{GG25,
+@techreport{GG25,
   abstract = {GG25},
   author       = {Rohan Goyal and Venkatesan Guruswami},
   title        = {Optimal Proximity Gaps for Subspace-Design Codes and (Random) {Reed}-{Solomon} Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2025/2054},
+  type         = {Cryptology {ePrint} Archive, Paper 2025/2054},
   year         = {2025},
   url          = {https://eprint.iacr.org/2025/2054}
 }
 
-@misc{ABF26,
+@techreport{ABF26,
   abstract = {ABF26},
   author       = {Gal Arnon and Dan Boneh and Giacomo Fenzi},
   title        = {Open Problems in List Decoding and Correlated Agreement},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/680},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/680},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/680}
 }
@@ -295,102 +296,102 @@
   url          = {https://proximityprize.org/}
 }
 
-@misc{BCPZZ26,
-  abstract = {BCPZ+26},
+@techreport{BCPZZ26,
+  abstract = {BCP+26},
   author       = {Joshua Brakensiek and Yeyuan Chen and Aaron Putterman and Zihan Zhang and Kai Zhe Zheng},
   title        = {Algorithmic List Decoding of {Reed}-{Solomon} Codes up to Capacity},
-  howpublished = {Electronic Colloquium on Computational Complexity, Report {TR26-164}},
+  type         = {Electronic Colloquium on Computational Complexity, Report {TR26-164}},
   year         = {2026},
   url          = {https://eccc.weizmann.ac.il/report/2026/164/}
 }
 
-@misc{Jer26,
+@techreport{Jer26,
   abstract = {Jer26},
   author       = {Fernando Granha Jeronimo},
   title        = {Algorithmic List Decoding at Capacity and Optimal Proximity Gaps for {Reed}-{Solomon} Codes},
-  howpublished = {Electronic Colloquium on Computational Complexity, Report {TR26-169}},
+  type         = {Electronic Colloquium on Computational Complexity, Report {TR26-169}},
   year         = {2026},
   url          = {https://eccc.weizmann.ac.il/report/2026/169/}
 }
 
-@misc{Gab26,
+@techreport{Gab26,
   abstract = {Gab26},
   author       = {Ariel Gabizon},
   title        = {Linear List Size Bounds for {Reed}-{Solomon} Beyond the {Johnson} Radius},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2048},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2048},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2048}
 }
 
-@misc{DKTZ26,
-  abstract = {DKTZ26},
+@techreport{DKTZ26,
+  abstract = {DKT+26},
   author       = {Quang Dao and Scott Duke Kominers and Justin Thaler and Kai Zhe Zheng},
   title        = {Counterexamples to Beyond-{Johnson} Proximity Gaps over Binary Fields},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2424},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2424},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2424}
 }
 
-@misc{Jo26,
+@techreport{Jo26,
   abstract = {Jo26},
   author       = {Sunghyeon Jo},
   title        = {{Reed}-{Solomon} Mutual Correlated Agreement Beyond the {Johnson} Radius},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/1432},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/1432},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/1432}
 }
 
 % [AI-added (claude-fable-5-2), 2026-11-16, at the author's request (the citation comments of the new "Our contributions" text of the introduction: "basefold", "references", "polygero", "ERA, sketched, RAA, QA"): the six entries below. Each one was checked on its ePrint page on 2026-11-16 (title, authors, number, publication note); polygero also against the title page of its PDF. "sketched" is read as the sketched codes of Bolt. Please review]
-@misc{basefold,
+@techreport{basefold,
   abstract = {ZCF23},
   author       = {Hadas Zeilberger and Binyi Chen and Ben Fisch},
   title        = {{BaseFold}: Efficient Field-Agnostic Polynomial Commitment Schemes from Foldable Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2023/1705 (a version appears at {CRYPTO} 2024)},
+  type         = {Cryptology {ePrint} Archive, Paper 2023/1705 (a version appears at {CRYPTO} 2024)},
   year         = {2023},
   url          = {https://eprint.iacr.org/2023/1705}
 }
 
-@misc{fribinius,
+@techreport{fribinius,
   abstract = {DP24},
   author       = {Benjamin E. Diamond and Jim Posen},
   title        = {Polylogarithmic Proofs for Multilinears over Binary Towers},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2024/504 (a version appears at {EUROCRYPT} 2026)},
+  type         = {Cryptology {ePrint} Archive, Paper 2024/504 (a version appears at {EUROCRYPT} 2026)},
   year         = {2024},
   url          = {https://eprint.iacr.org/2024/504}
 }
 
-@misc{polygero,
+@techreport{polygero,
   abstract = {FS26},
   author       = {Matteo Frigo and abhi shelat},
   title        = {Polygero: Proximity Testing From Polynomial Challenges},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/2481},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/2481},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/2481}
 }
 
-@misc{era,
-  abstract = {BFMM26},
+@techreport{era,
+  abstract = {BFM+26},
   author       = {Anubhav Baweja and Giacomo Fenzi and Pratyush Mishra and Tushar Mopuri},
   title        = {Field-Agnostic {SNARKs} with Small Proofs via Encode-Repeat-Accumulate ({ERA}) Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/864},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/864},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/864}
 }
 
-@misc{bolt,
+@techreport{bolt,
   abstract = {GNR26},
   author       = {Kobi Gurkan and Andrija Novakovic and Ron D. Rothblum},
   title        = {Bolt: Faster {SNARKs} from Sketched Codes},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/310 (a version appears at {CRYPTO} 2026)},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/310 (a version appears at {CRYPTO} 2026)},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/310}
 }
 
-@misc{qacodes,
-  abstract = {LLXY+26},
+@techreport{qacodes,
+  abstract = {LLX+26},
   author       = {Zhe Li and Hongqing Liu and Chaoping Xing and Yizhou Yao and Chen Yuan},
   title        = {More Efficient {SNARKs} via Quasi-Abelian Codes: Faster, Smaller, and Field-Agnostic},
-  howpublished = {Cryptology {ePrint} Archive, Paper 2026/939},
+  type         = {Cryptology {ePrint} Archive, Paper 2026/939},
   year         = {2026},
   url          = {https://eprint.iacr.org/2026/939}
 }
@@ -398,7 +399,7 @@
 % [AI-added (claude-opus-5-5), 2026-11-17, at the author's request ("Provide reference for STIR and Deepfold", for the sentence of the introduction on who obtains DEEP-type fold bounds): the two entries below. STIR checked on Crossref (DOI 10.1007/978-3-031-68403-6_12: authors, pages 380-413) and on the IUCC CRIS record (editors Reyzin and Stebila, LNCS 14929); DeepFold checked on its USENIX Security 2025 page (the BibTeX given there) and on its ePrint page (2024/1595, "Published elsewhere. Usenix Security 2025"). Please review]
 
 @inproceedings{stir,
-  abstract     = {ACFY24},
+  abstract     = {ACF+24},
   author       = {Gal Arnon and
                   Alessandro Chiesa and
                   Giacomo Fenzi and
@@ -418,7 +419,7 @@
 }
 
 @inproceedings{deepfold,
-  abstract     = {GLHQ+25},
+  abstract     = {GLH+25},
   author       = {Yanpei Guo and
                   Xuanming Liu and
                   Kexi Huang and

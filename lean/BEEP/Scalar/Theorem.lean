@@ -7,6 +7,9 @@
 -- without change; each proof is now one line, and the proof that was here is in
 -- `BEEP/Scalar/Proof.lean`. The namespace `BEEP.Main` is now `BEEP.Scalar`. Please review the
 -- statements against the paper.]
+-- [AI-revised (claude-fable-5-2), 2026-11-17, later, at the author's remark: `fold_challenge_le`
+-- is stated for every pair `b = (b₁, b₂)` (it was stated for a function from `z` to such pairs).
+-- The other statements are unchanged. Please review.]
 
 -- A line starting with `--` is a comment, which Lean ignores. The reading guide of
 -- `BEEP/Scalar/Defs.lean` explains the notation.
@@ -56,7 +59,7 @@ to read `BEEP/Scalar/Proof.lean` to know what they say.
   here.
 
 In all of them `|A_z|` is `R.maxHits u₁ u₂ s z`, the largest number of DEEP-MCA-bad elements at
-`z` over all answers `b₁, b₂`.
+`z` over all `b₁, b₂ ∈ F^m`.
 
 ## How the statements are written
 
@@ -170,16 +173,14 @@ end WithDelta
 
 section Counting
 
--- The words, the threshold, and the prover's answers `B`: for every `z ∈ Z` a pair
--- `B z = (b₁, b₂)` of vectors of `F^m`. The answers may depend on `z` in any way. Theorem 3.4
--- takes the answers that maximize the number of DEEP-MCA-bad elements (`maxHits` of `Defs.lean`).
-variable (u₁ u₂ : ι → F) (s : ℕ) (B : Z → (Fin R.m → F) × (Fin R.m → F))
+-- In this section `u₁ u₂` are the words and `s` is the agreement threshold.
+variable (u₁ u₂ : ι → F) (s : ℕ)
 
 /-- **Theorem 3.4, with the agreement threshold `s`.** Let `C` be list decodable with list size
 `L` at agreement `s`, and let `ε` be an error bound of the zero evader. Then for every integer
 `t ≥ n - s + 2` and `z` uniform in `Z`,
 `Pr[|A_z| ≥ t] ≤ (q L)³ ε / (t (t - 1) (t - (n - s) - 1))`, where `|A_z|` is the largest number of
-DEEP-MCA-bad elements at `z` over all answers `b₁, b₂`. -/
+DEEP-MCA-bad elements at `z` over all `b₁, b₂ ∈ F^m`. -/
 theorem main_thm [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s L)
     (hε : R.IsErrorBound ε) (ht : Fintype.card ι - s + 2 ≤ t) :
     ((univ.filter fun z : Z => t ≤ R.maxHits u₁ u₂ s z).card : ℝ) / Fintype.card Z ≤
@@ -190,7 +191,7 @@ theorem main_thm [Nonempty Z] (L t : ℕ) (ε : ℝ) (hL : R.ListDecodable s L)
 /-- **Theorem 3.4, counting form.** For every `t`,
 `t (t - 1) (t - N) · #{z ∈ Z | |A_z| ≥ t} ≤ (q L)³ M`, where `N = n - s + 1`, every nonzero
 `v ∈ F^ℓ` has `φ_z(v) = 0` for at most `M` of the `z ∈ Z`, and `|A_z|` is the largest number of
-DEEP-MCA-bad elements at `z` over all answers. The subtractions are those of `ℕ`, so for
+DEEP-MCA-bad elements at `z` over all `b₁, b₂`. The subtractions are those of `ℕ`, so for
 `t ≤ N` the left-hand side is `0`. -/
 theorem main_thm_nat (L M t : ℕ) (hL : R.ListDecodable s L)
     (hM : ∀ v : Fin R.ℓ → F, v ≠ 0 → (univ.filter fun z : Z => R.φ z v = 0).card ≤ M) :
@@ -199,14 +200,16 @@ theorem main_thm_nat (L M t : ℕ) (hL : R.ListDecodable s L)
       (Fintype.card F * L) ^ 3 * M :=
   R.main_thm_nat_proof u₁ u₂ s L M t hL hM
 
-/-- **How Theorem 3.4 is used (the fold challenge).** If `|A_z| < t`, then whatever the answers `B`
-to `z`, a uniform challenge `α ∈ F` is DEEP-MCA-bad with probability at most `(t - 1)/q`. With
-`t = (n - s) + 2`, the least threshold of `main_thm`, this is `(n - s + 1)/q`; for
-`s = ⌈(1 - δ) n⌉` it is at most the term `(δ n + 1)/|F|` of the error `κ₂` of Theorem 4.3. -/
-theorem fold_challenge_le (z : Z) (t : ℕ) (hz : R.maxHits u₁ u₂ s z < t) :
-    ((univ.filter fun α : F => R.DeepBad u₁ u₂ s z (B z) α).card : ℝ) / Fintype.card F ≤
+/-- **How Theorem 3.4 is used (the fold challenge).** If `|A_z| < t`, then for every
+`b = (b₁, b₂)`, a uniform challenge `α ∈ F` is DEEP-MCA-bad with respect to `z, b₁, b₂` with
+probability at most `(t - 1)/q`. With `t = (n - s) + 2`, the least threshold of `main_thm`, this
+is `(n - s + 1)/q`; for `s = ⌈(1 - δ) n⌉` it is at most the term `(δ n + 1)/|F|` of the error
+`κ₂` of Theorem 4.3. -/
+theorem fold_challenge_le (z : Z) (b : (Fin R.m → F) × (Fin R.m → F)) (t : ℕ)
+    (hz : R.maxHits u₁ u₂ s z < t) :
+    ((univ.filter fun α : F => R.DeepBad u₁ u₂ s z b α).card : ℝ) / Fintype.card F ≤
       ((t : ℝ) - 1) / Fintype.card F :=
-  R.fold_challenge_le_proof u₁ u₂ s B z t hz
+  R.fold_challenge_le_proof u₁ u₂ s z b t hz
 
 end Counting
 

@@ -2,6 +2,7 @@
 <!-- [AI-revised (claude-opus-5-5), 2026-11-16, at the author's request: the folder is copied from typst/lean of the repository random-domain-ligerito to lean/ of the repository BEEP; the paper's numbers are those of its numbering within sections (Theorem 30 is now Theorem 5.3, Lemma 33 is Lemma 5.5, Definitions 28, 29 and 32 are Definitions 5.1, 5.2 and 5.4), and the paths are those of the new repository; please review] -->
 <!-- [AI-revised (claude-fable-5-2), 2026-11-16, at the author's request: the formalization of Theorem 3.4 is new, and this README describes both; please review] -->
 <!-- [AI-revised (claude-fable-5-2), 2026-11-17, at the author's request: each formalization is now a folder of three files (definitions, statements, proofs), so that knowing what is proved only takes reading the definitions and the statements. This README is reorganized accordingly: the first section is new, each of the two sections on a theorem now has a part for each file, and the paper's numbers are those of November 17 (Definition 2.2, Lemmas 2.5 and 2.8, Construction 4.5, Theorem 4.6, Remark 5.6). The sections on the differences with the paper and the earlier records of the checks are the previous text; please review] -->
+<!-- [AI-revised (claude-fable-5-2), 2026-11-17, later, at the author's remark that the definitions spoke of a prover's strategy: `hits` takes the pair `(b₁, b₂)`; point 4 of the first list of differences, point 5 of the second, and the last record of the checks with its table are new; please review] -->
 
 # Lean formalizations of Theorems 3.4 and 5.3 of the BEEP paper
 
@@ -69,7 +70,7 @@ independent samples of a scalar family.)
 codewords at relative Hamming distance at most `δ`), and let `ε` be an error bound of the zero
 evader; then for every integer `t ≥ δ n + 2`, for `z` uniform in `Z`,
 `Pr[|A_z| ≥ t] ≤ (|F| L)³ ε / (t (t - 1) (t - δ n - 1))`, where `n` is the block length and `|A_z|`
-is the largest number of DEEP-MCA-bad elements at `z` over all answers `b₁, b₂`, defined with
+is the largest number of DEEP-MCA-bad elements at `z` over all `b₁, b₂`, defined with
 agreement sets of size at least `(1 - δ) n`.
 
 `main_thm_delta_floor` is slightly stronger than the theorem as stated when `δ n` is not an
@@ -114,7 +115,7 @@ and the Lean names.
 | Lemma 3.8 (colinearity of codewords) | `BEEP.Scalar.defect_eq_zero_iff` |
 | Lemma 3.9 (`U` vanishes under `φ_z` for consistent tuples) | `evader_defect_eq_zero` |
 | Lemma 3.10 (`|A_z| (|A_z| - 1) (|A_z| - δn - 1) ≤ |T_z|`) | `third_moment_bound` |
-| Theorem 3.4, for given answers (counting form, probability form) | `main_thm_gen_nat`, `main_thm_gen` |
+| Theorem 3.4, for a given choice of `b₁, b₂` at every `z` (counting form, probability form) | `main_thm_gen_nat`, `main_thm_gen` |
 | the proofs of the six theorems of `Theorem.lean` | `main_thm_delta_proof`, `main_thm_delta_real_proof`, `main_thm_delta_floor_proof`, `main_thm_proof`, `main_thm_nat_proof`, `fold_challenge_le_proof` |
 
 The proof follows the paper step by step: `exists_weights_form` and `eq_zero_of_two_folds` (the
@@ -155,9 +156,10 @@ the paper's form.
    `Pr_z[φ_z(v) = 0] ≤ ε` (the bound `ε ≤ 1` of the paper is not needed). The counting form takes
    instead a natural number `M` such that every nonzero `v` has `φ_z(v) = 0` for at most `M` of
    the `z`. The theorems that speak of a probability assume that `Z` is nonempty.
-4. **Answers.** The prover's answers are a function `B` from `z` to `(b₁, b₂)`. Theorem 3.4 is about
-   `maxHits`, the largest number of DEEP-MCA-bad elements over all answers to `z`, and a single
-   worst-case `B` attains it at every `z` (`exists_worst_answers` in `Proof.lean`).
+4. **The vectors `b₁, b₂`.** `hits z b` is the set `A_{z, b₁, b₂}` of the paper, for `b = (b₁, b₂)`,
+   and `maxHits z` is the largest `|A_{z, b₁, b₂}|` over all `b`: the paper's `|A_z|`. No prover
+   appears in the definitions or in the statements. Inside the proof, the paper's `b₁*, b₂*`, which
+   depend on `z`, are a function `B` from `z` to pairs (`exists_worst_answers` in `Proof.lean`).
 5. **MCA-bad elements.** Definition 3.1 is `MCABad` (the negation of the MCA property,
    `SatisfiesMCA`). Definition 3.2 and the set `A_θ^pret` of Lemma 3.7 are stated without the
    condition "`α` is MCA-bad", which follows from the existence of an `α`-pretender
@@ -189,7 +191,7 @@ Reed-Solomon codes") together with the lemma behind it, Lemma 5.5.
 `affine_main` reads: let `N = max(q, (n - s + 2)(n - s + 1)/2)` and let `C⁺ = RS_{ℓ+1}` be list
 decodable with list size `L` at agreement `s`; then for every integer `t ≥ N + 1`, for `z` uniform in
 `F^m`, `Pr[|A_z| ≥ t] ≤ (q² L)³ ((ℓ + 1)/q)^m / (t (t - 1) (t - N))`, where `q = |F|`, `n` is the block
-length, and `|A_z|` is the largest number of DEEP-MCA-bad challenges at `z` over all answers.
+length, and `|A_z|` is the largest number of DEEP-MCA-bad challenges at `z` over all `b₁, b₂`.
 `affine_main_delta` is the same with `s = ⌈(1 - δ) n⌉`, the relative Hamming distance in the list
 decodability of `C⁺`, and the paper's `N = max(|F|, (δn + 2)(δn + 1)/2)`.
 
@@ -220,7 +222,7 @@ and the Lean names.
 |---|---|
 | Lemma 5.5, second case of the proof (a line of `C_θ^{≡2}`) | `affine_line_pairs` |
 | Lemma 5.5 | `affine_line` |
-| Theorem 5.3, for given answers (counting form, probability form) | `affine_main_gen_nat`, `affine_main_gen` |
+| Theorem 5.3, for a given choice of `b₁, b₂` at every `z` (counting form, probability form) | `affine_main_gen_nat`, `affine_main_gen` |
 | the proofs of the four theorems of `Theorem.lean` | `affine_main_delta_proof`, `affine_main_proof`, `affine_main_nat_proof`, `fold_challenge_le_proof` |
 
 The proof follows the paper step by step: `affine_line` (Lemma 5.5, with the pigeonhole argument of
@@ -253,9 +255,9 @@ None of these changes the content of Theorem 5.3; `affine_main_delta` is in the 
 4. **Lines with rational coefficients** (Definition 5.4) are written with a common denominator:
    `θ(α) = P/D + α · Q/D` with polynomials `D ≠ 0`, `P`, `Q`, and "`c` lies on the line at `α`" is
    `D c = P + α Q`. This way the whole proof stays with polynomials (no `RatFunc`).
-5. **Answers.** The prover's answers are a function `B` from `z` to `(b₁, b₂)`. Theorem 5.3 is about
-   `maxHits`, the largest number of DEEP-MCA-bad challenges over all answers to `z`, and a single
-   worst-case `B` attains it at every `z` (`exists_worst_answers` in `Proof.lean`).
+5. **The vectors `b₁, b₂`.** As in `BEEP/Scalar`: `hits z b` is the set `A_{z, b₁, b₂}` of the paper,
+   `maxHits z` is the largest `|A_{z, b₁, b₂}|` over all `b = (b₁, b₂)`, and the paper's `b₁*, b₂*`
+   are, inside the proof, a function `B` from `z` to pairs (`exists_worst_answers` in `Proof.lean`).
 6. **Standing assumptions.** `ℓ ≥ 1` (Section 5.1) is not needed for the integer form;
    `affine_main_delta` uses `ℓ + 1 ≤ n` (to identify codewords with polynomials) and `δ ≥ 0`.
 
@@ -336,17 +338,30 @@ formalizations until November 17, 2026, `BEEP/AffineMain.lean` (Theorem 5.3, nam
   names and kinds included) and, for the 75 definitions, the same body; the other 4 are auxiliary
   lemmas that Lean generates inside the proofs of four theorems that are now called `x_proof`. The
   new files have 10 more theorems, the `x_proof`, each with the statement of its `x`. So no
-  definition and no statement changed. With the six files at the `shasum`s below, the script
-  printed what the section above describes and nothing else, in about a minute.
+  definition and no statement changed. The script printed what the section above describes and
+  nothing else, in about a minute.
+- Later the same day, after the author remarked that `hits` took a "strategy" (a function `B` from
+  `z` to the pairs `(b₁, b₂)`) although no prover appears in Theorem 3.4: `hits` now takes the
+  pair itself, so that `hits z b` is the paper's `A_{z, b₁, b₂}`; `maxHits` is written with it, and
+  `fold_challenge_le` is stated for every `b` (the same in `BEEP/Affine`). `maxHits` is the same
+  function as before: before and after the change, Lean accepts by `rfl` that `maxHits z` is the
+  largest number of `α` with `DeepBad z b α` over all `b`. A Lean program printed the 283
+  declarations of the six files before and after the change, with `hits` replaced by its
+  definition: 273 are identical, and the other 10 are the ones whose own arguments changed (in
+  each folder `hits`, `card_hits_le_maxHits`, `fold_challenge_le`, `fold_challenge_le_proof` and an
+  auxiliary lemma of its proof). So the statements of the other theorems of the two
+  `Theorem.lean` did not change. With the six files at the `shasum`s below, the script printed
+  what the section above describes and nothing else, in about a minute, and `lake build`
+  succeeded.
 
   | file | `shasum` |
   |---|---|
-  | `BEEP/Scalar/Defs.lean` | `0c65579f3b780e50c003725404a6295dbbec779e` |
-  | `BEEP/Scalar/Theorem.lean` | `dc3052c83ec6f8f622b2356515684f2dd28b192d` |
-  | `BEEP/Scalar/Proof.lean` | `cbffcffce5c763b47150bac618bca802a43b890e` |
-  | `BEEP/Affine/Defs.lean` | `6078a132edf888560d86685ca6176fc1e6d33994` |
-  | `BEEP/Affine/Theorem.lean` | `b73cb52c7cc2fa24fb5e8a4bb90e64fe601fb9a8` |
-  | `BEEP/Affine/Proof.lean` | `17e63b6085205aa4b1198a636ae2cb35442db9a4` |
+  | `BEEP/Scalar/Defs.lean` | `2b6c6c52a230a2a30c7f12c147aa1a8a50d5f37b` |
+  | `BEEP/Scalar/Theorem.lean` | `d5457a083972ec2ddb1c54aa63200b46cd6c4e3a` |
+  | `BEEP/Scalar/Proof.lean` | `4ecc22c0f29cf6a25861a91855c479eb0d28f928` |
+  | `BEEP/Affine/Defs.lean` | `7e100dd7acdccd82d5d8757b334cd38a53d36fe2` |
+  | `BEEP/Affine/Theorem.lean` | `846b1a6ad9e67cf1361f693240d23770cae733b0` |
+  | `BEEP/Affine/Proof.lean` | `90c38caff0cda0fe2cee885b5c75854faec747e2` |
 
 By hand, with the Mathlib build of `~/math in lean` (same version, v4.30.0), a `Defs.lean` can be
 checked alone:
