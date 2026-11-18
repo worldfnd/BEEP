@@ -4,7 +4,7 @@
 The paper cites with the style ieee-alpha.csl, whose labels are
   - one author:        the first three letters of the last name, then the year   [Joh62]
   - several authors:   the initials of the last names, then the year              [DKTZ26]
-  - five or more:      the first four initials, a plus sign, then the year        [BCHK+25]
+  - four or more:      the first three initials, a plus sign, then the year       [BCH+25]
   - an organization:   the first three letters of its name, then the year        [Eth25]
 with a, b, ... appended when two entries get the same label. Typst's bibliography engine
 (hayagriva) computes its own labels ([Ben+25] for four or more authors) and does not read
@@ -22,7 +22,7 @@ from collections import defaultdict
 from pathlib import Path
 
 BIB = Path(__file__).resolve().parent.parent / "bibliography.bib"
-MAX_INITIALS = 4  # a label with more initials keeps this many and replaces the rest by "+"
+MAX_INITIALS = 3  # a label with more initials keeps this many and replaces the rest by "+"
 
 
 def entries(text):
