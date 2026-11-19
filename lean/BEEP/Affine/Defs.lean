@@ -305,6 +305,8 @@ def ListDecodable (L : ℕ) : Prop :=
   ∀ w : ι → F, ((polysLT F (R.ℓ + 1)).filter fun c =>
     s ≤ (univ.filter fun i => c.eval (R.x i) = w i).card).card ≤ L
 
+
+
 end Defs
 
 /-! ### The DEEP-MCA-bad challenges at `z`, and their largest number `|A_z|` -/

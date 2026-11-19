@@ -107,7 +107,7 @@
 
 // Table of contents
 #show outline.entry: set text(fill: linkcolor)
-#outline(depth: 2) 
+#outline(depth: 3) 
 
 // Rest of paper
 
@@ -181,11 +181,12 @@ $<e:mca_error>]
 
 Equipped with these bounds, practitioners and researchers turned away from DEEP sampling, using @BCIKS20@BCHKS25@DKT26  to directly bound the number or raw MCA-bad elements.
 
-== Our contributions<s:contributions>
+== Contributions<s:contributions>
 
 We describe the main results of this work.
 
-#paragraph[Better Elimination of Pretenders (BEEP), an improvement to DEEP.] We provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Precisely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. 
+=== Better Elimination of Pretenders (BEEP), an improvement to DEEP. 
+We provide a new soundness analysis of the DEEP technique after modifying the technique slightly. Precisely, the modification consists simply in making $numsamples$ DEEP sample evaluations, rather than only $1$, for a tunable parameter $numsamples$. 
 
 We state our main result next, but before we generalize the notion of "an evaluation of a codeword" to arbitrary linear codes $cal(C)$, and not to just RS codes. Throughout, $FF$ is an arbitrary field and $cal(C)$ a code of blocklength $blockclength$ and dimension $codedim$.
 
@@ -198,7 +199,7 @@ We state our main result next, but before we generalize the notion of "an evalua
 
 #theorem[@t:main_thm, informal][
   Let $cal(C)$ be a linear code of blocklength $blockclength$, dimension $codedim$, and relative minimum distance $hamming(cal(C))$. Let $u_1, u_2 in FF^blockclength$ be two words,  let $delta in (0, Delta(cal(C)))$ be a proximity parameter and let $L$ be such that $cal(C)$ is $(delta, L)$-list decodable. 
-  Let $(evalmap_z)_(z in cal(Z))$ be a zero evader with error $epsilon_(sans("evader"))$. For every  DEEP sample point $z in cal(Z)$, and  $vb(b)_1, vb(b)_2 in FF^numsamples$ (supposedly  evaluations under $evalmap$ of codewords close to $u_1,u_2$), let $A_(z, vb(b)_1, vb(b)_2) subset FF$  be the set of MCA-bad folding challenges $alpha in FF$ such that, for some $alpha$-pretender $c in cal(C)$, we have #aiedit[$evalmap_z (c)= vb(b)_1 + alpha dot vb(b)_2$].
+  Let $(evalmap_z)_(z in cal(Z))$ be a zero evader with error $epsilon_(sans("evader"))$. For every  DEEP sample point $z in cal(Z)$, and  $vb(b)_1, vb(b)_2 in FF^numsamples$ (supposedly  evaluations under $evalmap$ of codewords close to $u_1,u_2$, to be provided by the prover), let $A_(z, vb(b)_1, vb(b)_2) subset FF$  be the set of MCA-bad folding challenges $alpha in FF$ such that, for some $alpha$-pretender $c in cal(C)$, we have #aiedit[$evalmap_z (c)= vb(b)_1 + alpha dot vb(b)_2$].
   Then
   $
     Pr_(z in cal(Z))[ lr(( max_(vb(b)_1, vb(b)_2 in FF^numsamples) lr(|A_(z, vb(b)_1, vb(b)_2)|))) > epsilon_(sans("BEEP"),2) dot |FF| ] ≤  epsilon_(sans("BEEP"),1),
@@ -210,30 +211,21 @@ We state our main result next, but before we generalize the notion of "an evalua
   $
   #aiedit[and] $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$, for the $delta$-MCA error $epsilon_(sans("MCA"))$ of $cal(C)$, if any such nontrivial error is known.
 ]<t:main_thm_informal>
-
 When $cal(C)$ is a RS code of dimension $codedim$ we have, for some $m≥1$,
 $ 
 cal(Z) = FF^numsamples, quad quad epsilon_(sans("evader")) = lr(((codedim)/(|FF|) ))^numsamples.
 $
 
-
-The statement of @t:main_thm_informal is tailored for obtaining round-by-round knowledge soundness when using DEEP sampling in an IOPP. The analogue of our statement in the formulation of @deep would be that, for any  $vb(b)_1, vb(b)_2 in FF^numsamples$,
-$
-  Pr_(vb(z) in FF^numsamples, alpha in FF)[ alpha in A_(vb(z), vb(b)_1, vb(b)_2) ] ≤ epsilon_(sans("BEEP"),1) + epsilon_(sans("BEEP"),2).
-$
-//The way @t:main_thm_informal would be used inside an IOPP is as follows: the result states that for at least a $1-epsilon_(sans("BEEP"),1)$ fraction of DEEP samples $vb(z)$ the following occurs: for any answer $vb(b)_1, vb(b)_2$ provided by the prover, there is at most an $epsilon_(sans("BEEP"),2)$ fraction of MCA-bad folding challenges $alpha in FF$ admitting an $alpha$-pretender codeword $c$ with $c(vb(z)_i) = vb(b)_(1,i) + alpha dot vb(b)_(2,i)$. The reader may find apparent that $epsilon_(sans("BEEP"),1)$ would then be the  round-by-round knowledge soundness error of the DEEP sampling round of the IOPP, and that $epsilon_(sans("BEEP"),2)$ would be  the error of the folding round (in our instantiation this latter error has additional additive terms since we simultaneously run a sumcheck round with it, see @c:BEEP and @t:beep_soundness).
-
-
-
 In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_(sans("BEEP"),2)$ with known MCA errors. We also include the affine version of our result (@t:affine_main_0), which we discuss later.
 
 
+
+
 #[
-#show figure.where(kind: table): set figure.caption(position: top)
 #show figure.caption: set align(left)
 #figure(
   {
-    set text(size: 10pt, hyphenate: false)
+    set text(size: 11pt, hyphenate: false)
     set par(justify: false)
     // a result: its name, and its source on the line below, indented
     let res(name, source) = stack(spacing: 0.65em, name, pad(left: 1em, source))
@@ -283,18 +275,28 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
   placement: auto,
   caption: [
     Comparison of known MCA error bounds with the errors from @t:main_thm_informal and its affine version @t:affine_main_0 (discussed below).  $blockclength$ is the code length and $codedim$ its dimension.
-    As long as $L$ is relatively small, the error $epsilon_(sans("BEEP"),1)$ can always be made arbitrarily small by taking a zero evader with $epsilon_(sans("evader"))$ small. For example, when the evader consists in evaluating on $numsamples$ points the polynomial whose coefficients are given by the message entries,  then $epsilon_(sans("evader")) = (codedim/(|FF|))^numsamples$, cf. Section @s:zero_evaders. 
+    As long as $L$ is relatively small (e.g. polynomial), the error $epsilon_(sans("BEEP"),1)$ can always be made arbitrarily small by taking a zero evader with $epsilon_(sans("evader"))$ small. For example, when the evader consists in evaluating on $numsamples$ points the polynomial whose coefficients are given by the message entries,  then $epsilon_(sans("evader")) = (codedim/(|FF|))^numsamples$, cf. Section @s:zero_evaders. 
     $M$ is either $|FF|$ or #aiedit[$epsilon_(sans("MCA")) dot |FF|$, for a $delta$-MCA error $epsilon_(sans("MCA"))$ of the code]. In practice $m$ is $4$--$5$ when $M=|FF|$, and $2$ when #aiedit[$epsilon_(sans("MCA"))$ is the error of] @DKT26[Thm 4.4].  In the last row we need $|FF| ≥ (delta dot blockclength +2)^2$.
   ]
 ) <tab:mca_comparison>
 ]
 
 
+The statement of @t:main_thm_informal is tailored for obtaining round-by-round knowledge soundness when using DEEP sampling in an IOPP. The analogue of our statement in the formulation of @deep would be that, for any  $vb(b)_1, vb(b)_2 in FF^numsamples$,
+$
+  Pr_(vb(z) in FF^numsamples, alpha in FF)[ alpha in A_(vb(z), vb(b)_1, vb(b)_2) ] ≤ epsilon_(sans("BEEP"),1) + epsilon_(sans("BEEP"),2).
+$
+The way @t:main_thm_informal would be used inside an IOPP is as follows: the result states that for at least a $1-epsilon_(sans("BEEP"),1)$ fraction of DEEP samples $z in cal(Z)$ sent by the verifier, the following occurs: for any prover answer $vb(b)_1, vb(b)_2$, there is at most an $epsilon_(sans("BEEP"),2)$ fraction of MCA-bad folding challenges $alpha in FF$ admitting an $alpha$-pretender codeword $c$ with $evalmap_z(c) = vb(b)_(1) + alpha dot vb(b)_(2)$. The reader may find apparent that $epsilon_(sans("BEEP"),1)$ would then be the  round-by-round knowledge soundness error of the DEEP sampling round of the IOPP, and that $epsilon_(sans("BEEP"),2)$ would be  the error of the folding round (in our instantiation this latter error has additional additive terms since we simultaneously run a sumcheck round with it, see @c:BEEP and @t:beep_soundness).
+
+
+\
+
+
 
 In Section @s:high_arity we provide a generalization and alternative proof of @t:main_thm_informal which relies solely on linear algebra. 
 
-
-#paragraph[BEEP-IOR: folding of constrained interleaved codes with BEEP.] We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is  an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, which we call BEEP-IOR. Here $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and for a code $cal(C)'$ of dimension $codedim'$ and blocklength $blockclength'$ we define
+=== BEEP-IOR: folding of constrained interleaved codes with BEEP
+ We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is  an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, which we call BEEP-IOR. Here $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and for a code $cal(C)'$ of dimension $codedim'$ and blocklength $blockclength'$ we define
   $ cal(R)_(cal(C)') := lr({
     lr(( cases(delim: #none,
       bb(x) = (mu, vb(v)) in FF times FF^(codedim') \,,
@@ -314,7 +316,7 @@ The BEEP-IOR (@c:BEEP) consists of three rounds:
 
 We show that the BEEP-IOR is round-by-round knowledge sound with errors: 
 $
-  epsilon_1=(|FF| dot L)^3/(delta dot blockclength +1)^2 dot epsilon_(sans("evader")), quad quad  epsilon_2= frac(delta dot blockclength +1,|FF|)+ frac(2dot L_(interleavedcode(2)),|FF|), quad quad epsilon_3=frac(L,|FF|)
+  epsilon_1=(M dot L)^3/(delta dot blockclength +1)^2 dot epsilon_(sans("evader")), quad quad  epsilon_2= frac(delta dot blockclength +1,|FF|)+ frac(2dot L_(interleavedcode(2)),|FF|), quad quad epsilon_3=frac(L,|FF|)
 $
 where $L_(interleavedcode(2))$ is a list size bound at radius $delta$ for $interleavedcode(2)$, and as before $L$ is a list size for $cal(C)$.
 
@@ -334,11 +336,15 @@ We note that, following @BCFW25, the codes used in this IOPP need not have an ef
 //) <tab:measured_0>
 
 
-#paragraph[BEEP and affine folding.] Restricting to RS codes,  in @polygero, the authors propose to use, as folding challenges $alpha$, polynomials of small degree $s$, instead of field elements. The soundness error from @polygero is of about $1\/|FF|$, with up to $s$ positions of agreement lost after the fold. It requires however $s$ to grow linearly with the block length, e.g. in @polygero[Remark 2] $s=74$  when $blockclength = 25724$, over a $128$-bit field. In  @CWYZ26 (concurrent to @polygero), the authors show that affine challenges, i.e. $s=1$, suffice. They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for RS codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$, assuming $blockclength dot eta^2 ≥ 4\/rho$ @CWYZ26[Theorem 1.1]. As in @polygero, one position of agreement may be lost after the folding].
+=== Affine folding version of BEEP
+ Restricting to RS codes,  in @polygero, the authors propose to use, as folding challenges $alpha$, polynomials of small degree $s$, instead of field elements. The soundness error from @polygero is of about $1\/|FF|$, with up to $s$ positions of agreement lost after the fold. It requires however $s$ to grow linearly with the block length, e.g. in @polygero[Remark 2] $s=74$  when $blockclength = 25724$, over a $128$-bit field. In  @CWYZ26 (concurrent to @polygero), the authors show that affine challenges, i.e. $s=1$, suffice. They obtain an MCA-type error bound of #aiedit[$4\/(eta dot |FF|) + 2^(14) dot blockclength^2\/(rho^3 dot eta^(10) dot |FF|^2)$ for RS codes of rate $rho$ and $delta = 1 - sqrt(rho) - eta$, assuming $blockclength dot eta^2 ≥ 4\/rho$ @CWYZ26[Theorem 1.1]. As in @polygero, one position of agreement may be lost after the folding].
 
-In Section @s:affine, we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial, for RS codes. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $epsilon_(sans("BEEP"),1)$ #aiedit[becomes $(|FF| dot L)^3\/3 dot ((codedim+1)\/|FF|)^numsamples$ (the factor $1\/(delta dot blockclength +1)^2$ is replaced by $1\/3$, and $L$ is a list size for the Reed-Solomon code of dimension $codedim+1$)], while the folding error $epsilon_(sans("BEEP"),2)$ becomes
+In Section @s:affine we provide a version of our results (concretely of @t:main_thm_informal) where $alpha$ is an affine polynomial, for RS codes. In this setting, the errors in @t:main_thm_informal are as follows: the DEEP sampling error $
+epsilon_(sans("affine-BEEP"),1) = (|FF| dot L')^3/3 dot ((codedim+1)/(|FF|))^numsamples
+$ 
+#aiedit[where $L$ is a list size for the Reed-Solomon code of dimension $codedim+1$)], while the folding error $epsilon_(sans("BEEP"),2)$ becomes
 $
-epsilon_(sans("affine-BEEP"),2) = 2\/|FF|.
+epsilon_(sans("affine-BEEP"),2) = 2/(|FF|).
 $
 #aiedit[As in @CWYZ26@polygero, one position of agreement may be lost.] We require $|FF| ≥ (delta dot blockclength +2)^2$.
 
@@ -349,7 +355,8 @@ In contrast to @CWYZ26, our analysis in the affine setting is elementary, amount
 
 
 
-#paragraph[Consequences.] We list some implications of our results:\
+=== Conclusions 
+We list some implications of our results:\
 \
 *Code-agnostic IOPPs up to the Johnson bound and beyond.* Our work allows to run typical code-based IOPPs   using arbitrary codes (e.g. #aiedit[@era@bolt@blaze@qacodes]), not necessarily RS codes, and still use a proximity parameter $delta$ approaching the Johnson bound, over fields of practical size.  It suffices to add the DEEP sampling step discussed above and in Section @s:BEEP_fold.
 
