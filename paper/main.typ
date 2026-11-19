@@ -169,6 +169,7 @@ epsilon_(sans("DEEP"))= max(2 dot L dot lr(( (codedim)/(|FF|) + epsilon  ))^(1/3
 $<e:original_deep_error>
 where   $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $codedim$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be  above $2^900$, which for practical purposes is far from the standard $128$-$256$ bit fields. Indeed, from #aiedit[$4\/(epsilon^2 dot |FF|) ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130\/epsilon^2$], and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so #aiedit[$|FF| ≥ 2^130\/epsilon^2 ≥ 2^(904) dot L^6$]. 
 
+In @r:original_deep_multiple_samples we discuss why increasing the number of samples and making a naive adaptation of the original DEEP proof @deep[Theorem 4.1] still yields essentially the same impractical error (still rquiring $|FF| ≥ 2^(904) dot L^6$).
 
 
 #paragraph[MCA.] On the other hand, #aiedit[as we mentioned,] today we have practical MCA results for Reed-Solomon codes up to the Johnson bound, and for any linear code up to the 1.5 Johnson bound. 
@@ -294,6 +295,8 @@ The way @t:main_thm_informal would be used inside an IOPP is as follows: the res
 
 
 In Section @s:high_arity we provide a generalization and alternative proof of @t:main_thm_informal which relies solely on linear algebra. 
+
+
 
 === BEEP-IOR: folding of constrained interleaved codes with BEEP
  We describe a BEEP variant of typical code-based IOPPs for constrained interleaved codes, such as WHIR @whir, Ligerito @ligerito, Basefold #aiedit[@basefold], etc. At its core is  an Interactive Oracle Reduction (IOR) (@c:BEEP) from $cal(R)_(interleavedcode(2))$ to $cal(R)_cal(C)$, which we call BEEP-IOR. Here $interleavedcode(2)$ is the $2$-wise interleaving of $cal(C)$, and for a code $cal(C)'$ of dimension $codedim'$ and blocklength $blockclength'$ we define
@@ -731,6 +734,14 @@ $<e:proof_thm_2> where $epsilon = epsilon_(sans("evader"))$ and $M$ is either $|
 ]
 
 
+#remark[Multiple DEEP samples in the original DEEP work @deep][
+   We ponder the question of what would happen if in the original soundness analysis of @deep we increase the amount of DEEP samples, or, more generaly, use an arbitrary zero evader. Upon inspecting the proof of  @deep[Theorem 4.1], it is apparent that the proof can be  word-by-word generalized so as to use an abstract evader $(evalmap_z)_(z in cal(Z))$. However, the resulting error still requires a field of size $|FF| ≥ 2^(904)dot L^6$, when targeting $128$ bits of security (see our derivation below @e:original_deep_error). Indeed,  the only spot in the proof of  @deep[Theorem 4.1] where the zero evader error $epsilon_(sans("evader"))$ (in @deep's setting, the evader is a single polynomial evaluation)  plays a role is when concluding that, in their notation, if $(x_0, P_(x_0)(z)), (beta_0, P_(beta_0)(z)), (gamma, P_(gamma)(z))$ are colinear over $FF times FF$ for more $z$ 's than $epsilon_(sans("evader")) dot |cal(Z)|$ (for @deep, this is simply $codedim$), then $(x_0, P_(x_0)(X)), (beta_0, P_(beta_0)(X)), (gamma, P_(gamma)(X))$ are colinear over $FF times FF[X]$. With an abstract zero evader, the proof of @deep[Theorem 4.1] then would yield an error of 
+  $
+  max(2 dot L dot lr(( epsilon_(sans("evader")) + epsilon  ))^(1/3), (4)/(epsilon^2 dot |FF|)).
+  $
+  The same derivation as the one below @e:original_deep_error yields $|FF| ≥ 2^(904)dot L^6$ when targeting $128$ bits of security.
+]<r:original_deep_multiple_samples>
+
 = Folding of constrained interleaved  codes with BEEP <s:BEEP_fold>
 
 We now discuss how to use the soundness analysis from @t:main_thm so as to modify usual code-based IOPPs. In Section @s:BEEP_IOR we discuss the DEEP sampling and folding step, and then in Section @s:BEEP_WHIR we provide a full description of BEEP-based IOPP.
@@ -1081,14 +1092,14 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
 Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adapting word by word the proof of @t:main_thm to the affine folding setting.
 
 \
-#proof[Proof of @t:affine_main_0, outline][
-  We follow the proof of @t:main_thm, instantiated with $cal(C)$ a Reed-Solomon code, taking challenges $alpha in chal$ instead of in $FF$, and using the parameterized lines $ratlines$ instead of $linfuns$. We go through such proof and explain in what ways it is the same as that of @t:main_thm and, when it is not, we explain how to modify the proof to our setting. 
+#proof[Proof of @t:affine_main_0][
+  We follow the proof of @t:main_thm, instantiated with $cal(C)$ a Reed-Solomon code, taking challenges $alpha in chal$ instead of in $FF$, and using the parameterized lines $ratlines$ instead of $linfuns$. We go through the proof and explain in what ways it is the same as that of @t:main_thm and, when it is not, we explain how to modify the proof to our setting. 
   
   First, let $(alpha_i, v_i)_(i in [3]) in (chal times Cplus)^3$ with $alpha_1, alpha_2, alpha_3$ pairwise distinct, and let
   $
     U((alpha_i, v_i)_(i in [3])) := (alpha_3 - alpha_1) dot (v_2 - v_1) - (alpha_2 - alpha_1) dot (v_3 - v_1).
   $
-   $U((alpha_i, v_i)_(i in [3]))$ is a polynomial of degree at most $codedim + 1$ (unlike in @t:main_thm where it would have degree $≤ codedim$). The analogue of @l:colinear holds: $(alpha_i, v_i)_(i in [3])$ belongs to the same parameterized line from $ratlines$ if and only if $U((alpha_i, v_i)_(i in [3])) = 0$ as a polynomial. The proof goes through exactly as in @l:colinear #albert[Double check],  where now operations take place in $FF(X)$ rather than in $FF$.
+   $U((alpha_i, v_i)_(i in [3]))$ is a polynomial of degree at most $codedim + 1$ (unlike in @t:main_thm where it has degree $≤ codedim$). The analogue of @l:colinear holds: $(alpha_i, v_i)_(i in [3])$ belongs to the same parameterized line from $ratlines$ if and only if $U((alpha_i, v_i)_(i in [3])) = 0$ as a polynomial. The proof goes through exactly as in @l:colinear #albert[Double check],  where now operations take place in $FF(X)$ rather than in $FF$.
 
   The analogue of @l:colinear_zero holds as well. Concretely,  let $vb(z) in FF^numsamples$ and assume that $(alpha_i, v_i)$ is consistent with $(vb(z), vb(b)_1, vb(b)_2)$ for all $i in [3]$. Then we claim that
   $
@@ -1102,11 +1113,11 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
   $
   It suffices to use @l:few_bad_points_on_line_0 with the bound $|A_lmap^(sans("pret"))|≤ N$ instead of the bound $|A_lmap^(sans("pret"))|≤ delta dot blockclength +1$ given by @l:few_bad_points_on_line.
   
-  Finally, let $P subset chal times Cplus$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. Since $Cplus$ is $(delta, L)$-list decodable, $|P| ≤ |chal| dot L = |FF|^2 dot L$. Let $(alpha_i, c_i)_(i in [3]) in P^3$ be such that $U((alpha_i, c_i)_(i in [3])) != 0$. Then by definition of $T_vb(z)$ this is a nonzero polynomial of degree at most $codedim + 1$, and hence there are at most $((codedim + 1) \/ |FF|)^numsamples dot |FF|^numsamples$ elements $vb(z) in FF^numsamples$ such that the triple belongs to $T_vb(z)$. Using an argument similar to the proof of @t:main_thm ,  and using #aiedit[$|chal| = |FF|^2$], we have
+  Finally, let $P subset chal times Cplus$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. Since $Cplus$ is $(delta, L)$-list decodable, $|P| ≤ |chal| dot L = |FF|^2 dot L$. Let $(alpha_i, c_i)_(i in [3]) in P^3$ be such that $U((alpha_i, c_i)_(i in [3])) != 0$. Then since $U((alpha_i, c_i)_(i in [3]))$ is a polynomial of degree at most $codedim+1$ (note that in @t:main_thm it would be of degree at most $codedim$), there are at most $(codedim + 1)^numsamples$ elements $vb(z) in FF^numsamples$ such that the triple belongs to $T_vb(z)$. Using now the same double counting arugment as in the proof of @t:main_thm,
   $
-    sum_(vb(z) in FF^numsamples) |T_vb(z)| ≤ (|FF|^2 dot L)^3 dot ((codedim + 1) \/ |FF|)^numsamples dot |FF|^numsamples,
+   t dot (t-1) dot (t -N) ≤ sum_(vb(z) in cal(Z)_t) |T_(vb(z))|  ≤ sum_(vb(z) in FF^numsamples) |T_vb(z)| ≤ (|FF|^2 dot L)^3 dot (codedim + 1)^numsamples,
   $
-  Now the theorem follows as in @t:main_thm #albert[check].
+  where $cal(Z)_t$ is the set of tuples $vb(z) in FF^numsamples$ such that $|A_vb(z)| ≥ t$. Again, this completes the proof since $Pr_(vb(z) <- FF^numsamples)[ |A_vb(z)| ≥ t| ] = |cal(Z)_t|\/|FF|^numsamples$.
 ]
 
 
