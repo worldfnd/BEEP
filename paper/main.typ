@@ -735,7 +735,7 @@ $<e:proof_thm_2> where $epsilon = epsilon_(sans("evader"))$ and $M$ is either $|
 
 
 #remark[Multiple DEEP samples in the original DEEP work @deep][
-   We consider the question of what would happen if in the original soundness analysis of @deep we increase the amount of DEEP samples, or, more generally, use an arbitrary zero evader. Upon inspecting the proofs of  #aiedit[@deep[Theorem 3 and Lemma 28]], it is apparent that the proof can be  word-by-word generalized so as to use an abstract evader $(evalmap_z)_(z in cal(Z))$. However, the resulting error still requires a field of size $|FF| ≥ 2^(904)dot L^6$, when targeting $128$ bits of security (see our derivation below @e:original_deep_error). Indeed,  the only spot in the proofs of  #aiedit[@deep[Theorem 3 and Lemma 28]] where the zero evader error $epsilon_(sans("evader"))$   plays a role is when concluding that, in their notation, if $(x_0, P_(x_0)(z)), (beta_0, P_(beta_0)(z)), (gamma, P_(gamma)(z))$ are colinear over $FF times FF$ for more $z$'s than $epsilon_(sans("evader")) dot |cal(Z)|$ (for @deep, this is simply $codedim$ in Theorem 3 and $sigma/N$ in Lemma 28), then $(x_0, P_(x_0)(X)), (beta_0, P_(beta_0)(X)), (gamma, P_(gamma)(X))$ are colinear over $FF times FF[X]$. With an abstract zero evader, the proofs of #aiedit[@deep[Theorem 3 and Lemma28]] would then yield an error of 
+   We consider the question of what would happen if in the original soundness analysis of @deep we increase the amount of DEEP samples, or, more generally, use an arbitrary zero evader. Upon inspecting the proofs of  #aiedit[@deep[Theorem 3 and Lemma 28]]#footnote[In the eprint version of @deep, the corresponding results are Theorem 4.1 and Lemma 4.6], it is apparent that the proof can be  word-by-word generalized so as to use an abstract evader $(evalmap_z)_(z in cal(Z))$. However, the resulting error still requires a field of size $|FF| ≥ 2^(904)dot L^6$, when targeting $128$ bits of security (see our derivation below @e:original_deep_error). Indeed,  the only spot in the proofs of  #aiedit[@deep[Theorem 3 and Lemma 28]] where the zero evader error $epsilon_(sans("evader"))$   plays a role is when concluding that, in their notation, if $(x_0, P_(x_0)(z)), (beta_0, P_(beta_0)(z)), (gamma, P_(gamma)(z))$ are colinear over $FF times FF$ for more $z$'s than $epsilon_(sans("evader")) dot |cal(Z)|$ (for @deep, this is simply $codedim$ in Theorem 3 and $sigma/N$ in Lemma 28), then $(x_0, P_(x_0)(X)), (beta_0, P_(beta_0)(X)), (gamma, P_(gamma)(X))$ are colinear over $FF times FF[X]$. With an abstract zero evader, the proofs of #aiedit[@deep[Theorem 3 and Lemma28]] would then yield an error of 
   $
   max(2 dot L dot lr(( epsilon_(sans("evader")) + epsilon  ))^(1/3), (4)/(epsilon^2 dot |FF|)).
   $
@@ -1043,7 +1043,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
 
 
 
-#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line; essenitally @CWYZ26[Lemma 4.4]][
+#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line; essentially @CWYZ26[Lemma 4.4]][
   Let $u_1,u_2 in FF^blockclength$ be two words, and let $lmap in ratlines$. Let $A_(lmap)^(sans("pret")) subset chal$ be the set of all  $alpha in chal$ such that $lmap(alpha) in Cplus$ and $lmap(alpha)$ is an $alpha$-pretender with respect to $u_1,u_2$. Then
   $
     |A_(lmap)^(sans("pret"))| ≤ max lr(( |FF|, thick ((delta dot blockclength + 2) dot (delta dot blockclength + 1)) / 2 )) = N.
