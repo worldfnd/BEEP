@@ -121,7 +121,8 @@ theorem affine_main_delta {δ : ℝ} (hδ : 0 ≤ δ) (L t : ℕ) (hn : R.ℓ + 
     (hL : ∀ w : ι → F, ((R.rsWords (R.ℓ + 1)).filter fun c =>
       ((univ.filter fun i => c i ≠ w i).card : ℝ) ≤ δ * Fintype.card ι).card ≤ L)
     (ht : max (Fintype.card F : ℝ)
-        ((δ * Fintype.card ι + 2) * (δ * Fintype.card ι + 1) / 2) + 1 ≤ t) :
+        ((δ * Fintype.card ι + 2) * (δ * Fintype.card ι + 1) / 2) + 1 ≤ t)
+         :
     ((univ.filter fun z : Fin m → F =>
         t ≤ R.maxHits u₁ u₂ ⌈(1 - δ) * Fintype.card ι⌉₊ z).card : ℝ) /
         (Fintype.card F : ℝ) ^ m ≤
