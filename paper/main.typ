@@ -169,7 +169,7 @@ epsilon_(sans("DEEP"))= max(2 dot L dot lr(( (codedim)/(|FF|) + epsilon  ))^(1/3
 $<e:original_deep_error>
 where   $L$ is the list size of the underlying code $cal(C)$ at radius $delta$. One can see that, for typical $codedim$ and $L$, and targeting $epsilon_(sans("DEEP")) ≤ 2^(-128)$, one needs $|FF|$ to be  above $2^900$, which for practical purposes is far from the standard $128$-$256$ bit fields. Indeed, from #aiedit[$4\/(epsilon^2 dot |FF|) ≤ 2^(-128)$ we obtain $|FF| ≥ 2^130\/epsilon^2$], and then, taking cubes, we additionally need $epsilon + codedim\/|FF| ≤ 2^(-384)/(8 dot L^3)$, which yield in particular that $epsilon ≤ 2^(-387)/(L^3)$ and so #aiedit[$|FF| ≥ 2^130\/epsilon^2 ≥ 2^(904) dot L^6$]. 
 
-In @r:original_deep_multiple_samples we discuss why increasing the number of samples and making a naive adaptation of the original DEEP proof @deep[Theorem 4.1] still yields essentially the same impractical error (still rquiring $|FF| ≥ 2^(904) dot L^6$).
+In @r:original_deep_multiple_samples we discuss why increasing the number of samples and making a naive adaptation of the original DEEP proof #aiedit[@deep[Theorem 3]] still yields essentially the same impractical error (still requiring $|FF| ≥ 2^(904) dot L^6$).
 
 
 #paragraph[MCA.] On the other hand, #aiedit[as we mentioned,] today we have practical MCA results for Reed-Solomon codes up to the Johnson bound, and for any linear code up to the 1.5 Johnson bound. 
@@ -739,7 +739,7 @@ $<e:proof_thm_2> where $epsilon = epsilon_(sans("evader"))$ and $M$ is either $|
   $
   max(2 dot L dot lr(( epsilon_(sans("evader")) + epsilon  ))^(1/3), (4)/(epsilon^2 dot |FF|)).
   $
-  The same derivation as the one below @e:original_deep_error yields $|FF| ≥ 2^(904)dot L^6$ when targeting $128$ bits of security.
+  #aiedit[The derivation below @e:original_deep_error does not use the term $codedim\/|FF|$, hence it applies as is.]
 ]<r:original_deep_multiple_samples>
 
 = Folding of constrained interleaved  codes with BEEP <s:BEEP_fold>
@@ -1032,7 +1032,7 @@ Assuming $N=|FF|$ and taking $t =2N$ we obtain
  $
     Pr_(vb(z) <- FF^numsamples)[ abs(A_vb(z)) ≥ t] ≤ frac((|FF| dot L)^3,3)dot lr(( frac(codedim+1,|FF|) ))^numsamples
   $
-We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptation of that of @t:main_thm to the new definitions introduced above. The main difference is in @l:few_bad_points_on_line, which states that a parameterized line contains few pretenders. When using affine folds, we obtain an analogous lemma whose proof is a generalization of that of @l:few_bad_points_on_line. #aiedit[A similar lemma appears in @CWYZ26[Lemma 4.4].]
+We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptation of that of @t:main_thm to the new definitions introduced above. The main difference is in @l:few_bad_points_on_line, which states that a parameterized line contains few pretenders. In its affine version, this is essentially the same as @CWYZ26[Lemma 4.4], with an arbitrary proximity parameter $delta$. We include a proof for completeness. 
 
  We start with a new definition of parameterized lines. Below, $FF(X)$ denotes the set of all rational functions over $FF$, on the variable $X$.
 
@@ -1043,7 +1043,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
 
 
 
-#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line][
+#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line; essenitally @CWYZ26[Lemma 4.4]][
   Let $u_1,u_2 in FF^blockclength$ be two words, and let $lmap in ratlines$. Let $A_(lmap)^(sans("pret")) subset chal$ be the set of all  $alpha in chal$ such that $lmap(alpha) in Cplus$ and $lmap(alpha)$ is an $alpha$-pretender with respect to $u_1,u_2$. Then
   $
     |A_(lmap)^(sans("pret"))| ≤ max lr(( |FF|, thick ((delta dot blockclength + 2) dot (delta dot blockclength + 1)) / 2 )) = N.
