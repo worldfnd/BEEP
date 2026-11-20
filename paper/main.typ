@@ -1032,7 +1032,7 @@ Assuming $N=|FF|$ and taking $t =2N$ we obtain
  $
     Pr_(vb(z) <- FF^numsamples)[ abs(A_vb(z)) ≥ t] ≤ frac((|FF| dot L)^3,3)dot lr(( frac(codedim+1,|FF|) ))^numsamples
   $
-We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptation of that of @t:main_thm to the new definitions introduced above. The main difference is in @l:few_bad_points_on_line, which states that a parameterized line contains few pretenders. In its affine version, this is essentially the same as @CWYZ26[Lemma 4.4], with an arbitrary proximity parameter $delta$. We include a proof for completeness. 
+We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptation of that of @t:main_thm to the new definitions introduced above. The main difference is in @l:few_bad_points_on_line, which states that a parameterized line contains few pretenders. In its affine version, this is a generalization of @CWYZ26[Lemma 4.4] with a slightly better bound, and arbitrary folding weights $lmap_1(alpha), lmap_2(alpha)$ and proximity parameter $delta$. We include a proof for completeness. 
 
  We start with a new definition of parameterized lines. Below, $FF(X)$ denotes the set of all rational functions over $FF$, on the variable $X$.
 
@@ -1043,7 +1043,7 @@ We proceed to prove @t:affine_main_0. The proof is almost a word-by-word adaptat
 
 
 
-#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line; essentially @CWYZ26[Lemma 4.4]][
+#lemma[A parameterized line contains few pretenders, for the affine fold; analogue of @l:few_bad_points_on_line; slight generalization of @CWYZ26[Lemma 4.4]][
   Let $u_1,u_2 in FF^blockclength$ be two words, and let $lmap in ratlines$. Let $A_(lmap)^(sans("pret")) subset chal$ be the set of all  $alpha in chal$ such that $lmap(alpha) in Cplus$ and $lmap(alpha)$ is an $alpha$-pretender with respect to $u_1,u_2$. Then
   $
     |A_(lmap)^(sans("pret"))| ≤ max lr(( |FF|, thick ((delta dot blockclength + 2) dot (delta dot blockclength + 1)) / 2 )) = N.
