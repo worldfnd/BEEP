@@ -522,7 +522,7 @@ We proceed to define round-by-round knowledge soundness of an IOR, following @BC
 
 
 
-= Better Elimination of Pretenders <s:better_pretenders>
+= BEEP:  Better Elimination of Pretenders <s:better_pretenders>
 
 In this section we prove @t:main_thm_informal. In Section @s:affine we prove an analogous version when folding challenges are affine polynomials.
 
