@@ -720,10 +720,12 @@ $(epsilon_(sans("MCA")) dot |FF| dot L)^3$.
   Indeed, let $P subset FF times cal(C)$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. We  have $|P| ≤ |FF| dot L$,
   where the list size factor $L$ is due  to the fact that an $alpha$-pretender is $delta$-close to #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$], and since $cal(C)$ is $(delta, L)$-list decodable, there are at most $L$ codewords in $cal(C)$ that are $delta$-close to #aiedit[$theta_1(alpha) dot u_1 + theta_2(alpha) dot u_2$]. Additionally, we also have $|P| ≤ epsilon_(sans("MCA")) dot |FF| dot L$ if $cal(C)$ has $delta$-MCA error $epsilon_(sans("MCA"))$, since for $(alpha, c)$ to belong to $P$, we need $alpha$ to be an MCA-bad element, and there are at most $epsilon_(sans("MCA")) dot |FF|$ such elements.
   
-  Now, for each triple $(alpha_i, c_i)_(i in [3]) in T_z$, we have by definition that $U((alpha_i, c_i)_(i in [3])) != 0$ and $(alpha_i, c_i)$ is consistent with $(z, vb(b)_1^*, vb(b)_2^*)$ for all $i in [3]$. By @l:colinear_zero, $evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. Since $0!=U((alpha_i, c_i)_(i in [3])) in cal(C)$, by the definition of zero evader there are at most $epsilon_(sans("evader")) dot |cal(Z)|$ elements $z in cal(Z)$ such that $evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. In other words, for every triple $(alpha_i, c_i)_(i in [3]) in P^3$, 
+  Now,  let $(alpha_i, c_i)_(i in [3]) in P$ be such that $alpha_i != alpha_j$ for all $i!=j$ and $U((alpha_i, c_i)_(i in [3])) != 0$. Then if  $(alpha_i, c_i)_(i in [3]) in T_z$, by definition $(alpha_i, c_i)$ is consistent with $(z, vb(b)_1^*, vb(b)_2^*)$ for all $i in [3]$. By @l:colinear_zero,$evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. Then, since $0!=U((alpha_i, c_i)_(i in [3])) in cal(C)$, by the definition of zero evader there are at most $epsilon_(sans("evader")) dot |cal(Z)|$ elements $z in cal(Z)$ such that $evalmap_z (U((alpha_i, c_i)_(i in [3])))=0$. In other words, for every triple $(alpha_i, c_i)_(i in [3]) in P^3$ such that $alpha_i != alpha_j$ for all $i!=j$  and $U((alpha_i, c_i)_(i in [3])) != 0$, 
   $
   lr(|{z in cal(Z) | (alpha_i, c_i)_i in T_z}|)≤ epsilon_(sans("evader")) dot |cal(Z)|.
-  $ Now we have by double counting and using $T_z subset P^3$,  
+  $
+  For  the rest of triples $(alpha_i, c_i)_(i in [3]) in P^3$ the same inequality holds, since then we actually have $lr(|{z in cal(Z) | (alpha_i, c_i)_i in T_z}|)=0$.
+   Now we obtain by double counting and using $T_z subset P^3$, 
  $
 &sum_(z in cal(Z)_t) |T_z| ≤ sum_(z in cal(Z)) |T_z| = lr(|{ (z,(alpha_i,c_i)_(i in [3])) in cal(Z) times P^3 mid(|) (alpha_i,c_i)_(i in [3]) in T_z}|)
 \ &=sum_((alpha_i, c_i)_(i in [3]) in P^3) lr(|{z in cal(Z) mid(|) (alpha_i, c_i)_(i in [3]) in T_z}|) <= sum_((alpha_i, c_i)_(i in [3]) in P^3) epsilon dot |cal(Z)| <= (M dot L)^3 dot epsilon dot |cal(Z)|,
