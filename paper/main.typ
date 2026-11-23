@@ -207,7 +207,7 @@ We state our main result next, but before we generalize the notion of "an evalua
   $
   where    
   $
-     epsilon_(sans("BEEP"),1)= (M dot L)^3/(delta dot blockclength +1)^2 dot epsilon_(sans("evader")), quad quad quad epsilon_(sans("BEEP"),2) := (delta dot blockclength +1)/(|FF|),
+     epsilon_(sans("BEEP"),1)= (M dot L)^3/(delta dot blockclength +1)^2 dot epsilon_(sans("evader")), quad quad quad epsilon_(sans("BEEP"),2) := (floor(delta dot blockclength) +1)/(|FF|),
    
   $
   #aiedit[and] $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$, for the $delta$-MCA error $epsilon_(sans("MCA"))$ of $cal(C)$, if any such nontrivial error is known.
@@ -232,7 +232,8 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
     let res(name, source) = stack(spacing: 0.65em, name, pad(left: 1em, source))
     let thickrule = table.hline(stroke: 0.8pt)
     let thinrule = table.hline(stroke: 0.5pt)
-    let listdec = [any $delta in (0, hamming(cal(C)))$ at which $cal(C)$ is $(delta, L)$-list decodable]
+    let listdecone = [any $delta in (0, hamming(cal(C)^+))$ at which $cal(C)^+$  is $(delta, L)$-list decodable#footnote[$cal(C)^+$ is  $cal(C)$ with the dimension increased by one, cf. @s:affine.]]  
+    let listdectwo = [any $delta in (0, hamming(cal(C)))$ at which $cal(C)$  is $(delta, L)$-list decodable]  
     stack(spacing: 0.6em,
     table(
       columns: (auto, auto, 1fr, auto, auto),
@@ -264,9 +265,9 @@ In @tab:mca_comparison we compare the errors $epsilon_(sans("BEEP"),1), epsilon_
       [$delta <= 1 - sqrt(1 - hamming(cal(C))) - eta$],
       table.cell(rowspan: 2, $display((delta blockclength + 1)/(|FF|))$),
       table.cell(rowspan: 2)[$display(((M L)^3 thin epsilon_(sans("evader")))/((delta blockclength + 1)^2))$ \ #box(text(size: 8.5pt)[(e.g. $epsilon_(sans("evader")) = (codedim\/|FF|)^numsamples$)])],
-      [linear], listdec,
+      [linear], listdecone,
       res[BEEP, affine fold][This work, @t:affine_main_0[Thm]], [RS],
-      listdec,
+      listdectwo,
       [$display(2/(|FF|))$],
       [$display(((|FF| L)^3 (codedim + 1)^numsamples)/(3 |FF|^numsamples))$],
       thickrule,
@@ -1120,7 +1121,7 @@ Equipped with @l:few_bad_points_on_line_0, we now prove @t:affine_main_0 by adap
   
   Finally, let $P subset chal times Cplus$ be the set of all tuples $(alpha, c)$ such that $c$ is an $alpha$-pretender. Since $Cplus$ is $(delta, L)$-list decodable, $|P| ≤ |chal| dot L = |FF|^2 dot L$. Let $(alpha_i, c_i)_(i in [3]) in P^3$ be such that $U((alpha_i, c_i)_(i in [3])) != 0$. Then since $U((alpha_i, c_i)_(i in [3]))$ is a polynomial of degree at most $codedim+1$ (note that in @t:main_thm it would be of degree at most $codedim$), there are at most $(codedim + 1)^numsamples$ elements $vb(z) in FF^numsamples$ such that the triple belongs to $T_vb(z)$. Using now the same double counting arugment as in the proof of @t:main_thm,
   $
-   t dot (t-1) dot (t -N) ≤ sum_(vb(z) in cal(Z)_t) |T_(vb(z))|  ≤ sum_(vb(z) in FF^numsamples) |T_vb(z)| ≤ (|FF|^2 dot L)^3 dot (codedim + 1)^numsamples,
+   t dot (t-1) dot (t -N) dot |cal(Z)_t| ≤ sum_(vb(z) in cal(Z)_t) |T_(vb(z))|  ≤ sum_(vb(z) in FF^numsamples) |T_vb(z)| ≤ (|FF|^2 dot L)^3 dot (codedim + 1)^numsamples,
   $
   where $cal(Z)_t$ is the set of tuples $vb(z) in FF^numsamples$ such that $|A_vb(z)| ≥ t$. Again, this completes the proof since $Pr_(vb(z) <- FF^numsamples)[ |A_vb(z)| ≥ t| ] = |cal(Z)_t|\/|FF|^numsamples$.
 ]
