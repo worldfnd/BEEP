@@ -730,7 +730,7 @@ $(epsilon_(sans("MCA")) dot |FF| dot L)^3$.
  $
 &sum_(z in cal(Z)_t) |T_z| ≤ sum_(z in cal(Z)) |T_z| = lr(|{ (z,(alpha_i,c_i)_(i in [3])) in cal(Z) times P^3 mid(|) (alpha_i,c_i)_(i in [3]) in T_z}|)
 \ &=sum_((alpha_i, c_i)_(i in [3]) in P^3) lr(|{z in cal(Z) mid(|) (alpha_i, c_i)_(i in [3]) in T_z}|) <= sum_((alpha_i, c_i)_(i in [3]) in P^3) epsilon dot |cal(Z)| <= (M dot L)^3 dot epsilon dot |cal(Z)|,
-$<e:proof_thm_2> where $epsilon = epsilon_(sans("evader"))$ and $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$, for $epsilon_(sans("MCA"))$ the $delta$-MCA error of $cal(C)$. The first inequality is due to $cal(Z)_t subset cal(Z)$; the two equalities are the result of double counting, using that $T_z subset P^3$ for the first one; the second inequality is due to our previous bound; and the last inequality is due to our prior bounds on $|P|$. This proves the claim. 
+$<e:proof_thm_2> where $epsilon = epsilon_(sans("evader"))$ and $M$ is either $|FF|$ or $epsilon_(sans("MCA")) dot |FF|$, for $epsilon_(sans("MCA"))$ the $delta$-MCA error of $cal(C)$. The first inequality is due to $cal(Z)_t subset cal(Z)$; the two equalities are the result of double counting, using that $T_z subset P^3$ for the first one, so that ${(z,(alpha_i,c_i)_(i in [3])) in cal(Z) times (FF times cal(C))^3 | (alpha_i,c_i)_(i in [3]) in T_z}={ (z,(alpha_i,c_i)_(i in [3])) in cal(Z) times P^3 mid(|) (alpha_i,c_i)_(i in [3]) in T_z}$; the second inequality is due to our previous bound; and the last inequality is due to our prior bounds on $|P|$. This proves the claim. 
 
 Combining @e:proof_thm_1 and @e:proof_thm_2 we now obtain 
   $
